@@ -81,17 +81,10 @@
 
   <header class="header">
     <h1 class="header__title">La red de Vannetti</h1>
-    <div id="loginbox">
-                    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-                        <label>Usuario  :</label><input type="text" name="username" class="box"/>
-                        <label>Contraseña :</label><input type="password" name="password" class="box" />
-                        <input type="submit" value=" Enviar "/><br />
-                    </form>
-                    
-                        <div style="font-size:16px; color:#cc0000; margin-top:10px" align="center"> <?php echo $error; ?></div>
-                
-                </div>
+    <button id="entra">ENTRAR</button>
+    
   </header>
+  
 
   <main class="main">
     <!-- Insert forecast-card.html here -->
@@ -99,12 +92,21 @@
   </main>
 
   <div class="dialog-container">
-    <!-- Insert add-new-city-dialog.html here -->
+    <div >
+    	 <!-- la caja para registro de usuario -->
+        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+            <label>Usuario  :</label><input type="text" name="username" class="box"/>
+            <label>Contraseña :</label><input type="password" name="password" class="box" />
+            <input type="submit" value=" Enviar "/><br />
+        </form> 
+    <div style="font-size:16px; color:#cc0000; margin-top:10px" align="center"> <?php echo $error; ?></div>              
+  </div>
   </div>
 
   
 
   <!-- Insert link to app.js here -->
+  <script src="js/app.js"></script>
   
 </body>
 </html>
