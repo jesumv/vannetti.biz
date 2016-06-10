@@ -52,7 +52,7 @@
     
             if(!isset($login_session))
             {
-                  header("Location: index.php"); 
+                  header("Location: ../index.php"); 
                
             }
         }
