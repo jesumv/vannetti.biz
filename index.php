@@ -24,7 +24,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vanneti.biz</title>
   <!-- Insert link to styles here -->
-   <link rel="stylesheet" type="text/css" href="css/inline.css">
+  <link rel="stylesheet" type="text/css" href="css/inline.css">
+  <link rel="shortcut icon" href="img/logomin.gif" />  
+  <link rel="apple-touch-icon" href="img/logomin.gif">
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <script type="text/javascript" src="js/login.js"></script>
 </head>
@@ -32,7 +34,7 @@
 
   <header class="header">
     <h1 class="header__title">La red de Vannetti</h1>
-    <button id="entra">ENTRAR</button>
+    <button id="primero" >ENTRAR</button>
   </header>
   
 
@@ -48,10 +50,9 @@
       <div class="dialog-body">
         <!-- la caja para registro de usuario -->
         <form id="board_login" name="board_login" method ="post" action="#" onsubmit="return false;">
-        	
-            <label>Usuario  :</label><input type="text" name="username" id="username" />
-            <label>Contraseña :</label><input type="password" name="password" id="password"/>
-            <input type="submit" value=" Enviar "/><br />     
+        	<div> <label>Usuario  :</label><input type="text" name="username" id="username" /></div>
+           <div><label>Contraseña :</label><input type="password" name="password" id="password"/></div>
+            <div><input type="submit" value=" Enviar "/><br />   </div>      
       </div>
       <div class="dialog-buttons">
       </div>

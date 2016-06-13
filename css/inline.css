@@ -80,8 +80,8 @@ body {
   transition: transform 0.233s cubic-bezier(0, 0, 0.21, 1) 0.1s;
   transition: transform 0.233s cubic-bezier(0, 0, 0.21, 1) 0.1s, -webkit-transform 0.233s cubic-bezier(0, 0, 0.21, 1) 0.1s; }
   .header .headerButton {
-    width: 24px;
-    height: 24px;
+    width: 48px;
+    height: 48px;
     margin-right: 16px;
     text-indent: -30000px;
     overflow: hidden;
@@ -90,10 +90,9 @@ body {
     transition: opacity 0.333s cubic-bezier(0, 0, 0.21, 1);
     border: none;
     outline: none; }
-  .header #butRefresh {
-    background: url(../images/ic_refresh_white_24px.svg) center center no-repeat; }
-  .header #butAdd {
-    background: url(../images/ic_add_white_24px.svg) center center no-repeat; }
+
+  .header  #entra {
+    background: url(../img/logo1.jpg) center center no-repeat; }
 
 .header__title {
   font-weight: 400;
@@ -164,7 +163,8 @@ body {
             transform: rotate(90deg); } }
 
 .main {
-  padding-top: 60px;
+margin-top:%;
+  padding-top: 80px;
   -webkit-box-flex: 1;
   -webkit-flex: 1;
       -ms-flex: 1;
@@ -172,6 +172,8 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch; }
+  
+.main .h2{display: block}
 
 .dialog-container {
   background: rgba(0, 0, 0, 0.57);

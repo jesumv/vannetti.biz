@@ -8,9 +8,9 @@
     $mysqli = $funcbase->conecta();
     if (is_object($mysqli)) {
 /*** checa login***/
-        $funcbase->checalogin($mysqli);
+       $funcbase->checalogin($mysqli);
     } else {
-        die ("<h1>'No se establecio la conexion a bd'</h1>");
+        //die ("<h1>'No se establecio la conexion a bd'</h1>");
     }
     
 ?>
@@ -20,20 +20,29 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vanneti.biz</title>
+  <title>Vanneti Consulenti</title>
   <!-- Insert link to styles here -->
    <link rel="stylesheet" type="text/css" href="css/inline.css">
+   <link rel="stylesheet" type="text/CSS" href="css/dropdown_two.css" />
+   <link rel="shortcut icon" href="img/logomin.gif" />  
+   <link rel="apple-touch-icon" href="img/logomin.gif">
 </head>
 <body>
 
   <header class="header">
-    <h1 class="header__title">Bienvenido</h1>
-    <h3>Bienvenido(a), <?php echo $_SESSION['nombre']; ?></h3>
+  	<div>
+    	<h1 class="header__title">Bienvenido(a), <?php echo $_SESSION['nombre']; ?></h1>
+    </div>
+    
   </header>
 
   <main class="main">
-    <!-- Insert forecast-card.html here -->
-  <h2>  PORTAL VANNETTI CONSULENTI</h2>
+ <br />
+ <h2>VANNETTI CONSULENTI</h2>
+  
+  <?php
+  		include_once "include/menu1.php";
+  ?>
   </main>
 
   <div class="dialog-container">
@@ -41,8 +50,6 @@
   </div>
 
   
-
-  <!-- Insert link to app.js here -->
   
 </body>
 </html>

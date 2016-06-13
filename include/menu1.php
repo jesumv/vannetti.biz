@@ -1,4 +1,4 @@
-<div id="menuPositioner">
+	<div id="menuPositioner">
     <div id="menuHolder">
             <ul id="menu">
                 <li><a href="portal.php"><b>Inicio</b></a></li>
@@ -12,7 +12,7 @@
                   </li>
                   <li><a>Almacén</a>
                     	<ul class="sub1">
-	                        <li><a href="entradas.php">Entradas</a></li>
+	                        <li><a href="oc.html">Ordenes de Compra</a></li>
 	                        <li class="currentsub"><a class="fly">Salidas</a>
 	                            <ul class="fly2">
 	                            	<li><a href="salidafact.php">Facturación</a></li>
@@ -36,8 +36,6 @@
                             <li><a href="clientes.php">Clientes</a></li>
                             <li><a href="proveedores.php">Proveedores</a></li>
                             <li><a href="productos.php">Productos</a></li>
-                            <li><a href="representantes.php">Representantes</a></li>
-                            <li><a href="sucursales.php">Sucursales</a></li>
                             <?php
                             if($_SESSION['nivel']==1){
                             	echo "<li><a href='admonusu.php'>Usuarios</a></li>";	
@@ -46,7 +44,7 @@
                                          
                         </ul>
                     </li>
-                    <li><a href="php/logout.php"><b>Salir</b></a></li>
+                    <li><a href="index.php"><b>Salir</b></a></li>
             </ul>
 	</div>
 </div>

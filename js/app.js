@@ -14,7 +14,7 @@
    *
    ****************************************************************************/
 
-  document.getElementById('entra').addEventListener('click', function() {
+  document.getElementById('primero').addEventListener('click', function() {
     // Open/show the add new city dialog
     app.toggleAddDialog(true);
   });

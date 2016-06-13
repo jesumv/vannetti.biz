@@ -39,9 +39,10 @@
 	   }
         public function checalogin($mysqli){
          //***checa si el cliente esta registrado ***/
+         //obtiene el path absoluto
             session_start();
     
-            $user_check=$_SESSION['login_user'];
+            $user_check=$_SESSION['usuario'];
             
             $ses_sql=mysqli_query($mysqli,"select username from usuarios where username='$user_check' ");      
             $row=mysqli_fetch_array($ses_sql);
@@ -50,10 +51,11 @@
     
             if(!isset($login_session))
             {
-                  header("Location: ../index.php"); 
+                  header("Location:/vannetti.biz/logout.html"); 
                
             }
         }
+
         
         public function leetodos($mysqli,$table,$filtro='1'){
           //***lee todos los datos de una tabla, un registro o todos los registros, de acuerdo con el argumento $filtro ***/
