@@ -1,0 +1,5 @@
+/* estilos para las pantalla de movil */
+/* para ocultar tablas */
+.tablaoculta{opacity:0;}
+.tablaocultav{opacity:1;}
+.ocult{display:none;}
