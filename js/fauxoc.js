@@ -62,34 +62,40 @@ function addprod(id,nombre,costo){
 	//seleccionar la clase adecuada
 		var clase;
 		var texto;
+		var elem;
 		switch(z) {
 	    case 0:
+	    	elem = "DIV"
 	        clase = "ocult"
 	        clase2 = " ocult"
 	        texto = id	
 	        break;
 	    case 1:
+	    	elem = "DIV"
 	    	clase = "ui-block-a"
 	    	clase2 = ""
 	    	texto = nombre
 	        break;
 	    case 2:
+	    	elem = "DIV"
 	    	clase = "ocult"
 	    	clase2 = " ocult"
 	    	texto = costo
 	        break;
 	    case 3:
+	    	elem = "INPUT"
 	    	clase = "ui-block-b"
 	    	clase2 = ""
-	    	texto = z
+	    	texto = ""
 	        break;
 	    default:
+	    	elem = "DIV"
 	    	clase = "ui-block-c"
 	    	clase2 = ""
 	    	texto = z*2
 	}
 		var nombre1 = document.createElement("DIV");
-		var nombre2 = document.createElement("DIV");
+		var nombre2 = document.createElement(elem);
 		nombre1.className = clase;
 		nombre2.className = "ui-bar ui-bar-a"+ clase2;
 		var node = document.createTextNode(texto);

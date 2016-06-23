@@ -8,23 +8,23 @@
     $funcbase = new dbutils;
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
-/*** obtiene proveedor si lo hay ***/
-if(isset($_POST['pr'])){$cad = "idproveedores=".$_POST['pr']; }else{$cad = "1"; }
+	$nivel;
+/*** obtiene lista de productos del nivel establecido si lo hay ***/
+if(isset($_POST['niv'])){$precio="precio".$_POST['niv']; }else{$precio = "costo"; }
 
-/**trae id y nom corto de productos no cancelados**/
+/**trae descripcion  y precio de productos no cancelados del nivel requerido**/
     if (is_object($mysqli)) {
-    	$sqlCommand = "SELECT idproductos,nom_corto,costo FROM productos WHERE ".$cad." ORDER BY nom_corto";		
+    	$sqlCommand = "SELECT descripcion,$precio,grupo FROM productos WHERE 1 ORDER BY GRUPO,descripcion";		
 	 // Execute the query here now
 			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE SELEC PROD. ".mysqli_error($mysqli));
 //inicializacion de arreglo
 			 while($tempo=mysqli_fetch_array($query1, MYSQLI_ASSOC)){
-			 	$result[] = array('id' => $tempo['idproductos'],'nombre' => $tempo['nom_corto'],'costo'=>$tempo['costo']);
+			 	$result[] = array('grupo' => $tempo['grupo'],'desc' => $tempo['descripcion'],'precio' => $tempo[$precio],'costo'=>$tempo['costo']);
 			 };
-
 			sort($result);
 	/* liberar la serie de resultados */
 			  mysqli_free_result($query1);			  
-	/* cerrar la conexi�n */
+	/* cerrar la conexion */
 	  mysqli_close($mysqli);
 	  
 	 echo json_encode($result);

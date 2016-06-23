@@ -74,6 +74,27 @@
             }
         }
 		
+		public function leelprod($mysqli){
+          //***lee todos los datos de una tabla, un registro o todos los registros, de acuerdo con el argumento $filtro ***/
+            $sqlCommand = "SELECT codigo,descripcion,precio3 FROM productos WHERE 1 ORDER BY descripcion";		
+	 // Execute the query here now
+			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE SELEC PROD. ".mysqli_error($mysqli));
+//inicializacion de arreglo
+				while($tempo=mysqli_fetch_array($query1)){
+			 		$result[] = array('cod' => $tempo['codigo'],'desc' => $tempo['descripcion'],'precio' => $tempo['precio3']);
+			 };
+            /* liberar la serie de resultados */
+                  mysqli_free_result($query1);
+                  /* cerrar la conexion */
+                  mysqli_close($mysqli);
+            if($result){
+              return $result;  
+            }
+            else {
+                 die('no hay resultados para ');
+            }
+        }
+		
 		public function leeuno($mysqli,$table,$filtro){
           //***lee un registro de una tabla, un registro o todos los registros, de acuerdo con el argumento $filtro ***/
             $sql= "SELECT * FROM $table WHERE ".$filtro;
