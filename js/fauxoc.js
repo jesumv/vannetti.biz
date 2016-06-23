@@ -11,8 +11,14 @@
 		//se muestra tabla
 		hazvisib(true);
 		haztabla();
-	  }); 
+		hazescu();
+	  });
 })();
+
+function hazescu(){
+	var vari =document.getElementsByClassName('cant')
+	alert(vari);
+}
 
 function llenaop(){
 	  //esta funcion añade opciones a la lista de proveedores
@@ -51,57 +57,97 @@ function haztabla(){
  				var id = obj1[z].id;
  				var nombre = obj1[z].nombre;
  				var costo = obj1[z].costo;
+ 				var reng = z;
  //adicion de celdas a la tabla de productos
- 				addprod(id,nombre,costo);
+ 				addprod(id,nombre,costo,reng);
  		};
+ 			
  		});
 }
 
-function addprod(id,nombre,costo){
+function addprod(id,nombre,costo,reng){
 	for( var z=0; z<5; z++) {
 	//seleccionar la clase adecuada
 		var clase;
 		var texto;
 		var elem;
+		var idt;
 		switch(z) {
 	    case 0:
 	    	elem = "DIV"
+	    	idt = "id"+reng;
 	        clase = "ocult"
-	        clase2 = " ocult"
 	        texto = id	
 	        break;
 	    case 1:
 	    	elem = "DIV"
+	    	idt = "nom" + reng;
 	    	clase = "ui-block-a"
 	    	clase2 = ""
 	    	texto = nombre
 	        break;
 	    case 2:
 	    	elem = "DIV"
+	    	idt = "costo" + reng;
 	    	clase = "ocult"
-	    	clase2 = " ocult"
 	    	texto = costo
 	        break;
 	    case 3:
 	    	elem = "INPUT"
-	    	clase = "ui-block-b"
+	    	idt = "cant" + reng
+	    	clase = "ui-block-b cant"
 	    	clase2 = ""
 	    	texto = ""
 	        break;
 	    default:
 	    	elem = "DIV"
+	    	idt = "subt" + reng;
 	    	clase = "ui-block-c"
 	    	clase2 = ""
-	    	texto = z*2
+	    	texto = 0
 	}
-		var nombre1 = document.createElement("DIV");
-		var nombre2 = document.createElement(elem);
-		nombre1.className = clase;
-		nombre2.className = "ui-bar ui-bar-a"+ clase2;
-		var node = document.createTextNode(texto);
-		nombre1.appendChild(nombre2);
-		nombre2.appendChild(node);
-		var origen = document.getElementById("octabla");
-		origen.appendChild(nombre1);
+//definicion de elementos de acuerdo con la celda
+		switch(z){
+			case 0:
+			case 2:
+				var nombre1 = document.createElement("DIV");
+				nombre1.className = clase;
+				nombre1.id = idt;
+				nombre1.name = idt;
+				var node = document.createTextNode(texto);
+				nombre1.appendChild(node);
+				var origen = document.getElementById("octabla");
+				origen.appendChild(nombre1);
+				break;
+			case 3:
+				var nombre1 = document.createElement("DIV");
+				var nombre2 = document.createElement(elem);
+				nombre1.className = clase;
+				nombre1.name = idt;
+				nombre1.id = idt;
+				nombre2.className = clase2;
+				nombre2.type = "text";
+				nombre2.size= "3";
+				nombre2.maxlength="3";
+				var node = document.createTextNode(texto);
+				nombre1.appendChild(nombre2);
+				nombre2.appendChild(node);
+				var origen = document.getElementById("octabla");
+				origen.appendChild(nombre1);
+				break;
+			default:
+				var nombre1 = document.createElement("DIV");
+				var nombre2 = document.createElement(elem);
+				nombre1.className = clase;
+				nombre2.className = clase2;
+				nombre2.name = idt;
+				nombre2.id = idt;
+				var node = document.createTextNode(texto);
+				nombre1.appendChild(nombre2);
+				nombre2.appendChild(node);
+				var origen = document.getElementById("octabla");
+				origen.appendChild(nombre1);	
+		}
+		
 	};
 };

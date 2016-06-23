@@ -19,6 +19,8 @@
 	<script>
 	$(document).ready(function() {
   		$.getScript( "js/fauxoc.js");
+  //enfoque en primer campo
+  		$('#cant0').focus(); 
         });
 	</script>
 </head>
@@ -35,13 +37,13 @@
 			<select name="ocprov" id="ocprov">
 			    <option value="0">Seleccione al proveedor</option>
 			</select>			
-			<div class="ui-grid-b tablaoculta" id="octabla">
+			<fieldset class="ui-grid-b tablaoculta" id="octabla">
 				<div class="ocult">id</div>
 			    <div class="ui-block-a"><div class="ui-bar ui-bar-b">Producto</div></div>
-			    <div><div class="ocult">Costo</div></div>
+			 <div class="ocult">Costo</div>
 			    <div class="ui-block-b"><div class="ui-bar ui-bar-b">Cantidad</div></div>
 			    <div class="ui-block-c"><div class="ui-bar ui-bar-b">Subtotal</div></div>
-			</div>
+			</fieldset>
 		</form>
     </div>
   </div>

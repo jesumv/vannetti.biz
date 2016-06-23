@@ -20,8 +20,6 @@ if(isset($_POST['pr'])){$cad = "idproveedores=".$_POST['pr']; }else{$cad = "1"; 
 			 while($tempo=mysqli_fetch_array($query1, MYSQLI_ASSOC)){
 			 	$result[] = array('id' => $tempo['idproductos'],'nombre' => $tempo['nom_corto'],'costo'=>$tempo['costo']);
 			 };
-
-			sort($result);
 	/* liberar la serie de resultados */
 			  mysqli_free_result($query1);			  
 	/* cerrar la conexi�n */
