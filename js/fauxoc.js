@@ -101,14 +101,13 @@ function sumaprecio(){
 function sumacant(){
 	var cantt= 0;
 	var arre = document.getElementsByTagName("INPUT");
-	var longit = arre.length;
+	var longit = (arre.length-2);
 	for(var z=0; z<longit; z++){
-		var cantact = arre[z].value
+		var cantact = arre[z].value;
 		var cantf = validacant(cantact);
-		cantt = cantt+cantf;
+		cantt = cantt + cantf;
 	}
 	return cantt;
-
 }
 
 function ponsubt(){

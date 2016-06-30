@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 	<meta charset="utf-8">
 	
@@ -31,8 +31,8 @@
       <h1>Orden de Compra</h1>
     </div>
     <div class="ui-content">
-		<form action="php/enviaoc.php" method="post" target="_blank" accept-charset="UTF-8"
-		enctype="application/x-www-form-urlencoded" >
+		<form action="php/enviaoc.php" method="post" target="blank" accept-charset="UTF-8"
+		enctype="application/x-www-form-urlencoded" name="ocforma" id="ocforma">
 				<label for="ocprov" class="select">Proveedor</label>
 			<select name="ocprov" id="ocprov">
 			    <option value="0">Seleccione al proveedor</option>
@@ -43,9 +43,21 @@
 			 <div class="ocult">Costo</div>
 			    <div class="ui-block-b"><div class="ui-bar ui-bar-b">Cantidad</div></div>
 			    <div class="ui-block-c"><div class="ui-bar ui-bar-b">Subtotal</div></div>
-			</fieldset>
+			</fieldset>	
+		    <input data-theme="b" data-icon="delete" data-iconshadow="true" value="Enviar" type="button" 
+		    name="envia"id="envia">
+		    <div class="ui-input-btn ui-btn ui-btn-b ui-icon-delete ui-btn-icon-left ui-shadow-icon" 
+		    name="cancela"id="cancela">
+		        Cancelar
+		        <input data-enhanced="true" value="Enhanced" type="button">
+		    </div>
+
 		</form>
     </div>
+    
+<div data-role="popup" id="popupBasic">
+	<p>This is a completely basic popup, no options set.</p>
+</div>
   </div>
 </body>
 </html>
