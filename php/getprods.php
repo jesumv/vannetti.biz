@@ -9,7 +9,7 @@
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
 /*** obtiene proveedor si lo hay ***/
-if(isset($_POST['pr'])){$cad = "idproveedores=".$_POST['pr']; }else{$cad = "1"; }
+if(isset($_GET['idprov'])){$cad = "idproveedores=".$_GET['idprov']; }else{$cad = "1"; }
 
 /**trae id y nom corto de productos no cancelados**/
     if (is_object($mysqli)) {

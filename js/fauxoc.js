@@ -3,6 +3,7 @@
  * este script tiene las funciones auxiliares de la hoja oc.html
  */
 (function() {
+//se inicializa la variable que indica si se ha elegido proveedor.
 //llena la lista de proveedores
 	llenaop();	
 //escucha de seleccion de proveedor
@@ -10,27 +11,11 @@
 		//se muestra tabla
 		hazvisib(true);
 		haztabla();
+		//desenchufar select
+		$('#ocprov').selectmenu( "disable" );
 	  });
 
 })();
-
-function limpia(){
-	//esta funcion limpia los campos de la  forma oc
-	var elements = document.getElementsByTagName("input");
-	for (var ii=0; ii < elements.length; ii++) {
-	  if (elements[ii].type == "text") {
-	    elements[ii].value = "";
-	  }
-	}
-	var arre = document.getElementsByClassName("prec") 
-	var longit = arre.length;
-	for(var z=0; z<longit; z++){
-		arre[z].innerText="0.00";
-	}
-	document.getElementById("tcant").innerHTML= "0";
-	document.getElementById("tprec").innerHTML= "0.";
-
-}
 
 function aviso(texto){
 	//esta funcion enciende el aviso de la pagina con el aviso
@@ -39,7 +24,7 @@ function aviso(texto){
 	$("#aviso").popup("open");
 }
 function validaelem(elem,valor){
-	//esta funcion valida el elemento que se pasa como argumentom regresando 0 si el elemento
+	//esta funcion valida el elemento que se pasa como argumento regresando 0 si el elemento
 	//coincide o es nulo
 	if(document.getElementById(elem)=== null){resul = 0}else{
 		var texto = document.getElementById(elem).innerHTML;
@@ -142,51 +127,81 @@ function sumacant(){
 	return cantt;
 }
 
+function checaval(valor){
+	//esta funcion checa si el valor introducido es numerico o no esta en blanco
+	if (isNaN(valor)&&valor!=''){
+		return false;
+	}else{
+		if(valor <0){
+		return false;	
+		}else{return true}
+	}
+}
 function ponsubt(){
-	//se toma el precio oculto, se multiplica x cantidad y se 
-	//agrega el resultado a la tabla
-	var longi = this.name.length;
-	var cad = this.name;
-	var pos = cad.indexOf("t");
-	var rengl = cad.slice(pos+1);
-	var precio = document.getElementById("costo"+ rengl).innerHTML;
-	var valor = document.getElementById("cant"+ rengl).value;
-	var preciot = precio*valor;
-	document.getElementById("subt"+ rengl).innerHTML = $.number(preciot,2);
-	// se modifican los totales
-	var sumacants = sumacant();
-	document.getElementById("tcant").innerHTML = sumacants;
-	var sumaprecs = sumaprecio();
-	var sumapreciost= $.number(sumaprecs,2);
-	document.getElementById("tprec").innerHTML = sumapreciost;
+	//se valida si la entrada es numerica
+	 var checa = checaval(this.value);
+	 var cad = this.name
+	 if(checa == true) {
+			//se toma el precio oculto, se multiplica x cantidad y se 
+			//agrega el resultado a la tabla
+			var longi = this.name.length;
+			var pos = cad.indexOf("t");
+			var rengl = cad.slice(pos+1);
+			var precio = document.getElementById("costo"+ rengl).innerHTML;
+			var valor = document.getElementById("cant"+ rengl).value;
+			var preciot = precio*valor;
+			document.getElementById("subt"+ rengl).innerHTML = $.number(preciot,2);
+			// se modifican los totales
+			var sumacants = sumacant();
+			document.getElementById("tcant").innerHTML = sumacants;
+			var sumaprecs = sumaprecio();
+			var sumapreciost= $.number(sumaprecs,2);
+			document.getElementById("tprec").innerHTML = sumapreciost; 
+	 }else{
+		 aviso("debe introducir una cantidad positiva");
+		$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
+				var enfoc = document.getElementById(cad);
+				enfoc.value = "";
+				enfoc.focus();
+			} );
+	 }
+
 };
 
 function haztabla(){
 // Esta funcion construye la tabla de productos a elegir
 	//obtener datos de los productos
-		$.get('php/getprods.php',function(data){
- 			var obj1 = JSON.parse(data);
-	 			for( var z=0; z <obj1.length; z++) {
-	 //extraccion de datos del array
-	 				var id = obj1[z].id;
-	 				var nombre = obj1[z].nombre;
-	 				var costo = obj1[z].costo;
-	 				var reng = z;
-	 //adicion de renglones de producto
-	 				addprod(id,nombre,costo,reng);
-	 //adicion de escuchas en cajas input
-	 				document.getElementById('cant'+z).addEventListener('input',ponsubt,false);
-	 		};
-//adicion de fila de totales
-			addtot();
-//adicion de botones de accion	
-//enfoque en el primer campo
-			$('#cant0').focus();
- 		});
+	var prov= document.getElementById('ocprov').value;
+	var select = document.getElementById('ocprov');
+    var selected = select.options[select.selectedIndex];
+    var key = selected.value;
+    	if(key!=0){
+    		//solo si se elige proveedor se envia por los datos
+    		//examina el proveedor elegido
+    		$.get('php/getprods.php',{
+    			idprov: key
+    		},function(data){
+     			var obj1 = JSON.parse(data);
+    	 			for( var z=0; z <obj1.length; z++) {
+    	 //extraccion de datos del array
+    	 				var id = obj1[z].id;
+    	 				var nombre = obj1[z].nombre;
+    	 				var costo = obj1[z].costo;
+    	 				var reng = z;
+    	 //adicion de renglones de producto
+    	 				addprod(id,nombre,costo,reng);
+    	 //adicion de escuchas en cajas input
+    	 				document.getElementById('cant'+z).addEventListener('input',ponsubt,false);
+    	 		};
+    //adicion de fila de totales
+    			addtot();
+    //adicion de botones de accion	
+    //enfoque en el primer campo
+    			$('#cant0').focus();
+     		});
+    	}
 
 }
-
-
 
 function addprod(id,nombre,costo,reng){
 	//adicion de celda inicial de id de renglon

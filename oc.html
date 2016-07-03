@@ -19,16 +19,14 @@
 
 	<script>
 			$(document).ready(function() {
-		//declaracion de variables globales
-			
-		//traer funciones auxiliares
+					//traer funciones auxiliares
 		  		$.getScript( "js/fauxoc.js");
 		//eventos para los botones de accion
 			$("#envia").click(function(){
 				var resul1 = validaelem("tcant","0");
 		//si no hay datos que enviar
 				if(resul1==0){
-					aviso("No ha solicitado ningÃºn artÃ­culo");
+					aviso("No ha solicitado ningun articulo");
 					$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
 							if($("#cant0")){$("#cant0").focus();}
 						} );
@@ -68,8 +66,10 @@
     							var total = data.total;
     							var cad = "ORDEN DE COMPRA OK <br>Numero: "+ noc + "<br>"+"Arts: "+arts+"<br>"+"total: "+total;
 								aviso(cad);
-								limpia();
-								$("#cant0").focus();
+								$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
+									location.reload();
+									$('#ocprov').selectmenu( "enable" );
+								} );
     						})
     						.fail(function( data ) {
     							var err1 = data.success;
@@ -80,8 +80,8 @@
 		   });
 		   
 		   $("#cancela").click(function(){
-				limpia();
-				$("#cant0").focus();
+		   		location.reload();
+		   		$('#ocprov').selectmenu( "enable" );
 		   });
 		   
 		 });
@@ -120,6 +120,7 @@
 <div data-role="popup" id="aviso">
 	<p>Sin texto, todavÃƒÂ­a.</p>
 </div>
+
   </div>
 </body>
 </html>
