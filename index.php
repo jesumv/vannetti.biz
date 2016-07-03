@@ -39,9 +39,7 @@
   
 
   <main class="main">
-    <!-- Insert forecast-card.html here -->
   <h2>  VANNETTI CONSULENTI</h2>
-  
   </main>
 
   <div class="dialog-container">

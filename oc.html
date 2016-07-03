@@ -18,10 +18,73 @@
 	<script src="js/jquery.number.js"></script>
 
 	<script>
-	$(document).ready(function() {
-  		$.getScript( "js/fauxoc.js");
-   });
- 
+			$(document).ready(function() {
+		//declaracion de variables globales
+			
+		//traer funciones auxiliares
+		  		$.getScript( "js/fauxoc.js");
+		//eventos para los botones de accion
+			$("#envia").click(function(){
+				var resul1 = validaelem("tcant","0");
+		//si no hay datos que enviar
+				if(resul1==0){
+					aviso("No ha solicitado ningÃºn artÃ­culo");
+					$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
+							if($("#cant0")){$("#cant0").focus();}
+						} );
+					}else{
+						//recoleccion de variables
+						var prov = $("#ocprov").val();
+						var total =$("#tprec").text();
+						var longi = $(".cant").length;
+						var prods=[];
+						var cant=[];
+						var preciou=[];
+						var preciot=[];
+						var longcants = 0;
+						for(var z=0; z <longi; z++){
+							if($("#cant".concat(z)).val()!==""){
+								prods[longcants] = $("#id".concat(z)).text();
+								cant[longcants] = $("#cant".concat(z)).val();
+								preciou[longcants]= $("#costo".concat(z)).text();
+								preciot[longcants]= $("#subt".concat(z)).text();
+								longcants++;
+							}
+						}
+						longcants--;
+						//si todo ok, se envian los datos
+						$.post( "php/enviaoc.php",
+						{	prov:prov,
+							longi:longcants,
+							prods:prods,
+							cants:cant,
+							preciou:preciou,
+							preciot:preciot,
+							total:total
+						 }, null, "json" )
+    						.done(function( data) {
+    							var noc= data.noc;
+    							var arts =data.arts;
+    							var total = data.total;
+    							var cad = "ORDEN DE COMPRA OK <br>Numero: "+ noc + "<br>"+"Arts: "+arts+"<br>"+"total: "+total;
+								aviso(cad);
+								limpia();
+								$("#cant0").focus();
+    						})
+    						.fail(function( data ) {
+    							var err1 = data.success;
+    							aviso("error alta de oc: "+err1);
+							});	
+					}
+		  		
+		   });
+		   
+		   $("#cancela").click(function(){
+				limpia();
+				$("#cant0").focus();
+		   });
+		   
+		 });
 	</script>
 </head>
 
@@ -31,7 +94,7 @@
       <h1>Orden de Compra</h1>
     </div>
     <div class="ui-content">
-		<form action="php/enviaoc.php" method="post" target="blank" accept-charset="UTF-8"
+		<form  method="post"
 		enctype="application/x-www-form-urlencoded" name="ocforma" id="ocforma">
 				<label for="ocprov" class="select">Proveedor</label>
 			<select name="ocprov" id="ocprov">
@@ -49,14 +112,13 @@
 		    <div class="ui-input-btn ui-btn ui-btn-b ui-icon-delete ui-btn-icon-left ui-shadow-icon" 
 		    name="cancela"id="cancela">
 		        Cancelar
-		        <input data-enhanced="true" value="Enhanced" type="button">
+		    <input data-enhanced="true" value="Enhanced" type="button">
 		    </div>
-
 		</form>
     </div>
     
-<div data-role="popup" id="popupBasic">
-	<p>This is a completely basic popup, no options set.</p>
+<div data-role="popup" id="aviso">
+	<p>Sin texto, todavÃƒÂ­a.</p>
 </div>
   </div>
 </body>

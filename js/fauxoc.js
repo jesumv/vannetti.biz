@@ -3,7 +3,7 @@
  * este script tiene las funciones auxiliares de la hoja oc.html
  */
 (function() {
-//asignacion de variables
+//llena la lista de proveedores
 	llenaop();	
 //escucha de seleccion de proveedor
 	document.getElementById('ocprov').addEventListener('change', function() {
@@ -14,10 +14,42 @@
 
 })();
 
+function limpia(){
+	//esta funcion limpia los campos de la  forma oc
+	var elements = document.getElementsByTagName("input");
+	for (var ii=0; ii < elements.length; ii++) {
+	  if (elements[ii].type == "text") {
+	    elements[ii].value = "";
+	  }
+	}
+	var arre = document.getElementsByClassName("prec") 
+	var longit = arre.length;
+	for(var z=0; z<longit; z++){
+		arre[z].innerText="0.00";
+	}
+	document.getElementById("tcant").innerHTML= "0";
+	document.getElementById("tprec").innerHTML= "0.";
 
+}
+
+function aviso(texto){
+	//esta funcion enciende el aviso de la pagina con el aviso
+	//pasado como parametro.
+	$("#aviso").html(texto);
+	$("#aviso").popup("open");
+}
+function validaelem(elem,valor){
+	//esta funcion valida el elemento que se pasa como argumentom regresando 0 si el elemento
+	//coincide o es nulo
+	if(document.getElementById(elem)=== null){resul = 0}else{
+		var texto = document.getElementById(elem).innerHTML;
+		if(texto==valor){var resul = 0}else{resul = -1}
+	}
+	return resul
+}
 
 function llenaop(){
-	  //esta funcion aÃ±ade opciones a la lista de proveedores
+	  //esta funcion añade opciones a la lista de proveedores
 		$.get('php/getprovs.php',function(data){
 		var obj1 = JSON.parse(data);
 		for( var z=0; z <obj1.length; z++) {
@@ -149,7 +181,7 @@ function haztabla(){
 			addtot();
 //adicion de botones de accion	
 //enfoque en el primer campo
-			$('cant0').focus();
+			$('#cant0').focus();
  		});
 
 }
