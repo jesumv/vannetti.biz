@@ -21,9 +21,11 @@
 			$(document).ready(function() {
 					//traer funciones auxiliares
 		  		$.getScript( "js/fauxoc.js");
+		  		
 		//eventos para los botones de accion
 			$("#envia").click(function(){
 				var resul1 = validaelem("tcant","0");
+				
 		//si no hay datos que enviar
 				if(resul1==0){
 					aviso("No ha solicitado ningun articulo");
@@ -84,26 +86,41 @@
 		   		$('#ocprov').selectmenu( "enable" );
 		   });
 		   
+		   $("#home").click(function(){
+		   		window.location.href = "portalmov.html";
+		   });
+		   
+		   $("#cerrar").click(function(){
+		   		window.location.href = "portalmov.html";
+		   });
+		   
+		   function inicio(){
+		  			window.location.href = "portalmov.html";
+		  		}
 		 });
 	</script>
 </head>
 
 <body>
   <div data-role="page"> 
-    <div data-role="header">
-      <h1>Orden de Compra</h1>
+    <div data-role="header" class = "ui-grid-b">
+    	<div class="ui-block-a"><input id="home" formaction ="portalmov.html"type="button" 
+    		value="Inicio" data-icon="home" data-iconpos="notext" data-inline="true"></div>
+    	<div class="ui-block-b"><h1>Orden de Compra</h1></div>
+      	<div class="ui-block-c"><input id ="cerrar" type="button" value="Cerrar" data-icon="delete" 
+      		data-iconpos="notext"></div>
     </div>
     <div class="ui-content">
 		<form  method="post"
 		enctype="application/x-www-form-urlencoded" name="ocforma" id="ocforma">
-				<label for="ocprov" class="select">Proveedor</label>
+			<label for="ocprov" class="select">Proveedor</label>
 			<select name="ocprov" id="ocprov">
 			    <option value="0">Seleccione al proveedor</option>
 			</select>			
 			<fieldset class="ui-grid-b tablaoculta" id="octabla">
 				<div class="ocult">id</div>
 			    <div class="ui-block-a"><div class="ui-bar ui-bar-b">Producto</div></div>
-			 <div class="ocult">Costo</div>
+			 	<div class="ocult">Costo</div>
 			    <div class="ui-block-b"><div class="ui-bar ui-bar-b">Cantidad</div></div>
 			    <div class="ui-block-c"><div class="ui-bar ui-bar-b">Subtotal</div></div>
 			</fieldset>	
@@ -120,7 +137,6 @@
 <div data-role="popup" id="aviso">
 	<p>Sin texto, todavÃƒÂ­a.</p>
 </div>
-
   </div>
 </body>
 </html>
