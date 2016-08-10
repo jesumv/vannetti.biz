@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+	
+	  <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame 
+	       Remove this if you use the .htaccess -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>Vannetti Cucina</title>
+	<meta name="author" content="jmv">
+	<meta name="viewport" content="width=device-width; initial-scale=1.0">
+	<link rel="shortcut icon" href="img/logomin.gif" />  
+	<link rel="apple-touch-icon" href="img/logomin.gif">
+	<link rel="stylesheet" href= "css/jquery.mobile-1.4.5.min.css" />
+	<link rel="stylesheet" href= "css/movil.css" />
+	<script src="js/jquery.js"></script>
+	<script src="js/jquery.mobile-1.4.5.min.js"></script>
+	<script src="js/jquery.number.js"></script>
+
+	<script>
+	function llenactes(){
+			  //esta funcion añade opciones a la lista de clientes
+		$.get('php/getctes.php',function(data){
+		var obj1 = JSON.parse(data);
+		for( var z=0; z <obj1.length; z++) {
+//extraccion de datos del array
+			var id = obj1[z].id;
+			var nombre = obj1[z].nombre;		
+//adicion de opciones select
+		  	var men = document.getElementById('pcte');
+			var option = document.createElement("option");
+			option.text = nombre;
+			option.value = id;
+			men.add(option);
+			};
+		});	
+	}
+	
+	function aviso(texto){
+			//esta funcion enciende el aviso de la pagina con el aviso
+			//pasado como parametro.
+			$("#aviso").html(texto);
+			$("#aviso").popup("open");
+		}
+		
+	function hazvisib(visible){
+	var tabla = document.getElementById('ocultable');
+		    if (visible) {
+		      tabla.classList.add('tablaocultav');
+		    } else {
+		      tabla.classList.remove('tablaocultav');
+		    }
+};
+	function addrengart(categ,nombre,precio,linea){
+		//esta funcion agrega los renglones de articulos para una categoría.
+		var ancla = document.getElementById("cat"+categ);
+	//columna 1
+		var rengpa = document.createElement("DIV");
+		rengpa.className = "ui-block-a";
+		var checkp = document.createElement("INPUT");
+		checkp.name = "chk"+linea;
+		checkp.id = "chk"+linea;
+		checkp.size="3";
+		rengpa.appendChild(checkp);
+		ancla.appendChild(rengpa);
+	//columna2	
+		var rengpb = document.createElement("DIV");
+		rengpb.className = "ui-block-b";
+		var textopb = document.createTextNode(nombre);
+		rengpb.appendChild(textopb);
+		ancla.appendChild(rengpb);
+	//columna3	
+		var rengpc = document.createElement("DIV");
+		rengpc.className = "ui-block-c";
+		var textopc = document.createTextNode(precio);
+		rengpc.appendChild(textopc);
+		ancla.appendChild(rengpc);
+	}
+	
+	function addarts(){
+		//esta funcion añade todos los artículos por categoría
+		$.get('php/getlprodped.php',{idcte:1},function(data){
+				var objarts = JSON.parse(data);
+				var cantarts = objarts.length;
+				for (var i=0;i<cantarts;i++){
+					//obtener los valores
+					var idprod = objarts[i].idprod;
+					var grupo = objarts[i].gpo;
+					var nombre = objarts[i].nombre;
+					var precio =  objarts[i].precio;
+					addrengart(grupo,nombre,precio,i);
+				}			
+			});
+	}
+	function agregacab(linea){
+//esta funcion agrega los titulos del grid
+		var envolt = document.createElement("DIV");
+		envolt.className = "ui-grid-b";
+		envolt.id = "cat"+linea;
+		for(var i=0;i<3; i++){
+			var ancla = document.getElementById("gr"+linea);
+			var atr;
+			var texto;
+			switch(i){
+				case 0:
+					atr="ui-block-a ";
+					texto="cantidad";
+				break;
+				case 1:
+					atr="ui-block-b";
+					texto="Producto";
+				break;
+				case 2:
+					atr="ui-block-c";
+					texto="monto";
+				break;
+			} 
+			var reng =document.createElement("DIV");
+			reng.className= atr;
+			var texto2= document.createTextNode(texto);
+			var sreng = document.createElement("DIV");
+			sreng.className = "ui-bar ui-bar-b";
+			sreng.appendChild(texto2);
+			reng.appendChild(sreng);
+			envolt.appendChild(reng);
+			ancla.appendChild(envolt);			
+		}	
+	};
+	function llenacats(){
+//esta funcion agrega las categorías de productos
+		$.get('php/getcats.php',function(data){
+			var obj1 = JSON.parse(data);
+//cabezales de categorias
+			var origen = document.getElementById("ptabla");
+			for( var z=0; z <obj1.length; z++) {
+				//extraccion de datos del array
+				var id = obj1[z].id;
+				var nombre = obj1[z].nombre;
+				var barra  = document.createElement("DIV");
+				barra.name="gr"+id;
+				barra.id = "gr"+id;
+				var atrib= document.createAttribute("data-role");
+				atrib.value = "collapsible";
+				barra.setAttributeNode(atrib);
+				var tema = document.createAttribute("data-theme");
+				tema.value="a";
+				var temaint	= document.createAttribute("data-content-theme");
+				temaint.value ="a";
+				barra.setAttributeNode(tema);
+				barra.setAttributeNode(temaint);
+				var subtit  = document.createElement("H2");
+				var texto = document.createTextNode(nombre);
+				subtit.appendChild(texto);
+				barra.appendChild(subtit);
+				origen.appendChild(barra);
+//encabezados del grid
+				agregacab(id);
+			};
+//lista de articulos
+				addarts();
+				$("#ptabla").enhanceWithin();
+		});
+	}
+	
+	//eventos para los botones de accion
+			$("#penvia").click(function(){
+				var resul1 = validaelem("tcant","0");		
+		   });
+		   
+		   $("#pcancela").click(function(){
+		   		location.reload();
+		   		$('#pcte').selectmenu( "enable" );
+		   });
+		
+	$( document ).on( "pageinit", "#pedpag", function( event ) {
+		//lenar el combo de clientes
+  			llenactes();
+  		//checar si se eligió cliente	
+    	//agregar las categorías de productos
+    		document.getElementById('pcte').addEventListener('change', function() {
+		//se muestra tabla
+		llenacats();
+		
+		hazvisib(true);
+		//agregar estilo mobile
+	$("#pedpag").enhanceWithin();
+		//desenchufar select
+		$('#pcte').selectmenu( "disable" );
+	  });			
+  			
+
+		});
+		
+	</script>
+</head>
+
+<body>
+  <div data-role="page" id="pedpag"> 
+	<div data-role="header">
+    	<a href="portalmov.html" data-ajax="false" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-home">Inicio</a>
+		<h1>Toma de Pedido</h1>
+    	<a href="portalmov.html" data-ajax="false" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-delete">Cerrar</a>
+	</div>
+    <div class="ui-content">
+		<form  method="post"
+		enctype="application/x-www-form-urlencoded" name="pforma" id="pforma">
+			<div>
+				<label for="ocprov" class="select">Cliente</label>
+				<select name="pcte" id="pcte">
+			    	<option value="0">Seleccione al Cliente</option>
+				</select>
+			</div>
+			<div id="ocultable" class="tablaoculta">
+				<fieldset id="tventa" name="tventa" data-role="controlgroup" data-type="horizontal">
+		    		<legend>Tipo de Venta</legend>
+		    		<label>
+		    			<input type="radio" id="rcontado" name="rtventa" value= "0" checked="checked"/>Contado
+		    		</label>
+		    		<label>
+		    			<input type="radio" id="rcontado" name="rtventa" value= "1" />Crédito
+		    		</label>
+    			</fieldset>	
+	    		<label>
+	    			<input type="checkbox" data-role="flipswitch" id="fact?" name="fact?"/>Facturar?
+	    		</label>	
+				<div id="ptabla">
+			    </div>
+			     	<input data-theme="b" data-icon="check" data-iconshadow="true" value="Enviar" type="button" 
+				    name="penvia"id="penvia">
+				    <div class="ui-input-btn ui-btn ui-btn-b ui-icon-delete ui-btn-icon-left ui-shadow-icon" 
+				    name="pcancela"id="pcancela">
+				        Cancelar
+				    	<input data-enhanced="true" value="Enhanced" type="button">
+			    	</div>
+
+			</div>
+		</form>
+
+    
+		<div data-role="popup" id="aviso">
+		<p>Sin texto, todavía.</p>
+		</div>
+  	</div>
+  </div>
+</body>
+</html>

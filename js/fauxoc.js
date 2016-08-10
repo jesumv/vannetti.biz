@@ -3,7 +3,6 @@
  * este script tiene las funciones auxiliares de la hoja oc.html
  */
 (function() {
-//se inicializa la variable que indica si se ha elegido proveedor.
 //llena la lista de proveedores
 	llenaop();	
 //escucha de seleccion de proveedor
@@ -34,7 +33,7 @@ function validaelem(elem,valor){
 }
 
 function llenaop(){
-	  //esta funcion añade opciones a la lista de proveedores
+	  //esta funcion aï¿½ade opciones a la lista de proveedores
 		$.get('php/getprovs.php',function(data){
 		var obj1 = JSON.parse(data);
 		for( var z=0; z <obj1.length; z++) {
@@ -61,7 +60,7 @@ function hazvisib(visible){
 };
 
 function addtot(){
-	//se añade la fila de totales
+	//se aï¿½ade la fila de totales
 	for( var z=0; z<3; z++) {
 		//seleccionar la clase adecuada
 			var claset;
@@ -171,7 +170,6 @@ function ponsubt(){
 function haztabla(){
 // Esta funcion construye la tabla de productos a elegir
 	//obtener datos de los productos
-	var prov= document.getElementById('ocprov').value;
 	var select = document.getElementById('ocprov');
     var selected = select.options[select.selectedIndex];
     var key = selected.value;

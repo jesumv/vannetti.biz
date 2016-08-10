@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+<script src="js/jquery.js"></script>
+<script src="js/jquery.mobile-1.4.5.min.js"></script>
+<script src="js/jquery.number.js"></script>
+<script>
+	
+	function addprotit(orden,reng){
+		$.get('php/getlistprodoc.php',{oc:orden},function(data){
+		var label1 = "prueba b";
+		var content = "<input type='checkbox' name='in"+ reng +"' id='in"+ reng +"'/>" +
+		"<label for ='in"+ reng +"'>"+ label1 + "'</label>";
+		$("1").append(content).collapsibleset("refresh");
+		
+	});
+	
+	$(document).ready(function() {
+			addprotit(20,1);
+		 });
+	
+};
+</script>
+</head>
+<body>
+<div data-role="page">
+	<div class="ui-content">
+		<form>	
+			<div data-role="collapsible-set" data-theme="a" data-content-theme="a">
+				<fieldset name= "1" id="1">
+				
+				</fieldset>
+			</div>
+		</form>
+		
+	</div>
+</div>
+</body>
+</html>

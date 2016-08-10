@@ -73,11 +73,11 @@ include_once "include/menu1.php";
         //inicializacion de contador de renglon
         $reng = 1;
         while($row2 = mysqli_fetch_row($result2)) {
-            $id = $row2[0];
-            $elid = -$row2[0];
+            $id = $row2[1];
+            $elid = -$row2[1];
             echo '<tr>';
-            echo '<td class= ed id='.$id.'><a href ="modifprov.php?nid='.$id.'"><img src="img/edita.jpg" ALT="editar"></a></td>';
-            echo '<td class = el id='.$elid.'><a href ="elimprov.php?nid='.$elid.'"><img src="img/elimina.jpg" ALT="eliminar"></a></td>';
+            echo '<td class= ed id='.$id.'><a href ="modifprod.php?nid='.$id.'"><img src="img/edita.jpg" ALT="editar"></a></td>';
+            echo '<td class = el id='.$elid.'><a href ="elimprod.php?nid='.$elid.'"><img src="img/elimina.jpg" ALT="eliminar"></a></td>';
             foreach($row2 as $key=>$value) {
                 echo '<td>',$value,'</td>';
             }
