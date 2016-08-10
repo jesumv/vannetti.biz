@@ -37,8 +37,11 @@ if (is_object($mysqli)) {
 	// Pie de página
 	function Footer()
 	{
-	    // Posición: a 1,5 cm del final
-	    $this->SetY(-15);
+	    // Posición: a x  cm del final
+	    $this->SetY(-40);
+		$this->SetFont('Arial','I',10);
+		$this->Cell(0,6,'ESTA LISTA ESTA SUJETA A CAMBIOS SIN PREVIO AVISO',0,1,'C');
+		$this->Cell(0,6,'Pedidos:777-313-1272; ventas@vannetti.biz',0,1,'C');
 	    // Arial italic 8
 	    $this->SetFont('Arial','I',8);
 	    // Número de página
