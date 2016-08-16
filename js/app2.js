@@ -17,7 +17,7 @@
 	  //esta funcion añade opciones a la lista de proveedores
 	   			$.get('php/getprovs.php',function(data){
 	 			var obj1 = JSON.parse(data);
-	 			for( var z=0; z <obj1.length; z++) {
+	 			for( var z=0 ; z< obj1.length; z++) {
 	 //extraccion de datos del array
 	 				var id = obj1[z].id;
 	 				var nombre = obj1[z].nombre;		
@@ -62,16 +62,93 @@
 	 		});
 	 			
 	   };
+function llenacas(obj1)	{
+	//extraccion de datos del array
+	var idprov = obj1[0].idprov;
+	var grupo = obj1[0].grupo;
+	var nombresel = obj1[0].nombre;
+	var ncortosel = obj1[0].nomcorto;
+	var codigosel = obj1[0].codigo;
+	var udsel = obj1[0].unidad;
+	var cantsel = obj1[0].cant;
+	var barrasel = obj1[0].cbarras;
+	var costosel = obj1[0].costo;
+	var descsel = obj1[0].desc;
+	var p1sel = obj1[0].pr1;
+	var p2sel = obj1[0].pr2;
+	var p3sel = obj1[0].pr3;
+	//lenado de datos
+	var provsel = document.getElementById('selectmenu');
+	provsel.value= idprov;
+	var gruposel = document.getElementById('selectmenu2');
+	gruposel.value= grupo;
+	var nombrecas =  document.getElementById('nombre');
+	nombrecas.value = nombresel;
+	var ncortocas =  document.getElementById('nomcor');
+	ncortocas.value = ncortosel;
+	var codigocas =  document.getElementById('cod');
+	codigocas.value = codigosel;
+	var udcas = document.getElementById('selectmenu3');
+	udcas.value= udsel;
+	var cantcas =  document.getElementById('cant');
+	cantcas.value = cantsel;
+	var barrascas =  document.getElementById('barr');
+	barrascas.value = barrasel;
+	var costocas =  document.getElementById('cost');
+	costocas.value = costosel;
+	var descas =  document.getElementById('desc');
+	descas.value = descsel;
+	var p1cas =  document.getElementById('p1');
+	p1cas.value = p1sel;
+	var p2cas =  document.getElementById('p2');
+	p2cas.value = p2sel;
+	var p3cas =  document.getElementById('p3');
+	p3cas.value = p3sel;
+} 
 
-  document.getElementById('altaprod').addEventListener('click', function() {
-    // Open/show the add new city dialog
-	llenaop();
-    app.toggleAddDialog(true);
-    
-  });
+function aparece(indice){
+	if(indice !== 0){
+		llenaop();
+					//recolectar los datos para el dialogo
+		$.get('php/getprod.php',{idprod:indice},function(data){
+				var obj1 = JSON.parse(data);
+				llenacas(obj1);
+			    app.toggleAddDialog(true);
+				});
+			};
 
+
+}; 
+  document.getElementById('altaprod').addEventListener('click', function(){aparece(0)},false);
+  //añadir funciones a elementos editar
+  	var editables = document.getElementsByClassName('ed');
+  		for (var i = 0; i < editables.length; i++) {
+  			editables[i].addEventListener('click', function(){aparece(this.id)}, false);
+  		}
+
+ function quita(){
+	 //quitar proveedores
+	 var provs = document.getElementById('selectmenu');
+	 var no = provs.length;
+	 for(var i=1; i<no; i++) {
+		 provs.remove(1);
+	 }
+	 //quitar grupos
+	 var grupos = document.getElementById('selectmenu2');
+	 var no2 = grupos.length;
+	 for(var i=1; i<no2; i++) {
+		 grupos.remove(1);
+	 }
+	//quitar unidades
+	 var uds = document.getElementById('selectmenu3');
+	 var no3 = uds.length;
+	 for(var i=1; i<no3; i++) {
+		 uds.remove(1);
+	 }
+ }
   document.getElementById('butAddCancel').addEventListener('click', function() {
-	    // Open/show the add new city dialog
+	  	quita();
+	    // oculta el dialogo de datos de producto
 	    app.toggleAddDialog(false);
 	  }); 
 

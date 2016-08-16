@@ -69,14 +69,14 @@ include_once "include/menu1.php";
 
     if(mysqli_num_rows($result2)) {
         echo '<table cellpadding="0" cellspacing="0" class="db-table">';
-        echo '<tr><th>Editar</th><th>Eliminar</th><th>No.</th><th>Código</th><th>Grupo</th><th>Producto</th><th>Unidad</th><th>Cantidad</th><th>Costo</th><th>Precio 1</th><th>Precio 2</th><th>Precio3</th></tr>';
+        echo '<tr><th>Editar</th><th>Eliminar</th><th>Grupo</th><th>No.</th><th>Código</th><th>Producto</th><th>Unidad</th><th>Cantidad</th><th>Costo</th><th>Precio 1</th><th>Precio 2</th><th>Precio3</th></tr>';
         //inicializacion de contador de renglon
         $reng = 1;
         while($row2 = mysqli_fetch_row($result2)) {
             $id = $row2[1];
             $elid = -$row2[1];
-            echo '<tr>';
-            echo '<td class= ed id='.$id.'><a href ="modifprod.php?nid='.$id.'"><img src="img/edita.jpg" ALT="editar"></a></td>';
+            echo '<tr id=r'.$id.' class="fila">';
+            echo '<td ><a id='.$id.' class= "ed" href="javascript:void(0);"><img src="img/edita.jpg" ALT="editar"></a></td>';
             echo '<td class = el id='.$elid.'><a href ="elimprod.php?nid='.$elid.'"><img src="img/elimina.jpg" ALT="eliminar"></a></td>';
             foreach($row2 as $key=>$value) {
                 echo '<td>',$value,'</td>';

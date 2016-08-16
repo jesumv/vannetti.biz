@@ -33,7 +33,7 @@ function validaelem(elem,valor){
 }
 
 function llenaop(){
-	  //esta funcion a�ade opciones a la lista de proveedores
+	  //esta funcion añade opciones a la lista de proveedores
 		$.get('php/getprovs.php',function(data){
 		var obj1 = JSON.parse(data);
 		for( var z=0; z <obj1.length; z++) {
@@ -176,27 +176,27 @@ function haztabla(){
     	if(key!=0){
     		//solo si se elige proveedor se envia por los datos
     		//examina el proveedor elegido
-    		$.get('php/getprods.php',{
-    			idprov: key
-    		},function(data){
-     			var obj1 = JSON.parse(data);
-    	 			for( var z=0; z <obj1.length; z++) {
-    	 //extraccion de datos del array
-    	 				var id = obj1[z].id;
-    	 				var nombre = obj1[z].nombre;
-    	 				var costo = obj1[z].costo;
-    	 				var reng = z;
-    	 //adicion de renglones de producto
-    	 				addprod(id,nombre,costo,reng);
-    	 //adicion de escuchas en cajas input
-    	 				document.getElementById('cant'+z).addEventListener('input',ponsubt,false);
-    	 		};
-    //adicion de fila de totales
-    			addtot();
-    //adicion de botones de accion	
-    //enfoque en el primer campo
-    			$('#cant0').focus();
-     		});
+			$.get('php/getprods.php',{
+				idprov: key
+			},function(data){
+	 			var obj1 = JSON.parse(data);
+		 			for( var z=0; z <obj1.length; z++) {
+		 //extraccion de datos del array
+		 				var id = obj1[z].id;
+		 				var nombre = obj1[z].nombre;
+		 				var costo = obj1[z].costo;
+		 				var reng = z;
+		 //adicion de renglones de producto
+		 				addprod(id,nombre,costo,reng);
+		 //adicion de escuchas en cajas input
+		 				document.getElementById('cant'+z).addEventListener('input',ponsubt,false);
+		 		};
+	//adicion de fila de totales
+				addtot();
+	//adicion de botones de accion	
+	//enfoque en el primer campo
+				$('#cant0').focus();
+	 		});
     	}
 
 }
