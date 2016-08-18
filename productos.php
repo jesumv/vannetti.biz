@@ -35,7 +35,7 @@
   <script>
    //rutinas del modelo ap
   $(document).ready(function() {
-  		$.getScript( "js/app2.js");
+  		$.getScript( "js/app3.js");
   		$.getScript( "js/altaprod.js");
         });
   </script>  
@@ -60,7 +60,7 @@ include_once "include/menu1.php";
  $table = 'productos';
  $table2 = 'grupos';
  $table3='unidades';
- $sql= "SELECT t2.nombre, t1.idproductos, t1.codigo, t1.nombre,t3.nombre, t1.cant,
+ $sql= "SELECT t2.nombre, t1.idproductos, t1.codigo, t1.cbarras,t1.nombre,t3.nombre, t1.cant,
  t1.costo, t1.precio1, t1.precio2,t1.precio3 FROM $table AS t1 INNER JOIN $table2 AS t2 
  ON t1.grupo=t2.idgrupos INNER JOIN $table3 AS t3 ON t1.unidad=t3.idunidades 
  WHERE t1.status < 2 ";
@@ -69,7 +69,8 @@ include_once "include/menu1.php";
 
     if(mysqli_num_rows($result2)) {
         echo '<table cellpadding="0" cellspacing="0" class="db-table">';
-        echo '<tr><th>Editar</th><th>Eliminar</th><th>Grupo</th><th>No.</th><th>Código</th><th>Producto</th><th>Unidad</th><th>Cantidad</th><th>Costo</th><th>Precio 1</th><th>Precio 2</th><th>Precio3</th></tr>';
+        echo '<tr><th>Editar</th><th>Eliminar</th><th>Grupo</th><th>No.</th><th>Código</th><th>CBarras</th>
+        <th>Producto</th><th>Unidad</th><th>Cantidad</th><th>Costo</th><th>Precio 1</th><th>Precio 2</th><th>Precio3</th></tr>';
         //inicializacion de contador de renglon
         $reng = 1;
         while($row2 = mysqli_fetch_row($result2)) {
@@ -102,6 +103,7 @@ include_once "include/menu1.php";
       		<div class="dialog-title">Datos del Producto</div>
 		      <div class="dialog-body">
 		        <form id="altaprod" name="altaprod" method ="post" action="#" onsubmit="return false;">
+		        	<input type="hidden" name="idprod" id ="idprod" value="0"/>
 		        	<div>
 		        		<label>Proveedor:</label><select id="selectmenu" name="selectmenu">
 											<option value="0">Seleccione al proveedor</option>
@@ -110,6 +112,7 @@ include_once "include/menu1.php";
 											<option value="0">Seleccione el grupo de productos</option>
          								</select>	
 		        	</div>
+		        	<p></p>
 		        	<div >
 		        						  
 					</div>

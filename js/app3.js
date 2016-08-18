@@ -1,6 +1,7 @@
-
-(function() {
   'use strict';
+  
+(function() {
+
   var app = {
 		    isLoading: true,
 		    spinner: document.querySelector('.loader'),
@@ -13,6 +14,12 @@
    * Event listeners for UI elements
    *
    ****************************************************************************/
+  /*****************************************************************************
+  *
+  *intento de promesa
+  *
+  ****************************************************************************/
+  
   function llenaop(){
 	  //esta funcion añade opciones a la lista de proveedores
 	   			$.get('php/getprovs.php',function(data){
@@ -64,6 +71,7 @@
 	   };
 function llenacas(obj1)	{
 	//extraccion de datos del array
+	var idprod = obj1[0].idprod;
 	var idprov = obj1[0].idprov;
 	var grupo = obj1[0].grupo;
 	var nombresel = obj1[0].nombre;
@@ -78,6 +86,8 @@ function llenacas(obj1)	{
 	var p2sel = obj1[0].pr2;
 	var p3sel = obj1[0].pr3;
 	//lenado de datos
+	var idsel = document.getElementById('idprod');
+	idsel.value= idprod;
 	var provsel = document.getElementById('selectmenu');
 	provsel.value= idprov;
 	var gruposel = document.getElementById('selectmenu2');
@@ -106,15 +116,28 @@ function llenacas(obj1)	{
 	p3cas.value = p3sel;
 } 
 
+function traeprod(indice){
+	//recolectar los datos para el dialogo
+	$.get('php/getprod.php',{idprod:indice},function(data){
+			var obj1 = JSON.parse(data);
+			llenacas(obj1);
+			});
+}
 function aparece(indice){
+	var datosprod = {} ;
+	// esta funcion muestra la caja de dialogo de producto
 	if(indice !== 0){
-		llenaop();
-					//recolectar los datos para el dialogo
-		$.get('php/getprod.php',{idprod:indice},function(data){
-				var obj1 = JSON.parse(data);
-				llenacas(obj1);
-			    app.toggleAddDialog(true);
+		var prodsel = new Promise(function(resolve,reject){
+			llenaop();
+		})
+	//recolectar los datos para el dialogo y llenar las casillas
+		.then(datosprod = traeprod(indice))
+		.then (app.toggleAddDialog(true));	
+		}else{
+				var prodvac = new Promise(function(resolve,reject){
+					llenaop();
 				});
+				prodvac.then(app.toggleAddDialog(true));
 			};
 
 

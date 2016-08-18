@@ -6,9 +6,12 @@ $(document)
   if(validate()){
 		$.post('php/altaprod.php', $(this).serialize(), function(data){
 			if(data == -1){
-				alert("error en el alta de producto");
+				alert("error en movimiento de producto");
 			} else if (data == 0){
 				alert("alta de producto OK");
+				location.reload(); 	
+			}else if (data == 1){
+				alert("cambio al producto OK");
 				location.reload(); 	
 			}
 		});

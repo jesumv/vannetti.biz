@@ -13,6 +13,7 @@
 	        $funcbase->checalogin($mysqli);
 				//asignacion de variables
 				 $table= "productos";
+				 $idprod = $_POST['idprod'];
 				  $prov = $_POST['selectmenu'];
 				  $grupo =$_POST['selectmenu2'];
 				  $nombre = strtoupper($_POST['nombre']);
@@ -27,18 +28,27 @@
 				  $p2 =$_POST['p2'];
 				  $p3 =$_POST['p3'];
 				  $usu = $_SESSION['usuario'];	
-		//insercion en la tabla de productos
-
-	   		$sqlCommand= "INSERT INTO $table (codigo,cbarras,nombre,nom_corto,
+		$result= 0;		  
+		//seleccion de tipo de operacion
+		if($idprod == 0){
+			//si es alta de producto
+			$sqlCommand= "INSERT INTO $table (codigo,cbarras,nombre,nom_corto,
 	   		grupo,unidad,cant,descripcion,costo,precio1,precio2,precio3,idproveedores,usu,status)
 	    	VALUES ('$cod','$barr','$nombre','$nomcor',$grupo,$ud,$cant,'$desc',$cost,'$p1','$p2','$p3',$prov,'$usu',0)";
-
+		}else{
+			// si es modificación al producto
+			$sqlCommand= "UPDATE productos SET codigo='$cod', cbarras = '$barr',
+			nombre= '$nombre',nom_corto='$nomcor',grupo=$grupo,
+			unidad= $ud, cant= $cant, descripcion= '$desc',costo=$cost,
+			precio1='$p1',precio2='$p2',precio3='$p3',idproveedores=$prov,
+			usu='$usu' WHERE idproductos = $idprod";
+			$result = 1;		
+		}
 	    	$query=mysqli_query($mysqli, $sqlCommand) or die (mysqli_error($mysqli)); 
 			
 			if($query){
-		echo 0;
-		}
-		else{echo 1;}		
+				echo $result;
+		}else{echo -1;}		
 			/* cerrar la conexion */
 	    	mysqli_close($mysqli);  
 			exit();

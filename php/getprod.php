@@ -9,7 +9,8 @@
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
 /*** obtiene proveedor si lo hay ***/
-$cad = "idproductos=".$_GET['idprod'];
+$idprod = $_GET['idprod'];
+$cad = "idproductos=".$idprod;
 /**trae datos del producto solicitado**/
     if (is_object($mysqli)) {
     	$sqlCommand = "SELECT idproveedores,grupo,nombre,nom_corto,codigo, unidad,cant, cbarras,
@@ -18,7 +19,7 @@ $cad = "idproductos=".$_GET['idprod'];
 			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE PRODUCTO ".mysqli_error($mysqli));
 //inicializacion de arreglo
 			 while($tempo=mysqli_fetch_array($query1, MYSQLI_ASSOC)){
-			 	$result[] = array('idprov' => $tempo['idproveedores'],'grupo' => $tempo['grupo'],
+			 	$result[] = array('idprod'=> $idprod,'idprov' => $tempo['idproveedores'],'grupo' => $tempo['grupo'],
 			 	'nombre' => $tempo['nombre'],'nomcorto' => $tempo['nom_corto'],
 			 	'codigo'=>$tempo['codigo'],'unidad'=>$tempo['unidad'],'cant'=>$tempo['cant'],
 			 	'cbarras'=>$tempo['cbarras'],'costo'=>$tempo['costo'],
