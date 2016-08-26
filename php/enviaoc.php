@@ -37,10 +37,10 @@
 	$sqlCommand= "INSERT INTO oc (idproveedores,arts,monto,total,usu,status)
 	    	VALUES ($prov,$arts,$total,$total,'$usu',1)";
 	    	$query=mysqli_query($mysqli, $sqlCommand)or die("error en alta oc:".mysqli_error($mysqli)); 
-			if($query){
-				//obtención de numero de orden de compra
+			if($query){				
+				//obtencion de numero de orden de compra
 				$noc = traeoc($mysqli);
-				//insercion de productos en tabla artspedidos
+				//insercion de productos en tabla artsoc
 				$indi = 0;
 					foreach($prods as $id){
 						$sqlCommand= "INSERT INTO artsoc (idoc,idproductos,cant,preciou,

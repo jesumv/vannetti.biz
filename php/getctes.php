@@ -10,12 +10,12 @@
     $mysqli = $funcbase->conecta();
 /**trae id y no corto de clientes no cancelados**/
     if (is_object($mysqli)) {
-    	$sqlCommand = "SELECT idclientes,nom_corto FROM clientes  WHERE status < 2 ORDER BY nom_corto";		
+    	$sqlCommand = "SELECT idclientes,nom_corto,nivel FROM clientes  WHERE status < 2 ORDER BY nom_corto";		
 	 // Execute the query here now
 			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE SELEC CTES. ".mysqli_error($mysqli));
 //inicializacion de arreglo
 			 while($tempo=mysqli_fetch_array($query1, MYSQLI_ASSOC)){
-			 	$result[] = array('nombre' => $tempo['nom_corto'],'id' => $tempo['idclientes']);
+			 	$result[] = array('nombre' => $tempo['nom_corto'],'id' => $tempo['idclientes'],'nivel' => $tempo['nivel']);
 			 };
 
 			sort($result);

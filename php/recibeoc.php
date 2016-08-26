@@ -61,7 +61,6 @@ function tiposurt($mysqli,$oc){
 	$jsondata = array();
     //recoleccion de variables
     $oc = $_POST["oc"];
-	$jsondata['noc']= $oc;
 	$arts= $_POST["arts"];
 	$usu= $_SESSION['usuario'];
 	$tipomov = 1;
@@ -74,27 +73,29 @@ function tiposurt($mysqli,$oc){
 		   			$sqlCommand = "UPDATE artsoc SET status= 2 WHERE idartsoc=".$valor;
 					$query1 = mysqli_query($mysqli, $sqlCommand) or die ('error en marcado de arts recep '.mysqli_error($mysqli));
 			//abono a inventario
-					$sqlCommand1 = "INSERT INTO inventario (idproductos,tipomov,cant,monto,usu,idoc)
-		    		SELECT idproductos, $tipomov, cant,preciot,'$usu',$oc from artsoc WHERE idartsoc=".$valor; 
+					$sqlCommand1 = "INSERT INTO inventario (idproductos,tipomov,cant,monto,usu,idoc,debe)
+		    		SELECT idproductos, $tipomov, cant,preciot,'$usu',$oc,preciot from artsoc WHERE idartsoc=".$valor; 
 					$query2 = mysqli_query($mysqli, $sqlCommand1) or die ('error en alta inventarios: '.mysqli_error($mysqli));
 			//cargo a cxp
-					$sqlCommand4 = "INSERT INTO cxp (idmovto,idproveedores,monto,iva,total,usu)
-		    		SELECT artsoc.idoc,oc.idproveedores,artsoc.preciot,artsoc.preciot*.16, artsoc.preciot+(artsoc.preciot*.16),
-		    		'$usu' FROM  artsoc INNER JOIN oc ON artsoc.idoc=oc.idoc where artsoc.idartsoc =".$valor; 
+					$sqlCommand4 = "INSERT INTO cxp (idmovto,idproveedores,monto,iva,total,usu,haber)
+		    		SELECT artsoc.idoc,oc.idproveedores,artsoc.preciot,0, preciot,
+		    		'$usu',preciot FROM  artsoc INNER JOIN oc ON artsoc.idoc=oc.idoc where artsoc.idartsoc =".$valor; 
 					$query4 = mysqli_query($mysqli, $sqlCommand4) or die ('error en cargo a cxp: '.mysqli_error($mysqli));
 			//cargo a ivaacred
-					$sqlCommand5 = "INSERT INTO ivaacred (idmovto,monto,usu)
-		    		SELECT idoc,preciot*.16,'$usu' FROM artsoc WHERE idartsoc =".$valor; 
+					$sqlCommand5 = "INSERT INTO ivaacred (idmovto,monto,usu,haber)
+		    		SELECT idoc,0,'$usu',0 FROM artsoc WHERE idartsoc =".$valor; 
 					$query5 = mysqli_query($mysqli, $sqlCommand5) or die ('error en cargo iva acred: '.mysqli_error($mysqli));
 				}
 			//validacion de ingreso
 				if(!$query1||!$query2){$jsondata['resul'] = -1;};
 				if(!$query4){$jsondata['resul'] = -2;};
-				
 			//determinar si se surte total o parcial
 			$tsurt = tiposurt($mysqli,$oc);
-			/*complementar el array de resultados*/  
+			/*complementar el array de resultados*/ 
+			$jsondata['noc']= $oc; 
 			$jsondata['tipos'] = $tsurt;
+			
+			
 			//marcar orden de compra como ingresada	
 			$sqlCommand3 = "UPDATE oc SET status =".$tsurt." WHERE idoc = $oc";
 				$query3 = mysqli_query($mysqli, $sqlCommand3) or die ('error en marcado de oc rec '.mysqli_error($mysqli));  

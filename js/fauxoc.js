@@ -25,7 +25,7 @@ function aviso(texto){
 function validaelem(elem,valor){
 	//esta funcion valida el elemento que se pasa como argumento regresando 0 si el elemento
 	//coincide o es nulo
-	if(document.getElementById(elem)=== null){resul = 0}else{
+	if(document.getElementById(elem)=== null){resul = -1}else{
 		var texto = document.getElementById(elem).innerHTML;
 		if(texto==valor){var resul = 0}else{resul = -1}
 	}

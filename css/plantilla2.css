@@ -1,0 +1,127 @@
+body {
+	font-family:Arial, Helvetica, sans-serif;
+    font-size:14px;
+}
+
+
+#bandasup{
+	
+	background-color:#004080;
+	height: 10em;
+	padding-left: 1em;
+	padding-bottom: 1em;
+	color:#ffffff;
+	margin-bottom:3em;
+}
+
+#div1{
+	float:left;
+	
+}
+
+#div2{
+	float:right;
+	margin-top:1em;
+	margin-right:1em;	
+}
+
+#logodiv{
+	clear: left;
+	float:left;
+}
+
+#logoprinc{
+	width:85px;
+	height:85px;
+}
+
+#saludo{
+	margin-top:3em;
+	margin-right:1em;
+	float:right;
+}
+
+.limpia{
+	/* division para limpiar flotaciones */
+	clear:both;
+}
+
+#titpag {
+
+	margin-top:2em;
+	color:#000000;
+}
+
+
+#footer{
+	margin-top:1em;
+	background-color:#7897ba;
+	border-top:solid 10px;
+	height: 3em;
+	padding-left: 1em;
+	padding-bottom: 1em;
+	text-align:center;
+}
+
+.cajacentrada{
+	margin:auto;
+}
+
+#cajacent{
+	width:575px;
+	margin-top: 1em;
+	margin-left: auto ;
+  	margin-right: auto ;
+}
+
+.centraelem{
+	margin:auto;
+	text-align:center;
+}
+
+/*estilos para las tablas*/
+
+table.db-table 		{ border-right:1px solid #ccc; border-bottom:1px solid #ccc; margin:auto}
+table.db-table th	{ background:#eee; padding:5px; border-left:1px solid #ccc; border-top:1px solid #ccc; }
+table.db-table td	{ padding:5px; border-left:1px solid #ccc; border-top:1px solid #ccc; }
+
+/*estilos para las formas */
+
+.req{
+	color:red;
+	}
+
+div.error{
+	color:red;
+	margin:auto;
+	width: 30%;
+}
+
+
+
+tr.requer td.label {
+	font-weight: bold;
+	background: url(/images/forms/backRequiredGray.gif) no-repeat right
+		center;
+}
+
+td.field input.error, td.field select.error, tr.errorRow td.field input,tr.errorRow td.field select {
+	border: 2px solid red;
+	background-color: #FFFFD5;
+	margin: 0px;
+	color: red;
+}
+
+label.error {
+	display: block;
+	color: red;
+	font-style: italic;
+	font-weight: normal;
+}
+
+input.error {
+	border: 2px solid red;
+}
+
+
+

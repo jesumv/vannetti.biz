@@ -8,6 +8,8 @@
     $funcbase = new dbutils;
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
+	$nivel= $_GET["nivel"];
+	$fecha= "FECHA DE ELABORACION: ".date("Y-m-d");
 if (is_object($mysqli)) {
 
 	require_once('fpdf.php');
@@ -40,7 +42,8 @@ if (is_object($mysqli)) {
 	    // Posición: a x  cm del final
 	    $this->SetY(-40);
 		$this->SetFont('Arial','I',10);
-		$this->Cell(0,6,'ESTA LISTA ESTA SUJETA A CAMBIOS SIN PREVIO AVISO',0,1,'C');
+		$this->Cell(100,6,'ESTA LISTA ESTA SUJETA A CAMBIOS SIN PREVIO AVISO.',0,0,'L');
+		$this->Cell(20,6,'FECHA DE ELABORACION: '.date('Y-m-d'),0,1,'L');
 		$this->Cell(0,6,'Pedidos:777-313-1272; ventas@vannetti.biz',0,1,'C');
 	    // Arial italic 8
 	    $this->SetFont('Arial','I',8);
@@ -75,7 +78,7 @@ function tablabas($header, $data)
 	
 	}
 	// Cargar los datos
-	$data= $funcbase->leelprod($mysqli);
+	$data= $funcbase->leelprod($mysqli,$nivel);
 	// Títulos de las columnas
 	$o_=utf8_decode('ó');
 	$header = array('C'.$o_.'digo','Producto','Precio');

@@ -135,7 +135,7 @@
 					// se envian los datos a registro
 						$.post( "php/recibeoc.php",
 						{	oc:para,
-							arts:prs
+							arts:prs,
 						 }, null, "json" )
     						.done(function( data) {
     							var noc= data.noc;
@@ -163,8 +163,8 @@
 	<div data-role="page" id="pagrecoc">
 		<div data-role="header" id="cabezal">
 			<a href="listoc.html" data-ajax="false" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-back">Regresar</a>
-			<h1 id="titulo"></h1>
-			<a href="portalmov.html" data-ajax="false" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-delete">Cerrar</a>
+			<h1 id="titulo">RECEPCION DE ORDEN DE COMPRA</h1>
+			<a href="logout.html" data-ajax="false" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-delete">Cerrar</a>
 		</div>
 		<div data-role = "ui-content" id="lista">
 			<form id="forma" method="post"
@@ -178,6 +178,14 @@
 		</div>
 		<div data-role="popup" id="aviso">
 		<p>Sin texto, todavía.</p>
+		<div data-role="panel" id="navpanel" data-display="overlay">
+	 		<ul data-role ="listview">
+	 			<li><a href="oc.html" data-ajax="false">Ordenes de Compra</a></li>
+	 			<li><a href="listoc.html" data-ajax="false">Rec. de OC</a></li>
+		    	<li><a href="pedido.html" data-ajax="false">Pedidos</a></li>
+		    	<li><a href="listasp.html" data-ajax="false">Listas de Productos</a></li>
+	 		</ul>	    	
+ 		</div>
 	</div>
 	</div>
 </body>

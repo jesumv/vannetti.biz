@@ -12,34 +12,54 @@
   <meta name="author" content="jmv">
 
   <meta name="viewport" content="width=device-width; initial-scale=1.0">
-
-  <link rel="shortcut icon" href="img/logomin.gif" />  
+	<link rel="shortcut icon" href="img/logomin.gif" />  
 	<link rel="apple-touch-icon" href="img/logomin.gif">
 	<link rel="stylesheet" href= "css/jquery.mobile-1.4.5.min.css" />
 	<link rel="stylesheet" href= "css/movil.css" />
 	<script src="js/jquery.js"></script>
 	<script src="js/jquery.mobile-1.4.5.min.js"></script>
-	<script src="js/jquery.number.js"></script>
+	
+	<script>
+	'use strict';
+	(function() {
+
+	})();	
+	</script>
 
 </head>
 
 <body>
-  <div>
-    <header>
-      <h1>Vannetti Cucina</h1>
-    </header>
-    <nav>
-      <p><a href="/">Home</a></p>
-      <p><a href="/contact">Contact</a></p>
-    </nav>
-
-    <div>
-      
-    </div>
-
-    <footer>
-     <p>&copy; Copyright  by jmv</p>
-    </footer>
-  </div>
+	<div data-role="page" id="portalmov">
+		<div data-role="header">
+    		<a href="portalmov.html" data-ajax="false" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-home">Inicio</a>
+			<h1>Vannetti Cucina App</h1>
+    		<a href="logout.html" data-ajax="false" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-delete">Salir</a>
+		</div>
+		<div class="ui-content">
+			<a href="#navpanel" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-bars">Navegaci&oacute;n</a>
+			<h2>INDICADORES DE DESEMPEÑO</H2>
+				<h2>MES DE AGOSTO 2016</h2>
+  <table id="kpo">
+  	<tr>
+	  	<th>INDICADOR</th>
+	  	<th>VALOR</th>
+	</tr>
+  	<tr>
+		<td>VENTAS</td>
+		<td>0.00</td>
+  	</tr>
+  </table>
+	 
+		</div>
+		<div data-role="panel" id="navpanel" data-display="overlay">
+	 		<ul data-role ="listview">
+	 			<li><a href="oc.html" data-ajax="false">Ordenes de Compra</a></li>
+	 			<li><a href="listoc.html" data-ajax="false">Rec. de OC</a></li>
+		    	<li><a href="pedido.html" data-ajax="false">Pedidos</a></li>
+		    	<li><a href="listasp.html" data-ajax="false">Listas de Productos</a></li>
+	 		</ul>	    	
+ 		</div>
+	</div>
+  
 </body>
 </html>

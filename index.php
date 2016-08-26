@@ -30,10 +30,15 @@
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <script type="text/javascript" src="js/login.js"></script>
 </head>
+<style>
+	body{
+    	background: url("img/logocucina.jpg") no-repeat scroll 0 0 transparent;
+	}
+</style>
 <body>
 
   <header class="header">
-    <h1 class="header__title">La red de Vannetti</h1>
+    <h1 class="header__title">Vannetti Inc.</h1>
     <button id="primero" >ENTRAR</button>
   </header>
   

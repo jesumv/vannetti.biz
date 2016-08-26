@@ -34,7 +34,9 @@
 					        $_SESSION['nivel']=$nivel;
 					        $_SESSION['empresa']=$empre;
 							$_SESSION['root'] = realpath($_SERVER["DOCUMENT_ROOT"]);
-							echo 1;
+							if($nivel<10){
+								echo 1;
+							}else{echo 2;}
 						} else {
 							echo 0;	
 						}

@@ -6,10 +6,10 @@ $(document)
   if(validate("login")){
 		$.post('php/ajax_login.php', $(this).serialize(), function(data){
 			if(data == 0){
-				alert("Nombre de usuario o contraseña incorrectos");
+				alert("Nombre de usuario o contraseÃ±a incorrectos");
 			} else if (data == 1){
 				window.open('portal.php', '_self');	
-			}
+			}else{window.open('portalmov.html', '_self')}
 		});
 	}
 })
