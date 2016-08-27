@@ -330,6 +330,11 @@ function sumaprecio(){
 			   });
 			
 		$( document ).on( "pageinit", "#pedpag", function( event ) {
+			//modificacion de las etiquetas del flipswitch
+			$( "#fact" ).flipswitch({
+  				onText: "Si",
+  				offText:"No"
+			});
 			//lenar el combo de clientes
 	  			llenactes();
 	  		//checar si se eligió cliente	
@@ -363,6 +368,7 @@ function sumaprecio(){
 						var cant=[];
 						var preciou=[];
 						var preciot=[];
+						var facturarp = $("#fact").prop("checked");
 				//variable para controlar el no. de renglon.
 						var longcants = 0;
 						for(var z=0; z <longi; z++){
@@ -387,7 +393,9 @@ function sumaprecio(){
 							preciot:preciot,
 							totarts:totarts,
 							total:total,
-							tipoventa:tipoventa
+							tipoventa:tipoventa,
+							facturarp:facturarp
+							
 						 }, null, "json" )
     						.done(function( data) {
     							var nped= data.nped;
@@ -441,9 +449,9 @@ function sumaprecio(){
 		    			<input type="radio" id="rcredcon-b" name="rcredcon" value= "1" />Crédito
 		    		</label>
     			</fieldset>	
-	    		<label>
-	    			<input type="checkbox" data-role="flipswitch" id="fact?" name="fact?"/>Facturar?
-	    		</label>	
+	    		<label for"fact">Facturar?</label>
+	    			<input type="checkbox" data-role="flipswitch" id="fact" name="fact"/>
+	    			
 				<div id="ptabla">
 			    </div>
 			     	<input data-theme="b" data-icon="check" data-iconshadow="true" value="Enviar" type="button" 
