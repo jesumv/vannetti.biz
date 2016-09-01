@@ -11,7 +11,36 @@
 	width: 26%;
 	font-size: 150%;
 }
+.cajalfc{
+	width: 80%;
+	font-size: 75%;
+}
+.celda{
+	background-color:#808080;
+}
+.celda:hover {
+    background-color:#80ffff;
+    
+}
 
+.celda .pagada{
+	background-color:#008040;
+}
+
+.titulo{
+	width: 80%;
+	font-size: 150%;
+	background-color:#008040;
+	margin-left:auto;margin-right:auto;margin-top:10px; margin-bottom:10px; 
+	color:#ccc;
+	text-align:center;
+}
+.subt{
+	margin:auto;
+	width: 80%;
+	border-style: dotted;
+	text-align: center;
+}
 /*estilos para las tablas*/
 
 table.db-table 		{ border-right:1px solid #ccc; border-bottom:1px solid #ccc; margin:auto}

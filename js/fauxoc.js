@@ -51,15 +51,16 @@ function llenaop(){
 };
 
 function hazvisib(visible){
-	var tabla = document.getElementById('octabla')
+	var tabla = document.getElementById('ococult');
 		    if (visible) {
 		      tabla.classList.add('tablaocultav');
 		    } else {
-		      tabla.classList.remove('tablaocultav');
+		      tabla.classList.remove('tablaocultav');;
 		    }
 };
 
 function addtot(){
+	
 	//se a�ade la fila de totales
 	for( var z=0; z<3; z++) {
 		//seleccionar la clase adecuada
@@ -116,8 +117,8 @@ function sumaprecio(){
 
 function sumacant(){
 	var cantt= 0;
-	var arre = document.getElementsByTagName("INPUT");
-	var longit = (arre.length-2);
+	var arre = document.getElementsByClassName("icant");
+	var longit = (arre.length);
 	for(var z=0; z<longit; z++){
 		var cantact = arre[z].value;
 		var cantf = validacant(cantact);
@@ -243,7 +244,7 @@ function addprod(id,nombre,costo,reng){
 	    	elem = "INPUT";
 	    	idt = "cant" + reng;
 	    	clase = "ui-block-b cant"
-	    	clase2 = ""
+	    	clase2 = "icant"
 	    	texto = ""
 	        break;
 	    default:

@@ -4,30 +4,30 @@
                 <li><a href="portal.php"><b>Inicio</b></a></li>
                 <li class="currentsub"><a class="fly" >Consultas</a>
                 	<ul class="sub1">
-                		<li ><a href="inventarios.php">Inventarios</a></li>
-                		<li ><a href="consfactura.php">Facturación</a></li>
-                		<li ><a href="consblanco.php">Rem. en blanco</a></li>
-                		<li ><a href="constodas.php">Remisiones</a></li>
+                		<li ><a href="#">Inventarios</a></li>
+                		<li ><a href="#">Facturación</a></li>
+                		<li ><a href="#">Cobranza</a></li>
+                		<li ><a href="#">Remisiones</a></li>
                 	</ul>
                   </li>
                   <li><a>Almacén</a>
                     	<ul class="sub1">
-	                        <li><a href="oc.html">Ordenes de Compra</a></li>
+	                        <li><a href="oc.html">OC</a></li>
 	                        <li class="currentsub"><a class="fly">Salidas</a>
 	                            <ul class="fly2">
-	                            	<li><a href="salidafact.php">Facturación</a></li>
-	                            	<li ><a href="remisionesvend.php">Rem Agentes</a></li>
-	                                <li class="currentfly"><a href="remisiones.php">Rem Clientes</a></li>
-	                                <li><a href="remblanco.php">Rem En Blanco</a></li>
-	                                <li><a href="remmanual.php">Rem Manuales</a></li>
+	                            	<li><a href="#">Facturación</a></li>
+	                                <li class="currentfly"><a href="#">Remisiones</a></li>
+	                                <li><a href="#">Muestras</a></li>
+	                                <li><a href="#">Producción</a></li>
 	                            </ul>
 	                        </li>
                         </ul>
 
                    </li>
-                    <li class="currentsub"><a class="fly">Ventas</a>
+                    <li class="currentsub"><a class="fly">Proveedores</a>
                     	<ul class="fly2">
-                			<li class="currentfly"><a href="oc.php">Ordenes de compra</a></li>
+                			<li class="currentfly"><a href="oc.php">Emisión OC</a></li>
+                			<li class="currentfly"><a href="pagooc.php">Pago OC</a></li>
                 		</ul>
                 	</li>
                     	

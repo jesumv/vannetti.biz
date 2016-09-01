@@ -18,79 +18,96 @@
 	<script src="js/jquery.number.js"></script>
 
 	<script>
-			$(document).ready(function() {
-					//traer funciones auxiliares
-		  		$.getScript( "js/fauxoc.js");
-		  		
-		//eventos para los botones de accion
-			$("#envia").click(function(){
-				var resul1 = validaelem("tcant","0");
-		//si no hay datos que enviar
-				if(resul1== 0){
-					aviso("No ha solicitado ningun articulo");
-					$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
-							if($("#cant0")){$("#cant0").focus();}
-						} );
-					}else{
-						//recoleccion de variables
-						var prov = $("#ocprov").val();
-						var total =$("#tprec").text();
-						var longi = $(".cant").length;
-						var prods=[];
-						var cant=[];
-						var preciou=[];
-						var preciot=[];
-						var longcants = 0;
-						for(var z=0; z <longi; z++){
-							if($("#cant".concat(z)).val()!==""){
-								prods[longcants] = $("#id".concat(z)).text();
-								cant[longcants] = $("#cant".concat(z)).val();
-								preciou[longcants]= $("#costo".concat(z)).text();
-								preciot[longcants]= $("#subt".concat(z)).text();
-								longcants++;
+	'use strict';
+	(function() {
+		$( document ).on( "pageinit", "#ocpag", function( event ) {
+			//traer funciones auxiliares
+			 $.getScript( "js/fauxoc.js");
+			//modificacion de titulos del flip 
+			$( "#factp" ).flipswitch({
+	  				onText: "Si",
+	  				offText:"No"
+				});
+			//eventos para los botones de accion
+				$("#envia").click(function(){
+					var resul1 = validaelem("tcant","0");
+			//si no hay datos que enviar
+					if(resul1== 0){
+						aviso("No ha solicitado ningun articulo");
+						$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
+								if($("#cant0")){$("#cant0").focus();}
+							} );
+						}else{
+							//recoleccion de variables
+							var prov = $("#ocprov").val();
+							var total =$("#tprec").text();
+							var longi = $(".cant").length;
+							var prods=[];
+							var cant=[];
+							var preciou=[];
+							var preciot=[];
+							var longcants = 0;
+							for(var z=0; z <longi; z++){
+								if($("#cant".concat(z)).val()!==""){
+									prods[longcants] = $("#id".concat(z)).text();
+									cant[longcants] = $("#cant".concat(z)).val();
+									preciou[longcants]= $("#costo".concat(z)).text();
+									preciot[longcants]= $("#subt".concat(z)).text();
+									longcants++;
+								}
 							}
+							longcants--;
+							//si todo ok, se envian los datos
+							$.post( "php/enviaoc.php",
+							{	prov:prov,
+								longi:longcants,
+								prods:prods,
+								cants:cant,
+								preciou:preciou,
+								preciot:preciot,
+								total:total
+							 }, null, "json" )
+	    						.done(function( data) {
+	    							var noc= data.noc;
+	    							var arts =data.arts;
+	    							var total = data.total;
+	    							var cad = "ORDEN DE COMPRA OK <br>Numero: "+ noc + "<br>"+"Arts: "+arts+"<br>"+"total: "+total;
+									aviso(cad);
+									$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
+										location.reload();
+										$('#ocprov').selectmenu( "enable" );
+									} );
+	    						})
+	    						.fail(function( data ) {
+	    							var err1 = data.success;
+	    							aviso("error alta de oc: "+err1);
+								});	
 						}
-						longcants--;
-						//si todo ok, se envian los datos
-						$.post( "php/enviaoc.php",
-						{	prov:prov,
-							longi:longcants,
-							prods:prods,
-							cants:cant,
-							preciou:preciou,
-							preciot:preciot,
-							total:total
-						 }, null, "json" )
-    						.done(function( data) {
-    							var noc= data.noc;
-    							var arts =data.arts;
-    							var total = data.total;
-    							var cad = "ORDEN DE COMPRA OK <br>Numero: "+ noc + "<br>"+"Arts: "+arts+"<br>"+"total: "+total;
-								aviso(cad);
-								$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
-									location.reload();
-									$('#ocprov').selectmenu( "enable" );
-								} );
-    						})
-    						.fail(function( data ) {
-    							var err1 = data.success;
-    							aviso("error alta de oc: "+err1);
-							});	
-					}
-		  		
-		   });
-		   
-		   $("#cancela").click(function(){
-		   		location.reload();
-		   		$('#ocprov').selectmenu( "enable" );
-		   });
-		   
-		 });
+			  		
+			   });
+			   
+			  $("#cancela").click(function(){
+			   		location.reload();
+			   		$('#ocprov').selectmenu( "enable" );
+			   });
+			 //escucha de decision facturar
+			 document.getElementById('factp').addEventListener('click',function(){
+			 	var facturaroc = $("#factp").prop("checked");
+				var titulotot;
+				if(facturaroc== true){
+					//si facturar, se añaden renglones de iva y total
+						var titulot =document.getElementById('tsubt');
+						titulot.innerHTML="SUBTOTALES";		 	
+			 }else{var titulot =document.getElementById('tsubt');
+						titulot.innerHTML="TOTALES";};
+		});
+	});			
+	})();	
 	</script>
 </head>
 
 <body>
-  <div data-role="page"> 
+  <div data-role="page" id="ocpag"> 
     <div data-role="header">
     <a href="portalmov.html" data-ajax="false" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-home">Inicio</a>
 <h1>Orden De Compra</h1>
@@ -103,21 +120,42 @@
 			<label for="ocprov" class="select">Proveedor</label>
 			<select name="ocprov" id="ocprov">
 			    <option value="0">Seleccione al proveedor</option>
-			</select>			
-			<fieldset class="ui-grid-b tablaoculta" id="octabla">
-				<div class="ocult">id</div>
-			    <div class="ui-block-a"><div class="ui-bar ui-bar-b">Producto</div></div>
-			 	<div class="ocult">Costo</div>
-			    <div class="ui-block-b"><div class="ui-bar ui-bar-b">Cantidad</div></div>
-			    <div class="ui-block-c"><div class="ui-bar ui-bar-b">Subtotal</div></div>
-			</fieldset>	
-		    <input data-theme="b" data-icon="check" data-iconshadow="true" value="Enviar" type="button" 
-		    name="envia"id="envia">
-		    <div class="ui-input-btn ui-btn ui-btn-b ui-icon-delete ui-btn-icon-left ui-shadow-icon" 
-		    name="cancela"id="cancela">
-		        Cancelar
-		    <input data-enhanced="true" value="Enhanced" type="button">
-		    </div>
+			</select>
+			<div id="ococult" class="tablaoculta">
+				<div id="opcionesp" data-role= "controlgroup" >
+					<fieldset id="tventap" name="tventap" data-role="controlgroup" data-type="horizontal">
+			    		<legend>Tipo de Venta</legend>
+			    		<label>
+			    			<input type="radio" id="rcredcon-a" name="rpcredcon" value= "0"/>Contado
+			    		</label>
+			    		<label>
+			    			<input type="radio" id="rcredcon-b" name="rpcredcon" value= "1"checked="checked"/>Crédito
+			    		</label>
+	    			</fieldset>	
+	    			<fieldset>
+	    				<div data-role="fieldcontain">
+		    				<label >
+			    				<input type="checkbox" data-role="flipswitch" id="factp" name="factp"/>Facturada?
+			    			</label>
+	    				</div>
+	    				
+	    			</fieldset>
+	    		</div>
+	    		<fieldset class="ui-grid-b" id="octabla">
+					<div class="ocult">id</div>
+				    <div class="ui-block-a"><div class="ui-bar ui-bar-b">Producto</div></div>
+				 	<div class="ocult">Costo</div>
+				    <div class="ui-block-b"><div class="ui-bar ui-bar-b">Cantidad</div></div>
+				    <div class="ui-block-c"><div class="ui-bar ui-bar-b">Subtotal</div></div>
+				</fieldset>		
+				<input data-theme="b" data-icon="check" data-iconshadow="true" value="Enviar" type="button" 
+		    	name="envia"id="envia">
+		    	<div class="ui-input-btn ui-btn ui-btn-b ui-icon-delete ui-btn-icon-left ui-shadow-icon" 
+		    	name="cancela"id="cancela">
+		        	Cancelar
+		    		<input data-enhanced="true" value="Enhanced" type="button">
+		    	</div>	
+			</div>
 		</form>
     </div>
     

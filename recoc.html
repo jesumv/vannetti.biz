@@ -44,9 +44,7 @@
 						var liprodoc = JSON.parse(data);
 						var noprods= liprodoc.length;
 					//colocar titulo
-						var origen = document.getElementById("titulo");
-						var nodet = document.createTextNode("ORDEN DE COMPRA No. "+para);
-						origen.appendChild(nodet);				
+							$("<H3>ORDEN DE COMPRA NO. "+para+"</H3>").insertAfter("H1");
 					//colocar renglones
 						for (var i = 0; i < noprods; i++) {
 							var nombre = liprodoc[i].nom;

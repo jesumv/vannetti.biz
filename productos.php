@@ -133,6 +133,7 @@ include_once "include/menu1.php";
 		            	<label>C Barras</label><input type="text" name="barr"  id="barr" class="cajam"/>
 		            	<label>Costo</label><input type="text" name="cost"  id="cost" class="cajac"/>
 		            </div>
+		            <div><label>Causa Iva?</label><input type="checkbox" id="chiva" name="chiva" /></div>
 		            <div>
 		            	<label>Descripción</label><input type="text" name="desc"  id="desc" class="cajal"/>
 		            </div> 

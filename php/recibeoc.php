@@ -51,6 +51,25 @@ function tiposurt($mysqli,$oc){
 		}
 	}
 	
+	function traeproov($mysqli,$oc){
+		$sql = "SELECT idproveedores FROM oc WHERE idoc=".$oc;
+		$query = mysqli_query($mysqli, $sql) or die ('error en consulta no. proov: '.mysqli_error($mysqli));
+		$row=mysqli_fetch_array($query);
+		$proov = $row[0];
+		return $proov;
+	}
+	
+	function facturar($mysqli,$oc){
+		//esta funcion informa si el proveedor factura para  calcular el iva
+		$sql = "SELECT t1.idproveedores, t2.factura FROM oc AS t1 INNER JOIN proveedores as t2
+		ON t1.idproveedores = t2.idproveedores WHERE t1.idoc = $oc";
+		$query = mysqli_query($mysqli, $sql) or die ('error en consulta idproov: '.mysqli_error($mysqli));
+		$row=mysqli_fetch_array($query);
+		$fact= $row[1];
+		return $fact;
+	
+	}
+	
     $funcbase = new dbutils;
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
@@ -64,26 +83,43 @@ function tiposurt($mysqli,$oc){
 	$arts= $_POST["arts"];
 	$usu= $_SESSION['usuario'];
 	$tipomov = 1;
+	$fact= facturar($mysqli,$oc);
+	$ivat= array();
+	$totalt=array();
 	//revisar que la oc no esté ya ingresada
 		$revisa = revisastoc($oc, $mysqli);
 		$jsondata['strevisa']= $revisa;
 		if($revisa==0){
-			//marcar los articulos como ingresados
+			//trae no proveedor
+				$proov=traeproov($mysqli, $oc);
 				foreach ($arts as $valor) {
+				//marcar los articulos como ingresados
 		   			$sqlCommand = "UPDATE artsoc SET status= 2 WHERE idartsoc=".$valor;
-					$query1 = mysqli_query($mysqli, $sqlCommand) or die ('error en marcado de arts recep '.mysqli_error($mysqli));
+					$query1 = mysqli_query($mysqli, $sqlCommand) or die ('error en marcado de arts recep '.mysqli_error($mysqli));		
 			//abono a inventario
 					$sqlCommand1 = "INSERT INTO inventario (idproductos,tipomov,cant,monto,usu,idoc,debe)
 		    		SELECT idproductos, $tipomov, cant,preciot,'$usu',$oc,preciot from artsoc WHERE idartsoc=".$valor; 
 					$query2 = mysqli_query($mysqli, $sqlCommand1) or die ('error en alta inventarios: '.mysqli_error($mysqli));
+			//detectar si causa iva
+					$sqlCommand4a = "SELECT t2.idproductos,t1.costo FROM productos AS t1 INNER JOIN artsoc AS t2 ON 
+					t1.idproductos = t2.idproductos WHERE t2.idartsoc=$valor";
+					$query4a= mysqli_query($mysqli, $sqlCommand4a) or die ('error en busc iva: '.mysqli_error($mysqli));
+					$row=mysqli_fetch_array($query4a);
+					$prod= $row[0];
+					$cost= $row[1];
+					if($fact==1){$ivaprod = $funcbase->iva($mysqli,$prod,$cost);
+					array_push($ivat,$ivaprod);
+					}else{$ivaprod=0;}
+					$movtotot=$cost+$ivaprod;
+					array_push($totalt,$movtotot);
 			//cargo a cxp
 					$sqlCommand4 = "INSERT INTO cxp (idmovto,idproveedores,monto,iva,total,usu,haber)
-		    		SELECT artsoc.idoc,oc.idproveedores,artsoc.preciot,0, preciot,
-		    		'$usu',preciot FROM  artsoc INNER JOIN oc ON artsoc.idoc=oc.idoc where artsoc.idartsoc =".$valor; 
-					$query4 = mysqli_query($mysqli, $sqlCommand4) or die ('error en cargo a cxp: '.mysqli_error($mysqli));
+		    		SELECT artsoc.idoc,oc.idproveedores,$cost,$ivaprod,$movtotot,
+		    		'$usu',$movtotot FROM  artsoc INNER JOIN oc ON artsoc.idoc=oc.idoc where artsoc.idartsoc =".$valor; 
+					$query4 = mysqli_query($mysqli, $sqlCommand4) or die ('error en cargo a cxp: '.mysqli_error($mysqli));		
 			//cargo a ivaacred
-					$sqlCommand5 = "INSERT INTO ivaacred (idmovto,monto,usu,haber)
-		    		SELECT idoc,0,'$usu',0 FROM artsoc WHERE idartsoc =".$valor; 
+					$sqlCommand5 = "INSERT INTO ivaacred(idmovto,idproveedores,usu,status,debe)
+					VALUES($oc,$proov,'$usu',1,$ivaprod)";
 					$query5 = mysqli_query($mysqli, $sqlCommand5) or die ('error en cargo iva acred: '.mysqli_error($mysqli));
 				}
 			//validacion de ingreso
@@ -94,10 +130,10 @@ function tiposurt($mysqli,$oc){
 			/*complementar el array de resultados*/ 
 			$jsondata['noc']= $oc; 
 			$jsondata['tipos'] = $tsurt;
-			
-			
-			//marcar orden de compra como ingresada	
-			$sqlCommand3 = "UPDATE oc SET status =".$tsurt." WHERE idoc = $oc";
+			//marcar orden de compra como ingresada	y actualizar iva de los productos recibidos
+			$ivaft=array_sum($ivat);
+			$totalft=array_sum($totalt);
+			$sqlCommand3 = "UPDATE oc SET status =".$tsurt." ,iva = $ivaft, total = $totalft WHERE idoc = $oc";
 				$query3 = mysqli_query($mysqli, $sqlCommand3) or die ('error en marcado de oc rec '.mysqli_error($mysqli));  
 			//validacion de ingreso
 			if(!$query3){$jsondata['resul'] = -3;};

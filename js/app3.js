@@ -69,6 +69,12 @@
 	 		});
 	 			
 	   };
+function converiva(valor){
+	var resp;
+	//esta funcion convierte el valor numerico de la variable a texto para su manipulacion con js
+	if(valor==1){resp=true}else{resp=false}
+	return resp;
+};
 function llenacas(obj1)	{
 	//extraccion de datos del array
 	var idprod = obj1[0].idprod;
@@ -82,6 +88,7 @@ function llenacas(obj1)	{
 	var barrasel = obj1[0].cbarras;
 	var costosel = obj1[0].costo;
 	var descsel = obj1[0].desc;
+	var ivasel= converiva(obj1[0].iva);
 	var p1sel = obj1[0].pr1;
 	var p2sel = obj1[0].pr2;
 	var p3sel = obj1[0].pr3;
@@ -106,6 +113,8 @@ function llenacas(obj1)	{
 	barrascas.value = barrasel;
 	var costocas =  document.getElementById('cost');
 	costocas.value = costosel;
+	var ivacas = document.getElementById('chiva');
+	ivacas.checked = ivasel;
 	var descas =  document.getElementById('desc');
 	descas.value = descsel;
 	var p1cas =  document.getElementById('p1');
@@ -142,8 +151,9 @@ function aparece(indice){
 
 
 }; 
+//escuchas del boton de alta
   document.getElementById('altaprod').addEventListener('click', function(){aparece(0)},false);
-  //añadir funciones a elementos editar
+  //añadir escuchas a elementos editar
   	var editables = document.getElementsByClassName('ed');
   		for (var i = 0; i < editables.length; i++) {
   			editables[i].addEventListener('click', function(){aparece(this.id)}, false);
