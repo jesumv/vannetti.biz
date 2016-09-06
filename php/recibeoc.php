@@ -25,10 +25,10 @@ function tiposurt($mysqli,$oc){
 		$resul = 0;
 	}elseif ($compa>0) {
 		//surtido parcial
-		$resul = 2;
+		$resul = 10;
 	}elseif ($compa === 0) {
 		//surtido total
-		$resul = 3;
+		$resul = 11;
 	}else{
 		//error
 		$resul = -99;

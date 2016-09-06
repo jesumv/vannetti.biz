@@ -56,7 +56,7 @@
 						if(!$query){
 							$result = -3;	
 						}else{
-							//4modificacion de ivaxacreditar
+							//4 modificacion de ivaxacreditar
 							$sqlCommand= "INSERT INTO ivaacred (idmovto,idproveedores,fact,usu,status,haber)
 							VALUES ($oc,$prov,'$fac','$usu',1,$iva)";
 							$query=mysqli_query($mysqli, $sqlCommand)or die("error en abono ivax acred: ".mysqli_error($mysqli));

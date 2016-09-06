@@ -22,6 +22,15 @@ function aviso(texto){
 	$("#aviso").html(texto);
 	$("#aviso").popup("open");
 }
+
+function confirma(texto,oc){
+	//esta funcion enciende aviso de conclusion de oc
+	//con el texto pasado como parametro
+	$("#datos").html(texto);
+	$("#noc").val(oc);
+	$("#confirma").popup("open");
+}
+
 function validaelem(elem,valor){
 	//esta funcion valida el elemento que se pasa como argumento regresando 0 si el elemento
 	//coincide o es nulo

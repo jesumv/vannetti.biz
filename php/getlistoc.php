@@ -13,7 +13,7 @@ if(isset($_GET['idprov'])){$cad = "idproveedores=".$_GET['idprov']; }else{$cad =
 
 /**trae datos de ordenes de compra sin surtir**/
     if (is_object($mysqli)) {
-    	$sqlCommand = "SELECT idoc, arts FROM oc WHERE ".$cad." AND status < 3 ORDER BY idoc";		
+    	$sqlCommand = "SELECT idoc, arts FROM oc WHERE ".$cad." AND status < 11 ORDER BY idoc";		
 	 // Execute the query here now
 			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE OC SOL. ".mysqli_error($mysqli));
 //inicializacion de arreglo

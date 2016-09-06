@@ -10,30 +10,27 @@
                 		<li ><a href="#">Remisiones</a></li>
                 	</ul>
                   </li>
-                  <li><a>Almacén</a>
+                  <li class="currentsub"><a class="fly">Clientes</a>
                     	<ul class="sub1">
-	                        <li><a href="oc.html">OC</a></li>
-	                        <li class="currentsub"><a class="fly">Salidas</a>
-	                            <ul class="fly2">
-	                            	<li><a href="#">Facturación</a></li>
-	                                <li class="currentfly"><a href="#">Remisiones</a></li>
-	                                <li><a href="#">Muestras</a></li>
-	                                <li><a href="#">Producción</a></li>
-	                            </ul>
-	                        </li>
+                    		<li ><a href="listasp.html">Listas de Precios</a></li>
+	                        <li><a href="#">Salidas</a></li>
+	                        <li ><a href="#">Remisiones</a></li>
+	                        <li><a href="#">Muestras</a></li>
+	                        <li><a href="#">Producción</a></li>
                         </ul>
 
                    </li>
                     <li class="currentsub"><a class="fly">Proveedores</a>
                     	<ul class="fly2">
-                			<li class="currentfly"><a href="oc.php">Emisión OC</a></li>
+                			<li class="currentfly"><a href="oc.html">Emisión OC</a></li>
+                			<li class="currentfly"><a href="recoc.html">Recepción OC</a></li>
                 			<li class="currentfly"><a href="pagooc.php">Pago OC</a></li>
                 		</ul>
                 	</li>
                     	
                     <li><a><b>Administración</b></a>
                         <ul class="sub1">
-                            <li><a href="clientes.php">Clientes</a></li>
+                            <li><a href="#">Clientes</a></li>
                             <li><a href="proveedores.php">Proveedores</a></li>
                             <li><a href="productos.php">Productos</a></li>
                             <?php

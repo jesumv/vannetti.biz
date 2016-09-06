@@ -13,7 +13,7 @@
 					  $myusername = $_POST['username'];
 					  $mypassword = $_POST['password'];
 					  
-					  $sql=sprintf("SELECT id,username,empresa,nivel,nombre FROM usuarios WHERE username='$myusername' 
+					  $sql=sprintf("SELECT id,username,empresa,nivel,nombre,email FROM usuarios WHERE username='$myusername' 
 					                and passcode=(AES_ENCRYPT('%s','%s'))",$mypassword,$mypassword);
 					  $result=mysqli_query($mysqli,$sql);
 					                $row=mysqli_fetch_array($result);
@@ -21,10 +21,9 @@
 					                $empre = $row[2];
 									$nivel =$row[3];
 									$nombre =$row[4];
-					                $count=mysqli_num_rows($result);
-					                
-					                $result->free();
-					                
+									$email=$row[5];
+					                $count=mysqli_num_rows($result); 
+					                $result->free();		                
 					                $mysqli->close();
 					  
 					  //
@@ -33,6 +32,7 @@
 					        $_SESSION['nombre']=$nombre;
 					        $_SESSION['nivel']=$nivel;
 					        $_SESSION['empresa']=$empre;
+							$_SESSION['uemail']=$email;
 							$_SESSION['root'] = realpath($_SERVER["DOCUMENT_ROOT"]);
 							if($nivel<10){
 								echo 1;

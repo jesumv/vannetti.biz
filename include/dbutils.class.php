@@ -186,6 +186,13 @@
 			
 		}
 		
+		public function enviamail($to,$subject,$txt,$headers){
+			//esta funcion envia unn mail con los parametros proporcionados
+			
+			
+			
+		}
+		
 		
 		public function compledom($calleno,$col,$del,$ciudad,$estado,$cp){
 			/*toma los elementos del domicilio y los une en una cadena */

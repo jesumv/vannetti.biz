@@ -71,9 +71,9 @@
 	    							var noc= data.noc;
 	    							var arts =data.arts;
 	    							var total = data.total;
-	    							var cad = "ORDEN DE COMPRA OK <br>Numero: "+ noc + "<br>"+"Arts: "+arts+"<br>"+"total: "+total;
-									aviso(cad);
-									$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
+	    							var cad = "Numero: "+ noc + "<br>"+"Arts: "+arts+"<br>"+"total: "+total;
+									confirma(cad,noc);
+									$( "#confirma" ).on( "popupafterclose", function( event, ui ) {
 										location.reload();
 										$('#ocprov').selectmenu( "enable" );
 									} );
@@ -84,6 +84,28 @@
 								});	
 						}
 			  		
+			   });
+			   
+			   $("#enviac").click(function(){
+			   	//escucha del boton envia correo
+			   		var numoc=$("#noc").val();
+			   		$.post("php/enviamailoc.php",{oc:numoc},null,"json").done(function(data){
+			   			var resul= data;
+			   			if(resul==0){
+			   				$("#confirma").popup("close");
+			   				alert("CORREO ENVIADO");
+			   			}else{
+			   				$("#confirma").popup("close");
+			   				alert("ENVIO FALLIDO");
+			   				};
+			   		});
+			   });
+			   
+			    $("#noenvia").click(function(){
+			   	//escucha del boton no evia correo
+			   		$("#confirma").popup("close");
+			   		location.reload();
+			   		$('#ocprov').selectmenu( "enable" );
 			   });
 			   
 			  $("#cancela").click(function(){
@@ -159,17 +181,32 @@
 		</form>
     </div>
     
-<div data-role="popup" id="aviso">
+<div data-role="popup" id="aviso" >
 	<p>Sin texto, todavía.</p>
 </div>
-<div data-role="panel" id="navpanel" data-display="overlay">
- 		<ul data-role ="listview">
- 			<li><a href="oc.html" data-ajax="false">Ordenes de Compra</a></li>
- 			<li><a href="listoc.html" data-ajax="false">Rec. de OC</a></li>
-	    	<li><a href="pedido.html" data-ajax="false">Pedidos</a></li>
-	    	<li><a href="listasp.html" data-ajax="false">Listas de Productos</a></li>
- 		</ul>	    	
- </div>
+
+<div id="confirma" data-role="popup"  data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
+    <div data-role="header" data-theme="a">
+	    <h1>O. Compra OK.</h1>
+	    <h2 id="datos"></h2>
+    </div>
+    <div role="main" class="ui-content">
+        <h3 class="ui-title">¿Enviar Correo al Proveedor?</h3>
+	<br>
+		<input id="noc" type="hidden" />
+        <button id="enviac" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b">SI, enviar</button>
+        <button id="noenvia" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" >NO</button>
+    </div>
+</div>
+
+	<div data-role="panel" id="navpanel" data-display="overlay">
+	 		<ul data-role ="listview">
+	 			<li><a href="oc.html" data-ajax="false">Ordenes de Compra</a></li>
+	 			<li><a href="listoc.html" data-ajax="false">Rec. de OC</a></li>
+		    	<li><a href="pedido.html" data-ajax="false">Pedidos</a></li>
+		    	<li><a href="listasp.html" data-ajax="false">Listas de Productos</a></li>
+	 		</ul>	    	
+	 </div>
   </div>
 </body>
 </html>
