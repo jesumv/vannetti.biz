@@ -140,8 +140,8 @@ function aparece(indice){
 			llenaop();
 		})
 	//recolectar los datos para el dialogo y llenar las casillas
-		.then(datosprod = traeprod(indice))
-		.then (app.toggleAddDialog(true));	
+		prodsel.then(datosprod = traeprod(indice))
+		prodsel.then (app.toggleAddDialog(true));	
 		}else{
 				var prodvac = new Promise(function(resolve,reject){
 					llenaop();
@@ -152,7 +152,7 @@ function aparece(indice){
 
 }; 
 //escuchas del boton de alta
-  document.getElementById('altaprod').addEventListener('click', function(){aparece(0)},false);
+  document.getElementById('altaprodb').addEventListener('click', function(){aparece(0)},false);
   //añadir escuchas a elementos editar
   	var editables = document.getElementsByClassName('ed');
   		for (var i = 0; i < editables.length; i++) {
