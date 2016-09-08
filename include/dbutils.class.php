@@ -130,6 +130,28 @@
             }
         }
 		
+		
+		public function leelinv($mysqli,$cat){
+          //***lee todos los datos de una tabla, un registro o todos los registros, de acuerdo con el argumento $filtro ***/
+ 
+            $sqlCommand = "SELECT codigo,nombre FROM productos WHERE grupo = $cat < 1 ORDER BY nombre";		
+	 // Execute the query here now
+			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE SELEC PROD. ".mysqli_error($mysqli));
+//inicializacion de arreglo
+				while($tempo=mysqli_fetch_array($query1)){
+			 		$result[] = array('cod' => $tempo['codigo'],'desc' => $tempo['nombre']);
+			 };
+            /* liberar la serie de resultados */
+                  mysqli_free_result($query1);
+                  /* cerrar la conexion */
+                  mysqli_close($mysqli);
+            if($result){
+              return $result;  
+            }
+            else {
+                 die('no hay resultados para lista de inventarios ');
+            }
+        }
 		public function leeuno($mysqli,$table,$filtro){
           //***lee un registro de una tabla, un registro o todos los registros, de acuerdo con el argumento $filtro ***/
             $sql= "SELECT * FROM $table WHERE ".$filtro;

@@ -140,8 +140,8 @@ function aparece(indice){
 			llenaop();
 		})
 	//recolectar los datos para el dialogo y llenar las casillas
-		.then(datosprod = traeprod(indice))
-		.then (app.toggleAddDialog(true));	
+		prodsel.then(datosprod = traeprod(indice))
+		prodsel.then (app.toggleAddDialog(true));	
 		}else{
 				var prodvac = new Promise(function(resolve,reject){
 					llenaop();
