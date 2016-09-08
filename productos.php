@@ -50,11 +50,11 @@
   <main class="main">
  	<br />
  <h2>PRODUCTOS</h2>
+   <button id="altaprodb">ALTA PRODUCTO</button>
   	<?php
 /*menu de navegación*/
 include_once "include/menu1.php";   	
   	?>
-  <button id="altaprod">ALTA PRODUCTO</button>
   <?php
 //-----CONSTRUCCION DE LA TABLA------------------------------------------------------------------------
  $table = 'productos';
