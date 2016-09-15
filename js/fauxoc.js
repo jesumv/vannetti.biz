@@ -70,8 +70,8 @@ function hazvisib(visible){
 
 function addtot(){
 	
-	//se a�ade la fila de totales
-	for( var z=0; z<3; z++) {
+	//se añade la fila de totales
+	for( var z=0; z<4; z++) {
 		//seleccionar la clase adecuada
 			var claset;
 			var clase2;
@@ -88,6 +88,12 @@ function addtot(){
 		        textot = "0";
 		        idt = "tcant";
 		    	 break;
+		     case 3:
+			        claset = "ocult";
+			        textot = "0";
+			        idt = "subtotalo";
+			    	break;
+		    
 		     default:
 		    	claset = "ui-block-c";
 		        textot = "0.00";
@@ -115,7 +121,7 @@ function validacant(cant){
 
 function sumaprecio(){
 	var preciot =0;
-	var arre = document.getElementsByClassName("prec") 
+	var arre = document.getElementsByClassName("subtoc") 
 	var longit = arre.length;
 	for(var z=0; z<longit; z++){
 		var preact = Number(arre[z].innerText);
@@ -159,13 +165,16 @@ function ponsubt(){
 			var precio = document.getElementById("costo"+ rengl).innerHTML;
 			var valor = document.getElementById("cant"+ rengl).value;
 			var preciot = precio*valor;
+			document.getElementById("subtoc" +rengl).innerHTML =preciot;
 			document.getElementById("subt"+ rengl).innerHTML = $.number(preciot,2);
+			
 			// se modifican los totales
 			var sumacants = sumacant();
 			document.getElementById("tcant").innerHTML = sumacants;
 			var sumaprecs = sumaprecio();
 			var sumapreciost= $.number(sumaprecs,2);
 			document.getElementById("tprec").innerHTML = sumapreciost; 
+			document.getElementById("subtotalo").innerHTML = sumaprecs.toFixed(2);
 	 }else{
 		 aviso("debe introducir una cantidad positiva");
 		$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
@@ -222,7 +231,7 @@ function addprod(id,nombre,costo,reng){
 	var origen = document.getElementById("octabla");
 	origen.appendChild(nombre1);
 	
-	for( var z=0; z<5; z++) {
+	for( var z=0; z<6; z++) {
 	//seleccionar la clase adecuada
 		var clase;
 		var clase2;
@@ -245,20 +254,27 @@ function addprod(id,nombre,costo,reng){
 	        break;
 	    case 2:
 	    	elem = "DIV"
-	    	idt = "costo" + reng;
+	    	idt = "costo" + reng
 	    	clase = "ocult"
 	    	texto = costo
 	        break;
 	    case 3:
 	    	elem = "INPUT";
-	    	idt = "cant" + reng;
+	    	idt = "cant" + reng
 	    	clase = "ui-block-b cant"
 	    	clase2 = "icant"
 	    	texto = ""
 	        break;
+	    case 5:
+	    	elem = "DIV"
+	    	idt = "subtoc" + reng
+	    	clase = "ocult subtoc"
+	    	texto = ""
+	        break;
+	    	
 	    default:
 	    	elem = "DIV"
-	    	idt = "subt" + reng;
+	    	idt = "subt" + reng
 	    	clase = "ui-block-c prec"
 	    	clase2 = ""
 	    	texto = "0.00"
@@ -266,7 +282,7 @@ function addprod(id,nombre,costo,reng){
 //definicion de elementos de acuerdo con la celda
 		switch(z){
 			case 0:
-			case 2:
+			case 2,5:
 				var nombre1 = document.createElement("DIV");
 				nombre1.className = clase;
 				nombre1.id = idt;

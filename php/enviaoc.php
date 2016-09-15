@@ -26,7 +26,7 @@
 	$cants=$_POST["cants"];
 	$prods=$_POST["prods"];
 	$preciou = $_POST["preciou"];
-	$preciot = $_POST["preciot"];
+	$preciot=$_POST["preciot"];
 	$total=$_POST["total"];
 	$jsondata = array();
 	//creacion de datos para oc
@@ -43,8 +43,7 @@
 				//insercion de productos en tabla artsoc
 				$indi = 0;
 					foreach($prods as $id){
-						$sqlCommand= "INSERT INTO artsoc (idoc,idproductos,cant,preciou,
-						preciot,status)
+						$sqlCommand= "INSERT INTO artsoc (idoc,idproductos,cant,preciou,preciot,status)
 		    			VALUES ($noc,$prods[$indi],$cants[$indi],$preciou[$indi],$preciot[$indi],1)";
 						$query=mysqli_query($mysqli, $sqlCommand)or die("error en alta artsoc:".mysqli_error($mysqli)); 	
 						if($query){

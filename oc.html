@@ -40,7 +40,7 @@
 						}else{
 							//recoleccion de variables
 							var prov = $("#ocprov").val();
-							var total =$("#tprec").text();
+							var total =$("#subtotalo").text();
 							var longi = $(".cant").length;
 							var prods=[];
 							var cant=[];
@@ -52,7 +52,7 @@
 									prods[longcants] = $("#id".concat(z)).text();
 									cant[longcants] = $("#cant".concat(z)).val();
 									preciou[longcants]= $("#costo".concat(z)).text();
-									preciot[longcants]= $("#subt".concat(z)).text();
+									preciot[longcants]= $("#subtoc".concat(z)).text();
 									longcants++;
 								}
 							}
@@ -70,7 +70,7 @@
 	    						.done(function( data) {
 	    							var noc= data.noc;
 	    							var arts =data.arts;
-	    							var total = data.total;
+	    							var total = $.number(data.total,2);
 	    							var cad = "Numero: "+ noc + "<br>"+"Arts: "+arts+"<br>"+"total: "+total;
 									confirma(cad,noc);
 									$( "#confirma" ).on( "popupafterclose", function( event, ui ) {
@@ -80,7 +80,7 @@
 	    						})
 	    						.fail(function( data ) {
 	    							var err1 = data.success;
-	    							aviso("error alta de oc: "+err1);
+	    							aviso("error alta de oc js: "+err1);
 								});	
 						}
 			  		
@@ -169,6 +169,7 @@
 				 	<div class="ocult">Costo</div>
 				    <div class="ui-block-b"><div class="ui-bar ui-bar-b">Cantidad</div></div>
 				    <div class="ui-block-c"><div class="ui-bar ui-bar-b">Subtotal</div></div>
+				    <div class="ocult">subtotalo</div>
 				</fieldset>		
 				<input data-theme="b" data-icon="check" data-iconshadow="true" value="Enviar" type="button" 
 		    	name="envia"id="envia">

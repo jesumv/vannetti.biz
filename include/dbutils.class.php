@@ -103,11 +103,11 @@
 		public function leelprod($mysqli,$nivel=3){
           //***lee todos los datos de una tabla, un registro o todos los registros, de acuerdo con el argumento $filtro ***/
           if ($nivel ==3) {
-               $nprecio = precio."3";
+               $nprecio = "precio"."3";
           } elseif ($nivel==0){
               $nprecio = "costo";
           }else{
-          	 $nprecio = precio."$nivel";
+          	 $nprecio = "precio"."$nivel";
           }
           
          

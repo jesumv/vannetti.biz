@@ -40,7 +40,7 @@ if (is_object($mysqli)) {
 	function Footer()
 	{
 	    // Posición: a x  cm del final
-	    $this->SetY(-40);
+	    $this->SetY(-45);
 		$this->SetFont('Arial','I',10);
 		$this->Cell(100,6,'ESTA LISTA ESTA SUJETA A CAMBIOS SIN PREVIO AVISO.',0,0,'L');
 		$this->Cell(20,6,'FECHA DE ELABORACION: '.date('Y-m-d'),0,1,'L');
@@ -56,7 +56,7 @@ if (is_object($mysqli)) {
 function tablabas($header, $data)
 {
     // Anchuras de las columnas
-    $w = array(30,125,25);
+    $w = array(30,130,20);
     // Cabeceras
     $this->SetFillColor(95);
     for($i=0;$i<count($header);$i++)
@@ -69,7 +69,8 @@ function tablabas($header, $data)
     {
     	$this->Cell($w[0],6,$row['cod'],1);
         $this->Cell($w[1],6,$row['desc'],1);
-        $this->Cell($w[2],6,$row['precio'],1,' ','R');
+		$numerof=number_format($row['precio'], 2, '.', '');
+        $this->Cell($w[2],6,$numerof,1,0,'R');
         $this->Ln(); 
     }
     // Línea de cierre
@@ -87,6 +88,7 @@ function tablabas($header, $data)
 	$pdf->AliasNbPages();
 	$pdf->AddPage();
 	//Tipografía Inicial
+	$pdf->SetAutoPageBreak(2,50);
 	$pdf->tablabas($header,$data);
 	$pdf->Output();
 }else {
