@@ -70,14 +70,14 @@
     
             $user_check=$_SESSION['usuario'];
             
-            $ses_sql=mysqli_query($mysqli,"select username from usuarios where username='$user_check' ");      
+            $ses_sql=mysqli_query($mysqli,"select username from usuarios where username='$user_check'");      
             $row=mysqli_fetch_array($ses_sql);
             
             $login_session=$row['username'];
     
             if(!isset($login_session))
             {
-                  header("Location:/vannetti.biz/logout.html"); 
+                  header("Location:/vannetti.biz/logout.php"); 
                
             }
         }
@@ -170,23 +170,6 @@
         }
 		
 		
-        
-        public function numremi($mysqli){
-        	/*lee el ultimo numero de remision emitido*/
-        	$sql= "SELECT MAX(idremisiones) FROM remisiones";
-            $result = mysqli_query($mysqli,$sql);
-            $result2 = mysqli_fetch_row($result);
-			$dato = $result2[0];
-            if($result2){
-              return $dato;  
-            }
-            else {
-                 die('no hay resultados para el numero de remision');
-            }
-        }
-		
-		
-		
 		public function leeprov($mysqli,$idprov){
 			//lee el nombre corto del proveedor cuyo id se pasa como parametro
 			
@@ -208,20 +191,6 @@
 			
 		}
 		
-		public function enviamail($to,$subject,$txt,$headers){
-			//esta funcion envia unn mail con los parametros proporcionados
-			
-			
-			
-		}
-		
-		
-		public function compledom($calleno,$col,$del,$ciudad,$estado,$cp){
-			/*toma los elementos del domicilio y los une en una cadena */
-			$completo = $calleno." ".$col." ".$del." c.p.".$cp." ".$ciudad.", ".$estado;
-			return $completo;
-			
-		}
         	
 	}/*** fin de la clase ***/
 	

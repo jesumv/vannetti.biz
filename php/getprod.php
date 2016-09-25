@@ -13,17 +13,17 @@ $idprod = $_GET['idprod'];
 $cad = "idproductos=".$idprod;
 /**trae datos del producto solicitado**/
     if (is_object($mysqli)) {
-    	$sqlCommand = "SELECT idproveedores,grupo,nombre,nom_corto,codigo, unidad,cant, cbarras,
-    	costo,descripcion, iva, precio1, precio2, precio3 FROM productos WHERE ".$cad;		
+    	$sqlCommand = "SELECT idproveedores,grupo,nombre,nom_corto,nom_cat,codigo,unidad,cant,cbarras,
+    	costo,descripcion,iva,speso,precio1,precio2,precio3 FROM productos WHERE ".$cad;		
 	 // Execute the query here now
 			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE PRODUCTO ".mysqli_error($mysqli));
 //inicializacion de arreglo
 			 while($tempo=mysqli_fetch_array($query1, MYSQLI_ASSOC)){
 			 	$result[] = array('idprod'=> $idprod,'idprov' => $tempo['idproveedores'],'grupo' => $tempo['grupo'],
-			 	'nombre' => $tempo['nombre'],'nomcorto' => $tempo['nom_corto'],
+			 	'nombre' => $tempo['nombre'],'nomcorto' => $tempo['nom_corto'],'nomcat' => $tempo['nom_cat'],
 			 	'codigo'=>$tempo['codigo'],'unidad'=>$tempo['unidad'],'cant'=>$tempo['cant'],
-			 	'cbarras'=>$tempo['cbarras'],'costo'=>$tempo['costo'],
-			 	'desc'=>$tempo['descripcion'],'iva'=>$tempo['iva'],'pr1'=>$tempo['precio1'],'pr2'=>$tempo['precio2'],
+			 	'cbarras'=>$tempo['cbarras'],'costo'=>$tempo['costo'],'desc'=>$tempo['descripcion'],
+			 	'iva'=>$tempo['iva'],'speso'=>$tempo['speso'],'pr1'=>$tempo['precio1'],'pr2'=>$tempo['precio2'],
 				'pr3'=>$tempo['precio3']);
 			 };
 	/* liberar la serie de resultados */

@@ -7,12 +7,9 @@
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
     if (is_object($mysqli)) {
-		/*** checa login***/
-		$funcbase->checalogin($mysqli);
 						 //asignacion de variables
 					  $myusername = $_POST['username'];
 					  $mypassword = $_POST['password'];
-					  
 					  $sql=sprintf("SELECT id,username,empresa,nivel,nombre,email FROM usuarios WHERE username='$myusername' 
 					                and passcode=(AES_ENCRYPT('%s','%s'))",$mypassword,$mypassword);
 					  $result=mysqli_query($mysqli,$sql);
@@ -28,6 +25,7 @@
 					  
 					  //
 						if($count == 1){
+							session_start();
 							$_SESSION['usuario'] = $usuario;
 					        $_SESSION['nombre']=$nombre;
 					        $_SESSION['nivel']=$nivel;
@@ -35,10 +33,10 @@
 							$_SESSION['uemail']=$email;
 							$_SESSION['root'] = realpath($_SERVER["DOCUMENT_ROOT"]);
 							if($nivel<10){
-								echo 1;
-							}else{echo 2;}
+								echo "1";
+							}else{echo "2";}
 						} else {
-							echo 0;	
+							echo "0";	
 						}
 						exit();		
 

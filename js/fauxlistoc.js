@@ -55,7 +55,7 @@ function addlista(clave){
 				//agregar al arreglo global
 				noc.push(nooc);
 				//construir cadena de texto
-				cadena= "<a class='ui-btn' data-ajax='false' href='recoc.html?oc="+nooc+"'>ORDEN DE COMPRA "+nooc+"</a>";
+				cadena= "<a class='ui-btn' data-ajax='false' href='recoc.php?oc="+nooc+"'>ORDEN DE COMPRA "+nooc+"</a>";
 				//construir los renglones
 				$("#lista").append(cadena);
 			};

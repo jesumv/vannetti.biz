@@ -25,7 +25,7 @@ if (is_object($mysqli)) {
 	    // Arial bold 18
 	    $this->SetFont('Arial','B',18);
 		//color relleno
-		$this->SetFillColor(77,153,225);
+		$this->SetFillColor(95,190,90);
 		 // Salto de línea
 	    $this->Ln(26);
 		// Movernos a la derecha
@@ -64,7 +64,7 @@ function tablabas($header, $data)
     $this->Ln();
     // Datos
     	//cambiar la fuente
-	$this->SetFont('Arial','',14);
+	$this->SetFont('Arial','',12);
     foreach($data as $row)
     {
     	$this->Cell($w[0],6,$row['cod'],1);

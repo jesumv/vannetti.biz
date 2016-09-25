@@ -9,7 +9,7 @@ $(document)
 				alert("Nombre de usuario o contraseña incorrectos");
 			} else if (data == 1){
 				window.open('portal.php', '_self');	
-			}else{window.open('portalmov.html', '_self')}
+			}else{window.open('portalmov.php', '_self')}
 		});
 	}
 })

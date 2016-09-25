@@ -69,12 +69,13 @@
 	 		});
 	 			
 	   };
-function converiva(valor){
+function converbool(valor){
 	var resp;
-	//esta funcion convierte el valor numerico de la variable a texto para su manipulacion con js
+	//esta funcion convierte el valor numerico una variable booleana a texto para su manipulacion con js
 	if(valor==1){resp=true}else{resp=false}
 	return resp;
 };
+
 function llenacas(obj1)	{
 	//extraccion de datos del array
 	var idprod = obj1[0].idprod;
@@ -82,13 +83,15 @@ function llenacas(obj1)	{
 	var grupo = obj1[0].grupo;
 	var nombresel = obj1[0].nombre;
 	var ncortosel = obj1[0].nomcorto;
+	var ncatsel = obj1[0].nomcat;
 	var codigosel = obj1[0].codigo;
 	var udsel = obj1[0].unidad;
 	var cantsel = obj1[0].cant;
 	var barrasel = obj1[0].cbarras;
 	var costosel = obj1[0].costo;
 	var descsel = obj1[0].desc;
-	var ivasel= converiva(obj1[0].iva);
+	var ivasel= converbool(obj1[0].iva);
+	var pesosel=converbool(obj1[0].speso)
 	var p1sel = obj1[0].pr1;
 	var p2sel = obj1[0].pr2;
 	var p3sel = obj1[0].pr3;
@@ -103,6 +106,8 @@ function llenacas(obj1)	{
 	nombrecas.value = nombresel;
 	var ncortocas =  document.getElementById('nomcor');
 	ncortocas.value = ncortosel;
+	var ncatcas =  document.getElementById('nomcat');
+	ncatcas.value = ncatsel;
 	var codigocas =  document.getElementById('cod');
 	codigocas.value = codigosel;
 	var udcas = document.getElementById('selectmenu3');
@@ -115,6 +120,8 @@ function llenacas(obj1)	{
 	costocas.value = costosel;
 	var ivacas = document.getElementById('chiva');
 	ivacas.checked = ivasel;
+	var pesocas = document.getElementById('chpeso');
+	pesocas.checked = pesosel;
 	var descas =  document.getElementById('desc');
 	descas.value = descsel;
 	var p1cas =  document.getElementById('p1');
@@ -152,7 +159,8 @@ function aparece(indice){
 
 }; 
 //escuchas del boton de alta
-  document.getElementById('altaprodb').addEventListener('click', function(){aparece(0)},false);
+  document.getElementById('altaprodb').addEventListener('click', function(){
+	  aparece(0)},false);
   //añadir escuchas a elementos editar
   	var editables = document.getElementsByClassName('ed');
   		for (var i = 0; i < editables.length; i++) {

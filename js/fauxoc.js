@@ -1,6 +1,6 @@
 /**
  * @author jmv
- * este script tiene las funciones auxiliares de la hoja oc.html
+ * este script tiene las funciones auxiliares de la hoja oc.php
  */
 (function() {
 //llena la lista de proveedores

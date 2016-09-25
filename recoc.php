@@ -1,3 +1,19 @@
+<?php
+  function __autoload($class){
+	  require('include/' . strtolower($class) . '.class.php');
+    }
+    
+    $funcbase = new dbutils;
+/*** conexion a bd ***/
+    $mysqli = $funcbase->conecta();
+    if (is_object($mysqli)) {
+/*** checa login***/
+       $funcbase->checalogin($mysqli);
+    } else {
+        //die ("<h1>'No se establecio la conexion a bd'</h1>");
+    }
+    
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,7 +52,7 @@
 				var para = getpar('oc');		
 		if(!para){
 				aviso("NO HAY ORDEN DE COMPRA SELECCIONADA");
-				window.setTimeout(function(){window.location.href = "listoc.html";}, 2000);	
+				window.setTimeout(function(){window.location.href = "listoc.php";}, 2000);	
 				
 			}else{
 					$.get('php/getlistprodoc.php',{oc:para},function(data){
@@ -142,7 +158,7 @@
     							var cad = rresprrecoc(resp2,noc,tiporec);
 								aviso(cad);
 								$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
-									window.location.href = "listoc.html";
+									window.location.href = "listoc.php";
 								} );
     						})
     						.fail(function( data ) {
@@ -160,9 +176,9 @@
 <body>
 	<div data-role="page" id="pagrecoc">
 		<div data-role="header" id="cabezal">
-			<a href="listoc.html" data-ajax="false" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-back">Regresar</a>
+			<a href="listoc.php" data-ajax="false" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-back">Regresar</a>
 			<h1 id="titulo">RECEPCION DE ORDEN DE COMPRA</h1>
-			<a href="logout.html" data-ajax="false" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-delete">Cerrar</a>
+			<a href="logout.php" data-ajax="false" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-delete">Cerrar</a>
 		</div>
 		<div data-role = "ui-content" id="lista">
 			<form id="forma" method="post"
@@ -178,10 +194,10 @@
 		<p>Sin texto, todavía.</p>
 		<div data-role="panel" id="navpanel" data-display="overlay">
 	 		<ul data-role ="listview">
-	 			<li><a href="oc.html" data-ajax="false">Ordenes de Compra</a></li>
-	 			<li><a href="listoc.html" data-ajax="false">Rec. de OC</a></li>
-		    	<li><a href="pedido.html" data-ajax="false">Pedidos</a></li>
-		    	<li><a href="listasp.html" data-ajax="false">Listas de Productos</a></li>
+	 			<li><a href="oc.php" data-ajax="false">Ordenes de Compra</a></li>
+	 			<li><a href="listoc.php" data-ajax="false">Rec. de OC</a></li>
+		    	<li><a href="pedido.php" data-ajax="false">Pedidos</a></li>
+		    	<li><a href="listasp.php" data-ajax="false">Listas de Productos</a></li>
 	 		</ul>	    	
  		</div>
 	</div>

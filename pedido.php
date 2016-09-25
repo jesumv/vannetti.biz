@@ -424,9 +424,9 @@ function sumaprecio(){
 <body>
   <div data-role="page" id="pedpag"> 
 	<div data-role="header">
-    	<a href="portalmov.html" data-ajax="false" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-home">Inicio</a>
+    	<a href="portalmov.php" data-ajax="false" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-home">Inicio</a>
 		<h1>Toma de Pedido</h1>
-    	<a href="logout.html" data-ajax="false" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-delete">Cerrar</a>
+    	<a href="logout.php" data-ajax="false" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-delete">Cerrar</a>
 	</div>
 
     <div role="main " class="ui-content">
@@ -471,10 +471,10 @@ function sumaprecio(){
   	</div>
   		<div data-role="panel" id="navpanel" data-display="overlay">
  		<ul data-role ="listview">
- 			<li><a href="oc.html" data-ajax="false">Ordenes de Compra</a></li>
- 			<li><a href="listoc.html" data-ajax="false">Rec. de OC</a></li>
-	    	<li><a href="pedido.html" data-ajax="false">Pedidos</a></li>
-	    	<li><a href="listasp.html" data-ajax="false">Listas de Productos</a></li>
+ 			<li><a href="oc.php" data-ajax="false">Ordenes de Compra</a></li>
+ 			<li><a href="listoc.php" data-ajax="false">Rec. de OC</a></li>
+	    	<li><a href="pedido.php" data-ajax="false">Pedidos</a></li>
+	    	<li><a href="listasp.php" data-ajax="false">Listas de Productos</a></li>
  		</ul>	    	
  		</div>
   </div>

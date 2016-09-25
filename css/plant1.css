@@ -1,15 +1,15 @@
 /*estilos para input dentro de dialogo*/
 .cajal {
 	width: 80%;
-	font-size: 150%;
+	font-size: 115%;
 }
 .cajam {
-	width: 40%;
-	font-size: 150%;
+	width: 35%;
+	font-size: 115%;
 }
 .cajac {
 	width: 26%;
-	font-size: 150%;
+	font-size: 115%;
 }
 .cajalfc{
 	width: 80%;
@@ -43,7 +43,8 @@
 }
 /*estilos para las tablas*/
 
-table.db-table 		{ border-right:1px solid #ccc; border-bottom:1px solid #ccc; margin:auto}
+table.db-table 		{ border-right:1px solid #ccc; border-bottom:1px solid #ccc; 
+margin-left:auto;margin-right:auto;margin-top:20px; margin-bottom:auto; }
 table.db-table th	{ background:#eee; padding:5px; border-left:1px solid #ccc; border-top:1px solid #ccc; }
 table.db-table td	{ padding:5px; border-left:1px solid #ccc; border-top:1px solid #ccc; }
 

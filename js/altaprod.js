@@ -1,9 +1,8 @@
 /**
  * @author jmv
  */
-$(document)
-.on("submit", "#altaprod", function(){
-  if(validate()){
+$(document).on("submit","#altaprod", function(){
+  if(validar()){
 		$.post('php/altaprod.php', $(this).serialize(), function(data){
 			if(data == -1){
 				alert("error en movimiento de producto");
@@ -17,9 +16,9 @@ $(document)
 		});
 	}
 })
-;
 
-function validate(){
+
+function validar(){
 		if($("#selectmenu").val() === '0'){
 			alert("Debe seleccionar un proveedor");
 			$("#selectmenu").focus();
@@ -40,6 +39,13 @@ function validate(){
 			$("#nomcor").focus();
 			return false;
 		}
+		
+		if($("#nomcat").val() === ''){
+			alert("Debe proporcionar un nombre de catalogo");
+			$("#nomcat").focus();
+			return false;
+		}
+		
 		if($("#cod").val() === ''){
 			alert("Debe proporcionar un codigo de producto");
 			$("#cod").focus();
