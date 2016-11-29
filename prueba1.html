@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame 
+       Remove this if you use the .htaccess -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>HTML</title>
+  <meta name="description" content="">
+  <meta name="author" content="jmv">
+
+  <meta name="viewport" content="width=device-width; initial-scale=1.0">
+
+  <!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" type="text/css" href="css/inline.css">
+  <link rel="stylesheet" type="text/css" href="css/plant1.css">
+</head>
+
+<body>
+  <div>
+    <header>
+      <h1>PRUEBA DE DIALOGO</h1>
+    </header>
+    
+  <div class="dialog-container--visible">
+    <!-- dialogo para alta de producto -->
+          <div class="dialog">
+      		<div class="dialog-title">Datos del Producto</div>
+		      <div class="dialog-body">
+		        <form id="altaprod" name="altaprod" method ="post" action="#" onsubmit="return false;">
+		        	<input type="hidden" name="idprod" id ="idprod" value="0"/>
+		        	<div class="rengn">
+		        		<label>Proveedor:</label><select id="selectmenu" name="selectmenu">
+											<option value="0">Seleccione al proveedor</option>
+         								</select>
+         				<label>Grupo:</label><select id="selectmenu2" name="selectmenu2">
+											<option value="0">Seleccione el grupo de productos</option>
+         								</select>	
+		        	</div>
+		            <div class="rengn">
+		            	<label>Nombre:  </label><input type="text" name="nombre" id="nombre" class="cajal"/>
+		            </div>
+
+		            <div class="rengn">
+		            	<label>N. Corto:  </label><input type="text" name="nomcor"  id="nomcor" class="cajam"/>
+		            	<label>N. Cat.:  </label><input type="text" name="nomcat"  id="nomcat" class="cajam"/>
+		            </div>
+		           <div class="rengn">
+		           	<label>Unidad:    </label><select id="selectmenu3" name="selectmenu3" style="margin-right: 50px">
+											<option value="0">Seleccione unidad medida</option>
+         								</select>
+		           	 <label>Cantidad:  </label><input type="text" name="cant"  id="cant" class="cajac" />
+		           </div> 
+		           <div class="rengn">
+		            	<label>C Barras:  </label><input type="text" name="barr"  id="barr" class="cajam"/>
+		            	<label>Código:  </label><input type="text" name="cod"  id="cod" class="cajac"/>
+		            </div>
+		            <div class="rengn">
+		            	<label>Descripción:</label><input type="text" name="desc"  id="desc" class="cajal"/>
+		            </div> 
+		            <div class="rengn"><label>Causa Iva?</label><input type="checkbox" id="chiva" name="chiva" />
+		            	<label>Costo:  </label><input type="text" name="cost"  id="cost" class="cajac"/>
+		            	<label>Precio según peso?</label><input type="checkbox" id="chpeso" name="chpeso" />
+		            </div>
+		            <div class="rengn">
+		            	<label>P1 </label><input type="text" name="p1"  id="p1" class="cajac"/>
+		            	<label>P2 </label><input type="text" name="p2"  id="p2" class="cajac"/>
+		            	<label>P3 </label><input type="text" name="p3"  id="p3" class="cajac"/>
+		            	
+		            </div>        
+			   </div>
+				      <div class="dialog-buttons">
+				      	<input type="submit" value=" Enviar "/>
+				      	<button id="butAddCancel" class="button" style="margin-left: 50px">Cancelar</button>
+				      </div>
+		      		   
+		      	</form>
+        
+    </div>
+  </div>
+
+    <footer>
+     <p>&copy; Copyright  by jmv</p>
+    </footer>
+  </div>
+</body>
+</html>

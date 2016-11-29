@@ -32,16 +32,20 @@ if (is_object($mysqli)) {
 	    // Título
 	    $this->Cell(90,20,'Lista de Inventarios',1,1,'C',TRUE);
 	    // Salto de línea
-	    $this->Ln(20);
+		$this->Ln(12);
+		$this->SetFont('Arial','B',12);
+		$this->SetX(100);
+	    $this->Cell(60,5,'Fecha:____/______/____',0,1,'L',false);
+	    $this->Ln(6);
 	}
 	
 	// Pie de página
 	function Footer()
 	{
 	    // Posición: a x  cm del final
-	    $this->SetY(-40);
+	    $this->SetY(-25);
 		$this->SetFont('Arial','I',10);
-		$this->Cell(0,6,'© Vannetti Cucina',0,1,'C');
+		$this->Cell(0,4,'© Vannetti Cucina',0,1,'C');
 	    // Arial italic 8
 	    $this->SetFont('Arial','I',8);
 	    // Número de página
@@ -61,7 +65,7 @@ function tablabas($header, $data)
     $this->Ln();
     // Datos
     	//cambiar la fuente
-	$this->SetFont('Arial','',14);
+	$this->SetFont('Arial','',12);
     foreach($data as $row)
     {
     	$this->Cell($w[0],6,$row['cod'],1);

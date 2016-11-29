@@ -32,7 +32,7 @@
 		$filas;
 		$mensaje2="";
 		/*** datos arts orden de compra***/
-		$sqlcom3="SELECT t1.cant,t2.nombre FROM artsoc AS t1 INNER JOIN productos AS t2 on t1.idproductos=
+		$sqlcom3="SELECT t1.cant,t2.nom_cat FROM artsoc AS t1 INNER JOIN productos AS t2 on t1.idproductos=
 		t2.idproductos WHERE idoc= $oc";
 		$query3=mysqli_query($mysqli,$sqlcom3)or die("error en cons. arts oc:".mysqli_error($mysqli));
 		if($query3){
@@ -42,7 +42,7 @@
 		 //creacion de datos para el pedido
 		 	$filas = $query3->num_rows;
 			while($tempo=mysqli_fetch_array($query3, MYSQLI_ASSOC)){
-				$mensaje2.="<tr><td style='width:500px'>".$tempo['nombre']."</td><td style='width:30px'>".$tempo['cant']."</td></tr>";
+				$mensaje2.="<tr><td style='width:500px'>".$tempo['nom_cat']."</td><td style='width:30px'>".$tempo['cant']."</td></tr>";
 			 }
 			mysqli_free_result($query3);
 		 //conformacion del mensaje

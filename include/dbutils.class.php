@@ -134,7 +134,7 @@
 		public function leelinv($mysqli,$cat){
           //***lee todos los datos de una tabla, un registro o todos los registros, de acuerdo con el argumento $filtro ***/
  
-            $sqlCommand = "SELECT codigo,nombre FROM productos WHERE grupo = $cat < 1 ORDER BY nombre";		
+            $sqlCommand = "SELECT codigo,nombre FROM productos WHERE grupo = $cat ORDER BY nombre";		
 	 // Execute the query here now
 			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE SELEC PROD. ".mysqli_error($mysqli));
 //inicializacion de arreglo

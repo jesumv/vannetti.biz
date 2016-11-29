@@ -138,6 +138,7 @@
 			 }else{var titulot =document.getElementById('tsubt');
 						titulot.innerHTML="TOTALES";};
 		});
+		
 	});			
 	})();	
 	</script>
@@ -174,8 +175,7 @@
 		    				<label >
 			    				<input type="checkbox" data-role="flipswitch" id="factp" name="factp"/>Facturada?
 			    			</label>
-	    				</div>
-	    				
+	    				</div>	    				
 	    			</fieldset>
 	    		</div>
 	    		<fieldset class="ui-grid-b" id="octabla">
@@ -214,7 +214,6 @@
         <button id="noenvia" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" >NO</button>
     </div>
 </div>
-
 	<div data-role="panel" id="navpanel" data-display="overlay">
 	 		<ul data-role ="listview">
 	 			<li><a href="oc.php" data-ajax="false">Ordenes de Compra</a></li>

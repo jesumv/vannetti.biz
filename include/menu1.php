@@ -23,7 +23,7 @@
                     <li class="currentsub"><a class="fly">Proveedores</a>
                     	<ul class="fly2">
                 			<li class="currentfly"><a href="oc.php">Emisión OC</a></li>
-                			<li class="currentfly"><a href="recoc.php">Recepción OC</a></li>
+                			<li class="currentfly"><a href="listoc.php">Recepción OC</a></li>
                 			<li class="currentfly"><a href="pagooc.php">Pago OC</a></li>
                 		</ul>
                 	</li>

@@ -15,12 +15,9 @@
     
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="utf-8">
-
-  <meta charset="utf-8">
-	
 	  <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame 
 	       Remove this if you use the .htaccess -->
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -33,9 +30,12 @@
 	<link rel="stylesheet" href= "css/movil.css" />
 	<script src="js/jquery.js"></script>
 	<script src="js/jquery.mobile-1.4.5.min.js"></script>
-	<script src="js/jquery.number.js"></script>
 	<script>
+	'use strict';
+	(function() {
+		var arrcosto = [];
 		function getpar(name){
+		//esta funcion obtiene el numero de orden de compra del string GET
 	   		if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
 	      	return decodeURIComponent(name[1]);
 		}
@@ -47,15 +47,228 @@
 			$("#aviso").popup("open");
 		}
 		
-			$(document).ready(function() {
-				//obtener datos para la construccion
-				var para = getpar('oc');		
-		if(!para){
+		function addreng(nombre,cant,idprod,reng,speso,costo){
+			var origen = document.getElementById("tbrecoc");
+			var nombre1 = document.createElement("DIV");
+			nombre1.className = "ocult";
+			nombre1.id = "ren"+reng;
+			nombre1.name = "ren"+reng;
+			var node = document.createTextNode(reng);
+			nombre1.appendChild(node);
+			origen.appendChild(nombre1);
+				var clase;
+				var clase2;
+				var texto;
+				var elem;
+				var idt;
+				var nombre1;
+				var nombre2;
+				var node;
+				var tipo;
+				
+			for(var z=0;z<7;z++){
+				nombre1 = document.createElement("DIV");
+				switch(z){
+					 case 0:
+				    	elem = "DIV";
+				    	idt = "id"+reng;
+				        clase = "ocult";
+				        clase2="";
+				        texto = idprod;	
+				        break;
+				    case 1:
+				    	elem = "DIV"
+				    	idt = "nom" + reng;
+				    	clase = "ui-block-a";
+				    	clase2 = "";
+				    	texto = nombre;
+				        break;
+				     case 2:
+				    	elem = "DIV"
+				    	idt = "cost" + reng;
+				    	clase = "ocult";
+				    	clase2 = "";
+				    	texto = costo;
+				        break;
+				           
+				    case 3:
+				    	elem = "INPUT";
+				    	idt = "cant" + reng;
+				    	clase = "ui-block-b";
+				    	clase2="icant";
+				    	tipo = "TEXT";
+				    	texto = cant;
+				        break;
+				    case 4:
+				    	elem = "INPUT";
+				    	tipo = "checkbox";
+				    	idt = "chk" + reng;
+				    	clase = "ui-block-c";
+				    	clase2="ichk";
+			        break;
+			        
+			        case 5:
+			    	elem ="DIV";
+			    	idt = "costof" + reng;
+			    	clase =  "ui-block-d";
+			    	clase2 ="";
+			    	texto = "0.00";
+			        break;	  
+				        
+				    case 6:
+				    	elem ="DIV";
+				    	idt = "speso" + reng;
+				    	clase = "ocult";
+				    	clase2 = "";
+				    	texto = speso;
+				        break;	    
+				}
+	//adicion de elementos al DOM					
+						nombre2 = document.createElement(elem);
+						nombre1.className = clase;
+						nombre2.className = clase2;
+						nombre2.name = idt;
+						nombre2.id = idt;
+						if(tipo!= null){
+							nombre2.type = tipo;
+							if(tipo!="CHECKBOX"){
+								nombre2.value = cant;
+								nombre2.size= "3";
+								nombre2.maxlength="3";
+							}
+						}
+						node = document.createTextNode(texto);
+						nombre2.appendChild(node);
+						nombre1.appendChild(nombre2);
+						origen.appendChild(nombre1); 
+						$("#cant0").focus();	
+			}
+		}
+		
+		
+		function quita(){
+	  		//quitar cajas de peso
+			 var pesos = document.getElementById('dialpeso').getElementsByTagName("input");
+			 var x = pesos.length;
+			 $("#pidepeso").popup("close");
+			 for(var i=0; i<x; i++) {
+			 	pesos[0].parentNode.removeChild(pesos[0]);
+			 }
+		}
+		
+		function ocosto(costo,peso){
+		//esta funcion obtiene el costo de un articulo
+		//en base a su peso
+		var costoc= costo*peso;
+		return costoc;	
+		}
+		
+		function regpeso(reng){
+			//esta funcion anade al arreglo los arts correspondientes
+			var caspeso = document.getElementsByClassName("cajapeso");
+			var nopesos = caspeso.length;
+			var idart;
+			var pesoact;
+			var costoact;
+			var costocalc;
+			var costosum;
+			for(var i = 0;i < nopesos; i++){
+				idart= document.getElementById("id"+reng).innerHTML;
+				pesoact = document.getElementById("peso"+i).value;
+				costoact = document.getElementById("cost"+reng).innerHTML;
+				costocalc= pesoact*costoact;
+				arrcosto.push([idart,pesoact,costocalc.toFixed(3)]);
+			}
+			console.log(arrcosto);
+			console.log(arrcosto[0]);
+			$("#pidepeso").popup("close");
+			quita();
+			
+		}
+		
+		function pidepeso(arts,reng){
+			//esta funcion muestra el dialogo para registrar pesos
+			//de arts recibidos.
+			//agregar cajas para registrar peso
+			var origen = document.getElementById("dialpeso");
+			var boton = document.createElement("INPUT");
+			boton.type ="BUTTON";
+			boton.value = "LISTO";
+			boton.id = "regpeso"
+			for(var i=0;i<arts;i++){
+				var divi = document.createElement("DIV");
+				var caja = document.createElement("INPUT");
+				caja.id = "peso"+i;
+				caja.className= "cajapeso";
+				caja.placeholder = "articulo "+(i+1);
+				origen.appendChild(divi);
+				divi.appendChild(caja);
+			}
+			origen.appendChild(boton);
+			var cancela = document.getElementById("cancpeso");
+			cancela.addEventListener('click',quita,false)
+			var registra = document.getElementById("regpeso")
+			registra.addEventListener('click',function(){regpeso(reng);},false)
+			$("#pidepeso").popup("open");
+			$("#peso0").focus();
+		}
+		
+		function extraereng(nombre){
+			//esta funcion extrae el renglon de un nombre
+			var reng = nombre.slice(-1);
+			//ver si se debe pesar el articulo
+			var speso=document.getElementById("speso"+reng).innerHTML;
+			//si se pesa, presentar el cuadro de pesos
+				if (speso==1){
+					//el numero de articulos
+					var narts = document.getElementById("cant"+reng).value;
+					pidepeso(narts,reng)
+				}	
+			}
+		
+		function pesoa(){
+			//esta funcion corre la rutina de dialogo para peso de articulos
+			//si se oprime un check
+			var valcheck= this.checked;
+			var valnom = this.id;
+			if(valcheck==true){
+				extraereng(valnom);
+			}
+		}
+		
+		function validacheck(){
+			//esta funcion enciende una bandera si se eligio un check
+				var checklist = document.getElementsByClassName("ichk")
+				var resul = false;
+				var node;
+				var resp;
+				 for (var i = 0; i < checklist.length; i++) {
+   						 	node = checklist[i];
+	        				resp = node.checked;
+							if(resp==true){resul=true;}else{resp= false;}	
+    					}
+				return resul;	 
+			}
+			
+		 function registra(){
+		 	//esta funcion manda los datos de recepcion a bd
+		 		var resp =validacheck();
+					if(resp==false){
+					// se avisa que se debe oprimir un check
+						aviso("NO SE RECIBIO NINGUN ARTICULO:<br>REVISE");	
+					}else{
+		 				alert("registrando");
+		 			}
+		 }
+		$( document ).on( "pageinit", "#pagrecoc", function( event ) {
+			//obtener datos para la construccion
+				var para = getpar('oc');
+				if(!para){
 				aviso("NO HAY ORDEN DE COMPRA SELECCIONADA");
 				window.setTimeout(function(){window.location.href = "listoc.php";}, 2000);	
 				
 			}else{
-					$.get('php/getlistprodoc.php',{oc:para},function(data){
+				$.get('php/getlistprodoc.php',{oc:para},function(data){
 					// extraer datos
 						var liprodoc = JSON.parse(data);
 						var noprods= liprodoc.length;
@@ -66,109 +279,21 @@
 							var nombre = liprodoc[i].nom;
 							var cant = liprodoc[i].cant;
 							var nart = liprodoc[i].idart;
-							var texto = cant+" "+ nombre;
-							var conten = "<label><input type='checkbox' id='in"+i+"'>"+texto+"</label><input type='hidden' name='pr"+i+
-					"' id='pr"+i+"' value="+nart+">";
-						$("#campos").append(conten);
-						$("#campos").enhanceWithin();	  						}					
+							var speso= liprodoc[i].speso;
+							var costo = liprodoc[i].costo;
+							addreng(nombre,cant,nart,i,speso,costo);
+							//adicion de escucha a check
+							var estecheck = document.getElementById("chk"+i)
+							estecheck.addEventListener('change',pesoa,false);
+							var btnrecibe = document.getElementById("recibe")
+							recibe.addEventListener('click',registra,false);
+						}
+															
 					});
-			function validacheck(etiq){
-			//esta funcion enciende una bandera si se eligio un check
-				var node_list = document.getElementsByTagName(etiq);
-				var resul = false;
-				 for (var i = 0; i < node_list.length; i++) {
-   						 var node = node_list[i];
-    					if (node.getAttribute('type') == 'checkbox') {
-	        					var resp = node.checked;
-							if(resp==true && resul==false){resul=true;}	
-    					}
 				}
-				return resul;	 
-			}
-			
-			function revisacheck(){
-				//esta funcion recorre los checks y toma los valores de los elegidos
-				var node_list = document.getElementsByTagName("input");
-				var selec=[];
-				var conta =0;
-				for (var i = 0; i < node_list.length; i++) {
-   						 var node = node_list[i];
-    					if (node.getAttribute('type') == 'checkbox') {
-	        					var resp = node.checked;
-							if(resp==true ){
-								var rsel = document.getElementById('pr'+conta);
-								selec.push(rsel.value);
-								}
-								conta++;		
-    					}
-				}
-				return selec;
-			}
-			
-			function tiporect(tiposurt){
-				var texto;
-				//esta funcion traduce el tipo de surtido a texto
-				if(tiposurt == 2){texto="PARCIAL";}else if(tiposurt == 3){texto="TOTAL";}else{texto="ERROR";}
-				return texto;
-			}
-			
-			function rresprrecoc(respuesta,oc,tiporec){
-			//esta funcion revisa el mensaje de respuesta y lo traduce
-			switch (respuesta){
-				case -99:
-					var resp = "LA ORDEN DE COMPRA YA INGRESO A INVENTARIO";
-					break;
-				case -1:
-					resp = "ERROR EN REGISTRO DE ARTICULOS";
-					break;
-				case -2:
-					resp = "ERROR EN REGISTRO CONTABLES";
-					break;
-				case -3:
-				resp = "ERROR EN ACTUALIZACION DE OC";
-				break;
-				default:
-					var textof = tiporect(tiporec);
-					resp = "ORDEN DE COMPRA INGRESADA <br>Numero: "+ oc + "<br>"+"FORMA: "+textof;	
-			}
-
-			return resp;
-			
-		}
-		
-		
-			$("#recibe").click(function(){
-				// validar que esté oprimido al menos 1check
-				var resp =validacheck('input');
-					if(resp==false){
-					// se avisa que se debe oprimir un check
-						aviso("NO SE RECIBIO NINGUN ARTICULO");	
-					}else{
-					//recoleccion de datos
-						var prs = revisacheck();
-					// se envian los datos a registro
-						$.post( "php/recibeoc.php",
-						{	oc:para,
-							arts:prs,
-						 }, null, "json" )
-    						.done(function( data) {
-    							var noc= data.noc;
-    							var tiporec = data.tipos;
-    							var resp2 = data.resp;
-    							var cad = rresprrecoc(resp2,noc,tiporec);
-								aviso(cad);
-								$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
-									window.location.href = "listoc.php";
-								} );
-    						})
-    						.fail(function( data ) {
-    							var err1 = data.success;
-    							aviso("error alta de rec oc: "+err1);
-							});	
-					}	
-					});		
-					}
-					});
+		});
+					
+	})();	
 	</script>
 	
 </head>
@@ -181,17 +306,39 @@
 			<a href="logout.php" data-ajax="false" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-delete">Cerrar</a>
 		</div>
 		<div data-role = "ui-content" id="lista">
-			<form id="forma" method="post"
-			enctype="application/x-www-form-urlencoded">
-			<fieldset data-role="controlgroup" id="campos">
-				<legend>PRODUCTOS:</legend>
-			</fieldset>
+		<a href="#navpanel" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-bars">Navegaci&oacute;n</a>
+			<form id="forma" method="post" enctype="application/x-www-form-urlencoded">
+				<fieldset class="ui-grid-c" id="tbrecoc">
+					<div class="ocult">id</div>
+				    <div class="ui-block-a"><div class="ui-bar ui-bar-b">Producto</div></div>
+				    <div class="ui-block-b"><div class="ui-bar ui-bar-b">Cantidad</div></div>
+				    <div class="ui-block-c"><div class="ui-bar ui-bar-b">OK</div></div>
+				    <div class="ui-block-d"><div class="ui-bar ui-bar-b">Costo</div></div>
+				    
+				</fieldset>
+				<fieldset class="ui-grid-c" id="tbtot">
+					<div class="ui-block-a" id="rtot" name="rtot"><div class="ui-bar-a">TOTALES</div></div>
+					<div class="ui-block-b" id="ctot" name="ctot"><div class="ui-bar-a">0</div></div>
+					<div class="ui-block-c" id="tont" name="tont"><div class="ui-bar-a">  </div></div>
+					<div class="ui-block-d" id="mtot" name="mtot"><div class="ui-bar-a">0.00</div></div>
+				</fieldset>
+
 			 <input data-theme="b" data-icon="check" data-iconshadow="true" value="Recibir" type="button" 
-		    name="recibe"id="recibe">	
+		    	name="recibe"id="recibe">	
 			</form>
 		</div>
 		<div data-role="popup" id="aviso">
-		<p>Sin texto, todavía.</p>
+			<p>Sin texto, todavía.</p>
+		</div>
+		<div data-role ="popup" id="pidepeso" class="ui-content" data-dismissible="false" data-theme="b">
+			<input type="button" data-theme="a" data-icon="delete" data-iconpos="notext" id="cancpeso"/>
+			<label >PESO ARTICULO(S)?</label>
+			<div id="dialpeso">
+				
+			</div>
+			 
+		</div>
+		
 		<div data-role="panel" id="navpanel" data-display="overlay">
 	 		<ul data-role ="listview">
 	 			<li><a href="oc.php" data-ajax="false">Ordenes de Compra</a></li>
@@ -201,6 +348,6 @@
 	 		</ul>	    	
  		</div>
 	</div>
-	</div>
+	
 </body>
 </html>
