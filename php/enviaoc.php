@@ -33,9 +33,11 @@
 	$arts= array_sum($cants);
 	$usu= $_SESSION['usuario'];
 	$iva=0;
+	if(isset($_POST['cred'])){$credito=1;}else{$credito=0;};
+	if(isset($_POST['fact'])){$facturar=1;}else{$facturar=0;};
 	//creacion de oc en tabla oc
-	$sqlCommand= "INSERT INTO oc (idproveedores,arts,monto,total,usu,status)
-	    	VALUES ($prov,$arts,$total,$total,'$usu',1)";
+	$sqlCommand= "INSERT INTO oc (idproveedores,arts,monto,total,usu,status,facturar,credito)
+	    	VALUES ($prov,$arts,$total,$total,'$usu',1,$facturar,$credito)";
 	    	$query=mysqli_query($mysqli, $sqlCommand)or die("error en alta oc:".mysqli_error($mysqli)); 
 			if($query){				
 				//obtencion de numero de orden de compra

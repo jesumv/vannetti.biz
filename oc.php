@@ -57,6 +57,8 @@
 							//recoleccion de variables
 							var prov = $("#ocprov").val();
 							var total =$("#subtotalo").text();
+							var cred = $("#rcredcon-a").val();
+							var fact =$("#factp").val();
 							var longi = $(".cant").length;
 							var prods=[];
 							var cant=[];
@@ -76,6 +78,8 @@
 							//si todo ok, se envian los datos
 							$.post( "php/enviaoc.php",
 							{	prov:prov,
+								cred:cred,
+								fact:fact,
 								longi:longcants,
 								prods:prods,
 								cants:cant,
@@ -220,6 +224,7 @@
 	 			<li><a href="listoc.php" data-ajax="false">Rec. de OC</a></li>
 		    	<li><a href="pedido.php" data-ajax="false">Pedidos</a></li>
 		    	<li><a href="listasp.php" data-ajax="false">Listas de Productos</a></li>
+		    	<li><a href="portal.php" data-ajax="false">Portal</a></li>
 	 		</ul>	    	
 	 </div>
   </div>

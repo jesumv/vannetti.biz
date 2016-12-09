@@ -4,7 +4,7 @@
                 <li><a href="portal.php"><b>Inicio</b></a></li>
                 <li class="currentsub"><a class="fly" >Consultas</a>
                 	<ul class="sub1">
-                		<li ><a href="#">Inventarios</a></li>
+                		<li ><a href="inventarios.php">Inventarios</a></li>
                 		<li ><a href="#">Facturación</a></li>
                 		<li ><a href="#">Cobranza</a></li>
                 		<li ><a href="#">Remisiones</a></li>

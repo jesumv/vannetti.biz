@@ -73,6 +73,7 @@
 	 			<li><a href="listoc.php" data-ajax="false">Rec. de OC</a></li>
 		    	<li><a href="pedido.php" data-ajax="false">Pedidos</a></li>
 		    	<li><a href="listasp.php" data-ajax="false">Listas de Productos</a></li>
+		    	<li><a href="portal.php" data-ajax="false">Portal</a></li>
 	 		</ul>	    	
  		</div>
 	</div>

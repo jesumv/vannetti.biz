@@ -159,7 +159,7 @@
 									window.location.href = "listoc.php";
 								} );
     						})
-    						.fail(function( data ) {
+    						.fail(function(data) {
     							var err1 = data.success;
     							aviso("error alta de rec oc: "+err1);
 							});	

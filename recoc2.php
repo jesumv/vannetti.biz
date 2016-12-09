@@ -33,8 +33,7 @@
 	<script>
 	'use strict';
 	(function() {
-		var cantreng;
-		var para;
+		var arrcosto = [];
 		function getpar(name){
 		//esta funcion obtiene el numero de orden de compra del string GET
 	   		if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
@@ -48,8 +47,7 @@
 			$("#aviso").popup("open");
 		}
 		
-		function addreng(nombre,cant,idprod,reng,speso,costo,civa){
-			//esta funcion añade un renglon de la tabla de articulos
+		function addreng(nombre,cant,idprod,reng,speso,costo){
 			var origen = document.getElementById("tbrecoc");
 			var nombre1 = document.createElement("DIV");
 			nombre1.className = "ocult";
@@ -68,7 +66,7 @@
 				var node;
 				var tipo;
 				
-			for(var z=0;z<9;z++){
+			for(var z=0;z<7;z++){
 				nombre1 = document.createElement("DIV");
 				switch(z){
 					 case 0:
@@ -123,23 +121,7 @@
 				    	clase = "ocult";
 				    	clase2 = "";
 				    	texto = speso;
-				        break;
-				        
-			        case 7:
-			    	elem ="DIV";
-			    	idt = "iva" + reng;
-			    	clase = "ui-block-e";
-			    	clase2 = "";
-			    	texto = "0.00";
-			        break;
-			        
-			        case 8:
-			    	elem ="DIV";
-			    	idt = "civa" + reng;
-			    	clase = "ocult";
-			    	clase2 = "";
-			    	texto = civa;
-			        break;		 	    
+				        break;	    
 				}
 	//adicion de elementos al DOM					
 						nombre2 = document.createElement(elem);
@@ -159,7 +141,7 @@
 						nombre2.appendChild(node);
 						nombre1.appendChild(nombre2);
 						origen.appendChild(nombre1); 
-						$("#remi").focus();	
+						$("#cant0").focus();	
 			}
 		}
 		
@@ -180,14 +162,9 @@
 		var costoc= costo*peso;
 		return costoc;	
 		}
-		function costospeso(costo,cant){
-			//esta funcion calcula el costo por cantidad de arts
-			var costo = costo*cant
-			return costo
-		}
-	
+		
 		function regpeso(reng){
-			//esta funcion registra en el html el costo de los articulos por peso
+			//esta funcion anade al arreglo los arts correspondientes
 			var caspeso = document.getElementsByClassName("cajapeso");
 			var nopesos = caspeso.length;
 			var idart;
@@ -195,25 +172,20 @@
 			var costoact;
 			var costocalc;
 			var costosum;
-			var civa;
-			var ivacalc;
 			costosum =0;
 			//inicializacion de suma costo
 			for(var i = 0;i < nopesos; i++){
 				idart= document.getElementById("id"+reng).innerHTML;
 				pesoact = document.getElementById("peso"+i).value;
 				costoact = document.getElementById("cost"+reng).innerHTML;
-				civa = document.getElementById("civa"+reng).innerHTML;
 				costocalc= ocosto(costoact,pesoact);
+				arrcosto.push([idart,pesoact,costocalc.toFixed(3)]);
 				costosum = costosum+costocalc;
 			}
+			console.log(arrcosto);
+			console.log(arrcosto[0]);
 			$("#pidepeso").popup("close");
-			document.getElementById("costof"+reng).innerHTML= costosum.toFixed(3);
-			if(civa==1){
-				ivacalc = calciva(costosum);
-				document.getElementById("iva"+reng).innerHTML= ivacalc;
-			}
-			calctot();
+			document.getElementById("costof"+reng).innerHTML= sumacosto;
 			quita();
 		}
 		
@@ -240,112 +212,38 @@
 			cancela.addEventListener('click',quita,false)
 			var registra = document.getElementById("regpeso")
 			registra.addEventListener('click',function(){
-			regpeso(reng);
+			sumacosto = regpeso(reng);
 				},false)
 			$("#pidepeso").popup("open");
 			$("#peso0").focus();
+			return sumacosto;
 		}
 		
-		function calcivar(costo,reng){
-			//esta funcion calcula el iva de un art. y lo registra en HMTL
-			var ivaact= costo *.16;
-			document.getElementById("iva"+reng).innerHTML= ivaact;	
-		}
-		
-		function calcosto(reng){
-		//esta funcion calcula el costo de un art. y su iva  y los registra en html
-			var costoact;
-			var cantact;
-			var civa;
-			costoact = document.getElementById("cost"+reng).innerHTML;
-			cantact = document.getElementById("cant"+reng).value;
-			civa = document.getElementById("civa"+reng).innerHTML;
-			var costof= costoact*cantact;
-			if (civa==1){
-				calcivar(costof,reng);
-			}
-			document.getElementById("costof"+reng).innerHTML= costof;
-			calctot();
-		}
-		
-		function sacareng(nombre){
+		function extraereng(nombre){
+			var sumacosto;
 			//esta funcion extrae el renglon de un nombre
-			var longi = nombre.length;
-			var remov = longi-3;
-			var reng = nombre.slice(-remov);
-			return reng;
-		}
-		
-		function extraereng(renglon){
-			//esta funcion extrae el renglon de un nombre
+			var reng = nombre.slice(-1);
 			//ver si se debe pesar el articulo
-			var speso=document.getElementById("speso"+renglon).innerHTML;
+			var speso=document.getElementById("speso"+reng).innerHTML;
 			//si se pesa, presentar el cuadro de pesos
 				if (speso==1){
 					//el numero de articulos
-					var narts = document.getElementById("cant"+renglon).value;
+					var narts = document.getElementById("cant"+reng).value;
 					//llama dialogo de peso
-					pidepeso(narts,renglon);
-				}else{
-					calcosto(renglon);			
+					pidepeso(narts,reng);
+					
 				}	
 			}
-			
-		function calcreng(){
-			//esta funcion calcula el no. de renglones
-			var cantis;
-			//calcula las cantidades totales
-			cantis= document.getElementsByClassName("icant").length;
-			return cantis;
-		}
-
-		function calctot(){
-			//esta funcion calcula el contenido del renglon totales
-			var cantot = [];
-			var ivatot=[];
-			var eleg;
-			var cantact;
-			var cantf ;
-			var costot= [];
-			var costact;
-			var costf;
-			var ivact;
-			var ivaf;
-			var arrno;
-			var grantot;
-			//cantidades
-				for(var i = 0; i<cantreng;i++){
-					cantact = parseInt(document.getElementById("cant"+i).value);
-					costact = parseFloat(document.getElementById("costof"+i).innerHTML);
-					ivact= parseFloat(document.getElementById("iva"+i).innerHTML);
-					eleg = document.getElementById("chk"+i).checked;
-					if(eleg==true){cantot.push(cantact);}
-					costot.push(costact);
-					ivatot.push(ivact)	;				
-				}
-				if(cantot.length>0){cantf= cantot.reduce(function(ant,act){return ant+=act;})}else{cantf= 0;}
-				document.getElementById("ctot").innerHTML= cantf;
-				costf= costot.reduce(function(cant,cact){return cant+=cact;});
-				document.getElementById("mtot").innerHTML= costf.toFixed(3);
-				ivaf=ivatot.reduce(function(iant,iact){return iant+=iact;});
-				grantot=costf+ivaf;
-				document.getElementById("itot").innerHTML= ivaf.toFixed(3);
-				document.getElementById("gtot").innerHTML= grantot.toFixed(3);
-		}
 		
 		function pesoa(){
+			var sumacosto;
 			//esta funcion corre la rutina de dialogo para peso de articulos
 			//si se oprime un check
 			var valcheck= this.checked;
 			var valnom = this.id;
-			var reng = sacareng(valnom);
 			if(valcheck==true){
-				extraereng(reng);
-			}else{//se corrige el costo
-				document.getElementById("costof"+reng).innerHTML= "0.00";
-				document.getElementById("iva"+reng).innerHTML= "0.00";
-				// calcular totales
-				calctot();
+				sumacosto = extraereng(valnom);
+				
 			}
 		}
 		
@@ -363,97 +261,19 @@
 				return resul;	 
 			}
 			
-			function recaba(reng){
-				//esta funcion recaba los datos para su envio a las tablas
-				var nart;
-				var cant;
-				var costo;
-				var selec=[];
-				nart = document.getElementById("id"+reng).innerHTML;
-				selec.push(nart)
-				cant = document.getElementById("cant"+reng).value;
-				selec.push(cant);
-				costo = document.getElementById("costof"+reng).innerHTML;
-				selec.push(costo);
-				return selec;
-			}
-			
-			function revisacheck(){
-				//esta funcion recorre los checks y toma los valores de los elegidos
-				var node_list = document.getElementsByClassName("ichk");
-				var dselec=[];
-				var remi;
-				var fact;
-				var conta =0;
-				for (var i = 0; i < node_list.length; i++) {
-   						 var node = node_list[i];
-	        			 var resp = node.checked;
-							if(resp==true ){
-									//si se eligio, obtener el reglon
-									var rsel = sacareng(node.name);
-									//añadir variables a arreglo
-									dselec.push(recaba(rsel));
-								}
-								conta++;		
-				}
-				remi= document.getElementById("remi").value;
-				dselec.unshift(remi);
-				fact = document.getElementById("fact").value;
-				dselec.unshift(fact);
-				dselec.unshift(para);
-				return dselec;
-			}
-			
-		function evalua(resul){
-			switch (resul){
-				case -99:
-					var resp = "LA ORDEN DE COMPRA YA INGRESO A INVENTARIO";
-					break;
-				case -1:
-					resp = "ERROR EN REGISTRO DE ARTICULOS";
-					break;
-				case -2:
-					resp = "ERROR EN REGISTRO CONTABLES";
-					break;
-				case -3:
-				resp = "ERROR EN ACTUALIZACION DE OC";
-				break;
-				default:
-					var textof = tiporect(tiporec);
-					resp = "ORDEN DE COMPRA INGRESADA <br>Numero: "+ oc + "<br>"+"FORMA: "+textof;	
-			}
-
-			return resp;
-		}
 		 function registra(){
-		 	var dseleco=[];
 		 	//esta funcion manda los datos de recepcion a bd
 		 		var resp =validacheck();
 					if(resp==false){
 					// se avisa que se debe oprimir un check
 						aviso("NO SE RECIBIO NINGUN ARTICULO:<br>REVISE");	
 					}else{
-						//recorre los checks y anota los datos
-		 				dseleco = revisacheck();
-		 				//envia los datos
-		 				$.post( "php/recibeoc.php",
-						{	oc:para,
-							arts:dseleco,
-						 }, null, "json" )
-    						.done(function( data) {
-    							var revst= data.strevisa;
-    							var textor = evalua(revst);
-    							aviso(textor);
-    						})
-    						.fail(function( data ) {
-    							var err1 = data.success;
-    							aviso("error alta de rec oc: "+err1);
-							});	
+		 				alert("registrando");
 		 			}
 		 }
 		$( document ).on( "pageinit", "#pagrecoc", function( event ) {
 			//obtener datos para la construccion
-				para = getpar('oc');
+				var para = getpar('oc');
 				if(!para){
 				aviso("NO HAY ORDEN DE COMPRA SELECCIONADA");
 				window.setTimeout(function(){window.location.href = "listoc.php";}, 2000);	
@@ -472,16 +292,14 @@
 							var nart = liprodoc[i].idart;
 							var speso= liprodoc[i].speso;
 							var costo = liprodoc[i].costo;
-							var civa = liprodoc[i].civa;
-							addreng(nombre,cant,nart,i,speso,costo,civa);
+							addreng(nombre,cant,nart,i,speso,costo);
 							//adicion de escucha a check
 							var estecheck = document.getElementById("chk"+i)
 							estecheck.addEventListener('change',pesoa,false);
 							var btnrecibe = document.getElementById("recibe")
 							recibe.addEventListener('click',registra,false);
 						}
-						//obtener cantidad de reglones con pag construida
-						cantreng = calcreng();									
+															
 					});
 				}
 		});
@@ -501,31 +319,19 @@
 		<div data-role = "ui-content" id="lista">
 		<a href="#navpanel" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-bars">Navegaci&oacute;n</a>
 			<form id="forma" method="post" enctype="application/x-www-form-urlencoded">
-				<div class="ui-field-contain">
-					<label for="remi">Remisión</label>
-					<input type="text" id="remi" name="remi">
-					<label for="fact">Factura</label>
-					<input type="text" id="fact" name="fact">
-				</div>
-				<fieldset class="ui-grid-d" id="tbrecoc">
+				<fieldset class="ui-grid-c" id="tbrecoc">
 					<div class="ocult">id</div>
 				    <div class="ui-block-a"><div class="ui-bar ui-bar-b">Producto</div></div>
 				    <div class="ui-block-b"><div class="ui-bar ui-bar-b">Cantidad</div></div>
 				    <div class="ui-block-c"><div class="ui-bar ui-bar-b">OK</div></div>
-				    <div class="ui-block-d"><div class="ui-bar ui-bar-b">Subtotal</div></div>
-				    <div class="ui-block-e"><div class="ui-bar ui-bar-b">IVA</div></div>	    
+				    <div class="ui-block-d"><div class="ui-bar ui-bar-b">Costo</div></div>
+				    
 				</fieldset>
-				<fieldset class="ui-grid-d" id="tbtot">
+				<fieldset class="ui-grid-c" id="tbtot">
 					<div class="ui-block-a" id="rtot" name="rtot"><div class="ui-bar-a">TOTALES</div></div>
 					<div class="ui-block-b" id="ctot" name="ctot"><div class="ui-bar-a">0</div></div>
 					<div class="ui-block-c" id="tont" name="tont"><div class="ui-bar-a">  </div></div>
 					<div class="ui-block-d" id="mtot" name="mtot"><div class="ui-bar-a">0.00</div></div>
-					<div class="ui-block-e" id="itot" name="itot"><div class="ui-bar-a">0.00</div></div>
-					<div class="ui-block-a"><div class="ui-bar-c"> </div></div>
-					<div class="ui-block-b"><div class="ui-bar-c"> </div></div>
-					<div class="ui-block-c"><div class="ui-bar-c"> </div></div>
-					<div class="ui-block-d"><div class="ui-bar-a">GRAN TOTAL</div></div>
-					<div class="ui-block-e" id="gtot" name="gtot"><div class="ui-bar-a">0.00</div></div>
 				</fieldset>
 
 			 <input data-theme="b" data-icon="check" data-iconshadow="true" value="Recibir" type="button" 
@@ -550,7 +356,6 @@
 	 			<li><a href="listoc.php" data-ajax="false">Rec. de OC</a></li>
 		    	<li><a href="pedido.php" data-ajax="false">Pedidos</a></li>
 		    	<li><a href="listasp.php" data-ajax="false">Listas de Productos</a></li>
-		    	<li><a href="portal.php" data-ajax="false">Portal</a></li>
 	 		</ul>	    	
  		</div>
 	</div>

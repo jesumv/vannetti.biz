@@ -46,6 +46,7 @@
 			}
 			
 		function hazvisib(visible){
+			//esta funcion presenta la tabla de productos
 		var tabla = document.getElementById('ocultable');
 			    if (visible) {
 			      tabla.classList.add('tablaocultav');
@@ -65,12 +66,14 @@
 	}
 	
 	function validacant(cant){
+	//esta funcion convierte los blancos en 0s para los calculos
 	var cantm;
 	if (cant==""){cantm = 0;}else{cantm=cant;};
 	return Number(cantm);
 }
 	
 	function sumacant(){
+		//esta funcion suma las cantidades de productos
 	var cantt= 0;
 	var arre = document.getElementsByTagName("INPUT");
 	var longit = (arre.length)-2;
@@ -83,6 +86,7 @@
 }
 
 function sumaprecio(){
+	//esta funcion suma los precios
 	var preciot =0;
 	var arre = document.getElementsByClassName("subt") ;
 	var longit = arre.length;
@@ -94,6 +98,7 @@ function sumaprecio(){
 }
 	
 	function multiplica(){
+		//esta funcion obtiene el precio final en base a los datos de cantidad
 		//se valida si la entrada es numerica
 	 	var checa = checaval(this.value);
 	 	var cad = this.name;
@@ -222,6 +227,7 @@ function sumaprecio(){
 		};
 		
 		function agregatots(){
+			//esta funcion agrega el renglon de totales
 			var origen = document.getElementById("ptabla");
 			var envolt = document.createElement("DIV");
 			envolt.id = "totales";
@@ -475,6 +481,7 @@ function sumaprecio(){
  			<li><a href="listoc.php" data-ajax="false">Rec. de OC</a></li>
 	    	<li><a href="pedido.php" data-ajax="false">Pedidos</a></li>
 	    	<li><a href="listasp.php" data-ajax="false">Listas de Productos</a></li>
+	    	<li><a href="portal.php" data-ajax="false">Portal</a></li>
  		</ul>	    	
  		</div>
   </div>

@@ -177,6 +177,10 @@ margin-top:%;
 background-color:#80ff80;
 text-align:center}
 
+.main h3{display: block; 
+background-color:#c0c0c0;
+text-align:center}
+
 .dialog-container {
   background: rgba(0, 0, 0, 0.57);
   position: fixed;
