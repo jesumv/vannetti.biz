@@ -9,6 +9,14 @@
     if (is_object($mysqli)) {
 /*** checa login***/
        $funcbase->checalogin($mysqli);
+	   $result=$mysqli->query("SELECT (SUM(CASE WHEN cuenta='401.01' THEN haber ELSE 0 END)+SUM(CASE WHEN cuenta='401.04' THEN haber ELSE 0 END))FROM DIARIO");
+	   $dato=$result->fetch_row();
+	   $result2=$mysqli->query("SELECT SUM(CASE WHEN cuenta='501.01' THEN debe ELSE 0 END)FROM DIARIO");
+	   $dato2=$result2->fetch_row(); 
+	   $vta=$dato[0];
+	   $cvta=$dato2[0];
+	   $ubruta=$vta-$cvta;
+	   $mysqli->close(); 
     } else {
         //die ("<h1>'No se establecio la conexion a bd'</h1>");
     }
@@ -27,7 +35,7 @@
   <meta name="description" content="">
   <meta name="author" content="jmv">
 
-  <meta name="viewport" content="width=device-width; initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="shortcut icon" href="img/logomin.gif" />  
 	<link rel="apple-touch-icon" href="img/logomin.gif">
 	<link rel="stylesheet" href= "css/jquery.mobile-1.4.5.min.css" />
@@ -61,9 +69,13 @@
 	  	<th>VALOR</th>
 	</tr>
   	<tr>
-		<td>VENTAS</td>
-		<td>0.00</td>
-  	</tr>
+  		<td>VENTAS</td>
+  		<?php 
+  		echo'<td>'.$vta.'</td></tr>';
+  		echo'<tr><td>MENOS</td></tr><tr><td>COSTO DE VENTAS</td><td>'.$cvta.'</td></tr>';
+  		echo '<tr><td>UTILIDAD BRUTA</td><td>'.$ubruta.'</td></tr>'
+  		?>
+  		
   </table>
 	 
 		</div>

@@ -4,147 +4,130 @@
       require('../include/' . strtolower($class) . '.class.php');
     }
 	
+	//funciones auxiliares
+	require '../include/funciones.php';
     $funcbase = new dbutils;
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
     if (is_object($mysqli)) {
+    	/**inicializa variable resultado**/
+    	$resul=0;
     	/*** checa login***/
-    	$funcbase->checalogin($mysqli);
-		
+    	$funcbase->checalogin($mysqli);	
 	
 	function traepedmax($mysqli){
+		//traer el np. de pedido mas alto
 		$req = "SELECT MAX(idpedidos) FROM pedidos WHERE 1"; 
     	$result = mysqli_query($mysqli,$req);
 		$row=mysqli_fetch_array($result,MYSQLI_NUM);
+		$cuenta=count($row);
+		if(is_null($row)){$pedmax=0;}else{$pedmax=$row[0];}
 	 /* liberar la serie de resultados */
 	    mysqli_free_result($result);
-		return $row[0];
+		return $pedmax;
 	}
 	
-	function traecv($mysqli,$prod){
-		$req = "SELECT costo FROM productos WHERE idproductos = $prod "; 
-    	$result = mysqli_query($mysqli,$req);
-		$row=mysqli_fetch_array($result,MYSQLI_NUM);
-	 /* liberar la serie de resultados */
-	    mysqli_free_result($result);
-		return $row[0];
-	}
 	
-    //recoleccion de variables
-    $cte = $_POST["cte"];
-	$totarts=$_POST["totarts"];
-	$tipoventa= $_POST["tipoventa"];
-	$facturar= $_POST["facturarp"];
-	$prods=$_POST["prods"];
-	$cants=$_POST["cants"];
-	$preciou = $_POST["preciou"];
-	$preciot = $_POST["preciot"];
-	$total=$_POST["total"];
-	$jsondata = array();
+	function cstatus($tipoventa){
+		//asigna el status del pedido  y articulos de acuerdo al tipo de venta
+		//para el alta del pedido
+		switch ($tipoventa) {
+			case 0:
+				$pdst= 40;
+				$arst=99;
+				break;
+			case 1:
+				$pdst= 20;
+				$arst=10;
+				break;
+			case 2:
+				$pdst= 30;
+				$arst=10;
+				break;
+		}
+		return array($pdst,$arst);
+	}
+		
 	//creacion de datos para el pedido
+	$jsondata = array();
+	//para las ventas por tasa
+	$vtas16= array();
+	$vtas0=array();
+    //recoleccion de variables
+    $cte=$_POST["cte"];
+	$fecha= $_POST["fecha"];
+	$fechaconv = converfecha($fecha);
+	$tventa=$_POST['tipoventa'];
+	$facturar=$_POST["facturarp"];
+	//cambiar variable a booleano
+	$facturarb=cambiafact($facturar);
+	$totarts=$_POST["totarts"];
+	$montot= $_POST["montot"];
+	$totiva=$_POST["totiva"];
+	$total=$_POST["total"];
 	$usu= $_SESSION['usuario'];
-	$iva=0;
-	//definicion de status segun tipo de compra
-	if($tipoventa ==0){$status = 99;}else{$status = 1;}
-	if($facturar==true){$ivaped=$total*.16;}else{$ivaped=0;}
-	//1 creacion de pedido en tabla pedido
-	$sqlCommand= "INSERT INTO pedidos (idclientes,arts,monto,iva,total,usu,status)
-	    	VALUES ($cte,$totarts,$total,$ivaped,$total+$ivaped,'$usu',$status)";
-	    	$query=mysqli_query($mysqli, $sqlCommand)or die("error en alta pedidos:".mysqli_error($mysqli)); 
-			//obtencion de numero de orden de pedido
-			$nped = traepedmax($mysqli);
-			if($query){
-				$ivaped;
-				$iva =array();
-				//se inicia asumiendo que el resultado es ok.
-				$jsondata['success'] = 0;
-	//---------------CICLO POR CADA PRODUCTO DEL PEDIDO
-	//2 insercion de productos en tabla artspedidos
-				$indi = 0;
-	//inicializacion de costo de ventas
-				$cvtas= 0;;
-						foreach($prods as $id){
-							//obtencion del costo de materia prima
-							$cvtaprod= traecv($mysqli, $id);
-							$sqlCommand= "INSERT INTO artsped (idpedido,idproductos,cant,preciou,
-							preciot,status)
-			    			VALUES ($nped,$id,$cants[$indi],$preciou[$indi],$preciot[$indi],$status)";
-							$query=mysqli_query($mysqli, $sqlCommand)or die("error en alta artsped:".mysqli_error($mysqli)); 	
-							if($query){
-								//incremento del cv del pedido
-								$cvtas = $cvtas+$cvtaprod;
-								//incremento del iva de la orden
-								$ivaprod = $funcbase->iva($mysqli,$id,$preciot[$indi]);
-								$iva[]=$ivaprod;
-								//registro de movimientos segun tipo de venta
-								if($tipoventa==0){
-									//3 inventarios	si es pedido de contado	
-									$sqlCommand= "INSERT INTO inventario (idproductos,tipomov,cant,usu,idoc,monto,haber)
-									VALUES ($id,2,-$cants[$indi],'$usu',$nped,$cvtaprod,$cvtaprod)";
-									$query=mysqli_query($mysqli, $sqlCommand)or die("error en salida invent: ".mysqli_error($mysqli));
-									if(!$query){
-										$jsondata['success'] = -3;	
-									}												
-								}
+	$status= cstatus($tventa);
+	$statusp=$status[0];
+	$statusa=$status[1];
+	$pedido;
+	$arts=$_POST['prods'];
+	//afectacion a bd
+	//alta de pedido
+	$table="pedidos";
+	$sqlCommand= "INSERT INTO $table (idclientes,arts,monto,iva,total,fecha,tipovta,usu,status,facturar)
+	VALUES ($cte,$totarts,$montot,$totiva,$total,'$fechaconv',$tventa,'$usu',$statusp,$facturarb)";
+	$query= mysqli_query($mysqli, $sqlCommand)or die("error en alta pedidos:".mysqli_error($mysqli));
+		if($query){
+			//numero de pedido
+			$pedido=traepedmax($mysqli);
+			//CICLO POR CADA ARTICULO DEL PEDIDO
+			$i= 0;
+			foreach($arts as $id){
+				$idact=$arts[$i][0];
+				$caact=$arts[$i][1];
+				$pract=$arts[$i][2];
+				$moact=$arts[$i][3];
+				$ivact=$arts[$i][4];
+				if($ivact==0){
+					//suma de ventas tasa0
+					array_push($vtas0,$moact);
+				}else{
+					//suma de ventas tasa16
+					array_push($vtas16,$moact);
+				}
 
-							
-							}else{$jsondata['success'] = -2;}
-								$indi++;
-							};
-//---FIN DEL CICLO POR ARTICULO------------------
-								//variables de regreso segun resultado
-								$jsondata['nped'] = $nped;
-								$jsondata['arts'] = $totarts;
-								$jsondata['total'] =$total;
-								//si el resultado de las anteriores operaciones es ok, se continua con los movimientos contables
-								if($jsondata['success'] == 0){
-									//si es venta contado
-									if($tipoventa==0){
-										//4 caja y bancos
-										$sqlCommand= "INSERT INTO disponible (idmovto,idclientes,cuenta,usu,debe)
-										VALUES ($nped,$cte,1,'$usu',$total)";
-										$query=mysqli_query($mysqli, $sqlCommand)or die("error en abono caja: ".mysqli_error($mysqli));
-										if(!$query){
-											$jsondata['success'] = -4;	
-										}
-										//4a ingresos por ventas
-										$sqlCommand= "INSERT INTO ingresos (idmovto,idclientes,usu,haber)
-										VALUES ($nped,$cte,'$usu',$total)";
-										$query=mysqli_query($mysqli, $sqlCommand)or die("error en abono ingresos: ".mysqli_error($mysqli));
-										if(!$query){
-											$jsondata['success'] = -5;	
-										}
-										//4b costo de ventas
-										$sqlCommand= "INSERT INTO cvtas (idmovto,idclientes,usu,debe)
-										VALUES ($nped,$cte,'$usu',$cvtas)";
-										$query=mysqli_query($mysqli, $sqlCommand)or die("error en abono cvtas: ".mysqli_error($mysqli));
-										if(!$query){
-											$jsondata['success'] = -5;	
-										}
-									//si es a credito, solo se registra el pedido.
-									}	
-									
-									//si es contado, y facturable, se registra el iva
-									//6 iva por pagar
-									
-									if($facturar== 'true'){$ivacalc= array_sum($iva);}else{$ivacalc=0;}
-									
-									$sqlCommand= "INSERT INTO ivatrans (idmovto,idclientes,usu,status,haber)
-										VALUES ($nped,$cte,'$usu',0,$ivacalc)";
-										$query=mysqli_query($mysqli, $sqlCommand)or die("error en abono ivatrans: ".mysqli_error($mysqli));
-										if(!$query){
-											$jsondata['success'] = -6;	
-										}
-								}
-								
-								
-					}else{$jsondata['success'] = -1;}
-						
-			/* cerrar la conexion */
-	    	mysqli_close($mysqli);  
+				//alta de articulos del pedido
+				$sqlCommand2= "INSERT INTO artsped (idpedido,idproductos,cant,preciou,preciot,status)
+				VALUES ($pedido,$idact,$caact,$pract,$moact,$statusa)";
+				$query2=mysqli_query($mysqli, $sqlCommand2)or die("error en alta artsped:".mysqli_error($mysqli));
+				if($query2) {
+					//afectacion a inventario
+					$sqlCommand3= "INSERT INTO inventario (idproductos,tipomov,cant,fechamov,usu,idoc,factu,haber)
+					SELECT $idact,2,$caact,'$fechaconv','$usu',$pedido,$facturarb,costo FROM productos WHERE idproductos = $idact";
+					$query3=mysqli_query($mysqli, $sqlCommand3)or die("error en salida invent: ".mysqli_error($mysqli));
+					if(!$query3){
+						$resul=-3;	
+					}
+			}else{$resul=-2;}	
+			
+				$i++;
+			}
+				//totalizacion de ventas por tasa
+				$sventas0=array_sum($vtas0);
+				$sventas16=array_sum($vtas16);
+				//afectacion a diario
+				$resul2=venta($mysqli,$fechaconv,$pedido,$sventas16,$sventas0,$totiva,$tventa,$facturarb);
+				if($resul2!=0){$resul=-3;};
+				
+		}else{$resul=-1;}
 
-	//salida de respuesta
-		 echo json_encode($jsondata);
-    }else{
-    	
-    }
+   }else{$resul=-99;}
+   //creacion de variables de respuesta
+   $jsondata['resul']=$resul;
+   $jsondata['ped']=$pedido;
+   $jsondata['tventa']=$tventa;
+   //salida
+   echo json_encode($jsondata);
+   
+   ?>
+    

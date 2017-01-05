@@ -28,13 +28,13 @@
 	$preciou = $_POST["preciou"];
 	$preciot=$_POST["preciot"];
 	$total=$_POST["total"];
+	$credito=$_POST["cred"];
+	$facturar=$_POST["fact"];
 	$jsondata = array();
 	//creacion de datos para oc
 	$arts= array_sum($cants);
 	$usu= $_SESSION['usuario'];
 	$iva=0;
-	if(isset($_POST['cred'])){$credito=1;}else{$credito=0;};
-	if(isset($_POST['fact'])){$facturar=1;}else{$facturar=0;};
 	//creacion de oc en tabla oc
 	$sqlCommand= "INSERT INTO oc (idproveedores,arts,monto,total,usu,status,facturar,credito)
 	    	VALUES ($prov,$arts,$total,$total,'$usu',1,$facturar,$credito)";

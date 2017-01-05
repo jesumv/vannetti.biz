@@ -9,4 +9,23 @@ h3 {
 
 .cajacent{
 	width: 50%;
+	margin:auto
 }
+
+.cajamed{
+	width: 50%;
+	margin:auto
+}
+
+.subt{
+	text-align:right;
+}
+.subiva{
+	text-align:right;
+}
+
+.gsubt{
+	text-align:right;
+}
+
+.gtot{text-align:right;}

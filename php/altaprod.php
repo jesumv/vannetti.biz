@@ -27,6 +27,7 @@
 				  $desc = strtoupper($_POST['desc']);
 				  if(isset($_POST['chiva'])){$iva=1;}else{$iva=0;};
 				  if(isset($_POST['chpeso'])){$speso=1;}else{$speso=0;};
+				  if(isset($_POST['chpesov'])){$spesov=1;}else{$spesov=0;};
 				  $p1 =$_POST['p1'];
 				  $p2 =$_POST['p2'];
 				  $p3 =$_POST['p3'];
@@ -36,13 +37,13 @@
 		if($idprod == 0){
 			//si es alta de producto
 			$sqlCommand= "INSERT INTO $table (codigo,cbarras,nombre,nom_corto,nom_cat,
-	   		grupo,unidad,cant,descripcion,iva,speso,costo,precio1,precio2,precio3,idproveedores,usu,status)
-	    	VALUES ('$cod','$barr','$nombre','$nomcor','$nomcat',$grupo,$ud,$cant,'$desc',$iva,$speso,$cost,'$p1','$p2','$p3',$prov,'$usu',0)";
+	   		grupo,unidad,cant,descripcion,iva,speso,costo,precio1,precio2,precio3,idproveedores,usu,status,spesov)
+	    	VALUES ('$cod','$barr','$nombre','$nomcor','$nomcat',$grupo,$ud,$cant,'$desc',$iva,$speso,$cost,'$p1','$p2','$p3',$prov,'$usu',0,$spesov)";
 		}else{
 			// si es modificación al producto
 			$sqlCommand= "UPDATE productos SET codigo='$cod', cbarras = '$barr',
 			nombre= '$nombre',nom_corto='$nomcor',nom_cat ='$nomcat',grupo=$grupo,
-			unidad= $ud, cant= $cant, descripcion= '$desc',iva=$iva,speso=$speso,costo=$cost,
+			unidad= $ud, cant= $cant, descripcion= '$desc',iva=$iva,speso=$speso,spesov=$spesov,costo=$cost,
 			precio1='$p1',precio2='$p2',precio3='$p3',idproveedores=$prov,
 			usu='$usu' WHERE idproductos = $idprod";
 			$result = 1;		

@@ -12,17 +12,19 @@
 if(!isset($_GET['oc'])){$result= 0 ;}else{
 	/**trae datos de ordenes de compra sin surtir**/
     if (is_object($mysqli)) {
+
     	$oc= $_GET['oc'];
-    	$sqlCommand = "SELECT t1.idartsoc, t1.cant, t2.nom_corto, t2.speso, t2.costo,t2.iva FROM artsoc AS t1 LEFT JOIN productos AS t2
-    	ON t1.idproductos = t2.idproductos WHERE idoc = ".$oc." AND t1.status = 1 ORDER BY t1.idartsoc";		
+    	$sqlCommand = "SELECT t1.idartsoc, t1.cant, t2.nom_corto, t2.speso, t2.costo,t2.iva,t3.nombre AS ud FROM artsoc AS t1 LEFT JOIN productos AS t2
+    	ON t1.idproductos = t2.idproductos INNER JOIN  unidades AS t3 ON t2.unidad= t3.idunidades WHERE t1.idoc = ".$oc." AND t1.status = 1 ORDER BY t2.nom_corto";		
 	 // Execute the query here now
 			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE ARTSOC SOL. ".mysqli_error($mysqli));
+	//trae las unidades para la caja de dialogo
 //inicializacion de arreglo
 			$filas = $query1->num_rows;
 			if($filas > 0){
 				while($tempo=mysqli_fetch_array($query1, MYSQLI_ASSOC)){
 			 	$result[] = array('idart' => $tempo['idartsoc'],'cant' => $tempo['cant'],'nom' => $tempo['nom_corto'],
-			 	'speso' => $tempo['speso'],'costo' => $tempo['costo'],'civa'=>$tempo['iva']);
+			 	'speso' => $tempo['speso'],'costo' => $tempo['costo'],'civa'=>$tempo['iva'],'ud'=>$tempo['ud']);
 			 }
 			}else{$result= 1;}
 			 

@@ -68,6 +68,7 @@
 		var descsel = obj1[0].desc;
 		var ivasel= converbool(obj1[0].iva);
 		var pesosel=converbool(obj1[0].speso)
+		var pesoselv=converbool(obj1[0].spesov)
 		var p1sel = obj1[0].pr1;
 		var p2sel = obj1[0].pr2;
 		var p3sel = obj1[0].pr3;
@@ -98,6 +99,8 @@
 		ivacas.checked = ivasel;
 		var pesocas = document.getElementById('chpeso');
 		pesocas.checked = pesosel;
+		var pesocasv = document.getElementById('chpesov');
+		pesocasv.checked = pesoselv;
 		var descas =  document.getElementById('desc');
 		descas.value = descsel;
 		var p1cas =  document.getElementById('p1');
@@ -438,13 +441,14 @@ include_once "include/menu1.php";
 		            	<label>Descripción:</label><input type="text" name="desc"  id="desc" class="cajal"/>
 		            </div> 
 		            <div class="rengn"><label>Causa Iva?</label><input type="checkbox" id="chiva" name="chiva" />
-		            	<label>Costo:  </label><input type="text" name="cost"  id="cost" class="cajac"/>
-		            	<label>Precio según peso?</label><input type="checkbox" id="chpeso" name="chpeso" />
+		            	<label>Costo:</label><input type="text" name="cost"  id="cost" class="cajac"/>
+		            	<label>Costo según peso?</label><input type="checkbox" id="chpeso" name="chpeso" />
+		            	<label>Venta según peso?</label><input type="checkbox" id="chpesov" name="chpesov" />
 		            </div>
 		            <div class="rengn">
-		            	<label>P1 </label><input type="text" name="p1"  id="p1" class="cajac"/>
-		            	<label>P2 </label><input type="text" name="p2"  id="p2" class="cajac"/>
-		            	<label>P3 </label><input type="text" name="p3"  id="p3" class="cajac"/>
+		            	<label>P1 </label><input type="text" name="p1"  id="p1" class="cajam"/>
+		            	<label>P2 </label><input type="text" name="p2"  id="p2" class="cajam"/>
+		            	<label>P3 </label><input type="text" name="p3"  id="p3" class="cajam"/>
 		            	
 		            </div>        
 			   </div>

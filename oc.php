@@ -24,7 +24,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<title>Vannetti Cucina</title>
 	<meta name="author" content="jmv">
-	<meta name="viewport" content="width=device-width; initial-scale=1.0">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	<link rel="shortcut icon" href="img/logomin.gif" />  
 	<link rel="apple-touch-icon" href="img/logomin.gif">
 	<link rel="stylesheet" href= "css/jquery.mobile-1.4.5.min.css" />
@@ -57,8 +57,8 @@
 							//recoleccion de variables
 							var prov = $("#ocprov").val();
 							var total =$("#subtotalo").text();
-							var cred = $("#rcredcon-a").val();
-							var fact =$("#factp").val();
+							var cred = $("#tventap :radio:checked").val();
+							var fact = $("#factp").prop("checked") ? "1" : "0";
 							var longi = $(".cant").length;
 							var prods=[];
 							var cant=[];

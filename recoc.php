@@ -23,7 +23,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<title>Recepción OC</title>
 	<meta name="author" content="jmv">
-	<meta name="viewport" content="width=device-width; initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="shortcut icon" href="img/logomin.gif" />  
 	<link rel="apple-touch-icon" href="img/logomin.gif">
 	<link rel="stylesheet" href= "css/jquery.mobile-1.4.5.min.css" />
@@ -34,7 +34,13 @@
 	'use strict';
 	(function() {
 		var cantreng;
+		var fechar;
 		var para;
+		var remi;
+		var fact;
+		var ivat;
+		var mtot;
+		
 		function getpar(name){
 		//esta funcion obtiene el numero de orden de compra del string GET
 	   		if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
@@ -48,7 +54,7 @@
 			$("#aviso").popup("open");
 		}
 		
-		function addreng(nombre,cant,idprod,reng,speso,costo,civa){
+		function addreng(nombre,cant,idprod,reng,speso,costo,civa,cud){
 			//esta funcion añade un renglon de la tabla de articulos
 			var origen = document.getElementById("tbrecoc");
 			var nombre1 = document.createElement("DIV");
@@ -68,7 +74,7 @@
 				var node;
 				var tipo;
 				
-			for(var z=0;z<9;z++){
+			for(var z=0;z<10;z++){
 				nombre1 = document.createElement("DIV");
 				switch(z){
 					 case 0:
@@ -139,7 +145,15 @@
 			    	clase = "ocult";
 			    	clase2 = "";
 			    	texto = civa;
-			        break;		 	    
+			        break;
+			        
+			        case 9:
+			    	elem ="DIV";
+			    	idt="cud"+reng;
+			    	clase = "ocult";
+			    	clase2 = "";
+			    	texto = cud;
+			        break;			 	    
 				}
 	//adicion de elementos al DOM					
 						nombre2 = document.createElement(elem);
@@ -159,7 +173,7 @@
 						nombre2.appendChild(node);
 						nombre1.appendChild(nombre2);
 						origen.appendChild(nombre1); 
-						$("#remi").focus();	
+						$("#fecha").focus();	
 			}
 		}
 		
@@ -172,6 +186,8 @@
 			 for(var i=0; i<x; i++) {
 			 	pesos[0].parentNode.removeChild(pesos[0]);
 			 }
+			 //limpiar titulo
+			 document.getElementById("tpeso").innerHTML ="PESO ARTICULO(S) EN ";
 		}
 		
 		function ocosto(costo,peso){
@@ -180,12 +196,7 @@
 		var costoc= costo*peso;
 		return costoc;	
 		}
-		function costospeso(costo,cant){
-			//esta funcion calcula el costo por cantidad de arts
-			var costo = costo*cant
-			return costo
-		}
-	
+		
 		function regpeso(reng){
 			//esta funcion registra en el html el costo de los articulos por peso
 			var caspeso = document.getElementsByClassName("cajapeso");
@@ -197,8 +208,8 @@
 			var costosum;
 			var civa;
 			var ivacalc;
-			costosum =0;
 			//inicializacion de suma costo
+			costosum =0;
 			for(var i = 0;i < nopesos; i++){
 				idart= document.getElementById("id"+reng).innerHTML;
 				pesoact = document.getElementById("peso"+i).value;
@@ -210,7 +221,7 @@
 			$("#pidepeso").popup("close");
 			document.getElementById("costof"+reng).innerHTML= costosum.toFixed(3);
 			if(civa==1){
-				ivacalc = calciva(costosum);
+				ivacalc = calcivar(costosum);
 				document.getElementById("iva"+reng).innerHTML= ivacalc;
 			}
 			calctot();
@@ -220,6 +231,10 @@
 		function pidepeso(arts,reng){
 			//esta funcion muestra el dialogo para registrar pesos
 			//de arts recibidos.
+			//agregar las unidades de peso
+			var titpeso=document.getElementById("tpeso").innerHTML;
+			var tud= document.getElementById("cud"+reng).innerHTML;
+			document.getElementById("tpeso").innerHTML=titpeso+tud+"?";
 			//agregar cajas para registrar peso
 			var origen = document.getElementById("dialpeso");
 			var boton = document.createElement("INPUT");
@@ -382,8 +397,6 @@
 				//esta funcion recorre los checks y toma los valores de los elegidos
 				var node_list = document.getElementsByClassName("ichk");
 				var dselec=[];
-				var remi;
-				var fact;
 				var conta =0;
 				for (var i = 0; i < node_list.length; i++) {
    						 var node = node_list[i];
@@ -396,24 +409,30 @@
 								}
 								conta++;		
 				}
-				remi= document.getElementById("remi").value;
-				dselec.unshift(remi);
-				fact = document.getElementById("fact").value;
-				dselec.unshift(fact);
-				dselec.unshift(para);
 				return dselec;
 			}
 			
-		function evalua(resul){
+			function tiporect(tiposurt){
+				var texto;
+				//esta funcion traduce el tipo de surtido a texto
+				if(tiposurt == 10){texto="PARCIAL";}else if(tiposurt == 11){texto="TOTAL";}else{texto="ERROR";}
+				return texto;
+			}
+			
+		function evalua(resul,oc,tiporec){
+			/** se evalua la respuesta del servidor**/
 			switch (resul){
+				case -90:
+					var resp = "ERROR EN CONEXION A BD";
+					break;
 				case -99:
-					var resp = "LA ORDEN DE COMPRA YA INGRESO A INVENTARIO";
+					var resp = "ERROR: LA ORDEN DE COMPRA YA ESTA EN INVENTARIO";
 					break;
 				case -1:
 					resp = "ERROR EN REGISTRO DE ARTICULOS";
 					break;
 				case -2:
-					resp = "ERROR EN REGISTRO CONTABLES";
+					resp = "ERROR EN REGISTRO CONTABLE";
 					break;
 				case -3:
 				resp = "ERROR EN ACTUALIZACION DE OC";
@@ -429,6 +448,11 @@
 		 	var dseleco=[];
 		 	//esta funcion manda los datos de recepcion a bd
 		 		var resp =validacheck();
+		 		remi= document.getElementById("remi").value;
+				fact = document.getElementById("fact").value;
+				ivat= document.getElementById("itot").innerHTML;
+				mtot= document.getElementById("mtot").innerHTML;
+				fechar = document.getElementById("fecha").value;
 					if(resp==false){
 					// se avisa que se debe oprimir un check
 						aviso("NO SE RECIBIO NINGUN ARTICULO:<br>REVISE");	
@@ -438,12 +462,22 @@
 		 				//envia los datos
 		 				$.post( "php/recibeoc.php",
 						{	oc:para,
+							remi:remi,
+							fact:fact,
+							monto:mtot,
+							ivat:ivat,
 							arts:dseleco,
+							fechar:fechar,
 						 }, null, "json" )
     						.done(function( data) {
-    							var revst= data.strevisa;
-    							var textor = evalua(revst);
+    							var revst= data.resul;
+    							var tiposur= data.tipos;
+    							var noc = data.noc;
+    							var textor = evalua(revst,noc,tiposur);
     							aviso(textor);
+    							$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
+									window.location.href = "listoc.php";
+								} );
     						})
     						.fail(function( data ) {
     							var err1 = data.success;
@@ -456,6 +490,7 @@
 				para = getpar('oc');
 				if(!para){
 				aviso("NO HAY ORDEN DE COMPRA SELECCIONADA");
+			//retraso para retirar la pantalla
 				window.setTimeout(function(){window.location.href = "listoc.php";}, 2000);	
 				
 			}else{
@@ -465,6 +500,8 @@
 						var noprods= liprodoc.length;
 					//colocar titulo
 							$("<H3>ORDEN DE COMPRA NO. "+para+"</H3>").insertAfter("H1");
+					//fecha por defecto
+	  				document.getElementById("fecha ").valueAsDate = new Date();	
 					//colocar renglones
 						for (var i = 0; i < noprods; i++) {
 							var nombre = liprodoc[i].nom;
@@ -473,7 +510,8 @@
 							var speso= liprodoc[i].speso;
 							var costo = liprodoc[i].costo;
 							var civa = liprodoc[i].civa;
-							addreng(nombre,cant,nart,i,speso,costo,civa);
+							var cud = liprodoc[i].ud;
+							addreng(nombre,cant,nart,i,speso,costo,civa,cud);
 							//adicion de escucha a check
 							var estecheck = document.getElementById("chk"+i)
 							estecheck.addEventListener('change',pesoa,false);
@@ -501,11 +539,18 @@
 		<div data-role = "ui-content" id="lista">
 		<a href="#navpanel" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-bars">Navegaci&oacute;n</a>
 			<form id="forma" method="post" enctype="application/x-www-form-urlencoded">
+				<div class="cajacent">
+					<label for ="fecha">Fecha:</label>
+					 <input type="date" name="fecha" id="fecha">
+				</div>
 				<div class="ui-field-contain">
-					<label for="remi">Remisión</label>
-					<input type="text" id="remi" name="remi">
-					<label for="fact">Factura</label>
-					<input type="text" id="fact" name="fact">
+					<div class="cajamed">
+						<label for="remi">Remisión:</label>
+						<input type="text" id="remi" name="remi" >
+						<label for="fact">Factura:</label>
+						<input type="text" id="fact" name="fact">
+					</div>
+					
 				</div>
 				<fieldset class="ui-grid-d" id="tbrecoc">
 					<div class="ocult">id</div>
@@ -537,7 +582,7 @@
 		</div>
 		<div data-role ="popup" id="pidepeso" class="ui-content" data-dismissible="false" data-theme="b">
 			<input type="button" data-theme="a" data-icon="delete" data-iconpos="notext" id="cancpeso"/>
-			<label >PESO ARTICULO(S)?</label>
+			<label id="tpeso">PESO ARTICULO(S) EN </label>
 			<div id="dialpeso">
 				
 			</div>

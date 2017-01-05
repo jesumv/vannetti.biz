@@ -1,43 +1,24 @@
 <?php
-
-function cambiafact($booleano){
-	//esta funcion cambia booleano por entero
-		switch($booleano){
-			case "true":
-			$resul= 1;
-			break;
-			case "false":
-			$resul= 0;
-			break;
-		}
-		return $resul;
-}
-function converfecha($fechao){
-	//esta funcion convierte una fecha dd/MM/AAA en aaaa-mm-dd
-	$cuenta = 0;
-	$año=substr($fechao,-4,4);
-	$mes=substr($fechao,-7,2);
-	$dia=substr($fechao,0,2);
-	//checa si la fecha recibida es valida
-		if(is_numeric($año)&&is_numeric($mes)&&is_numeric($dia)){$fechac=$año."-".$mes."-".$dia;}else{$fechac=$fechao;}
-	return $fechac;
-}
-
-function operdiario($mysqli,$cuenta,$tipoper,$tipom,$ref,$monto,$fecha,$factu){
-		//esta funcion realiza 1 movimiento contable en diario. $tipom determina
-		//si el movimiento es debe o haber
-		//determinacion de referencia
-		if($tipoper==0){$refe="oc".$ref;}else{$refe="pd".$ref;}
-		//determinacion de tipo de movimiento
-		if($tipom==0){
-			$colum="debe";
-		}else{
-			$colum="haber";
-		}
-		$mysqli->query("INSERT INTO diario(cuenta,referencia,$colum,fecha,facturar)VALUES($cuenta,'$refe',$monto,'$fecha',$factu )");
-}
+/*** Autoload class files ***/ 
+    function __autoload($class){
+      require('/include/' . strtolower($class) . '.class.php');
+    }
+	function operdiario($mysqli,$cuenta,$tipoper,$tipom,$ref,$monto,$fecha,$factu){
+	//esta funcion realiza 1 movimiento contable en diario. $tipom determina
+	//si el movimiento es debe o haber
+	//determinacion de referencia
+	if($tipoper==0){$refe="oc".$ref;}else{$refe="pd".$ref;}
+	//determinacion de tipo de movimiento
+	if($tipom==0){
+		$colum="debe";
+	}else{
+		$colum="haber";
+	}
+	$mysqli->query("INSERT INTO diario(cuenta,referencia,$colum,fecha,facturar)VALUES($cuenta,'$refe',$monto,'$fecha',$factu )");
 	
-function venta($mysqli,$fecha,$ref,$monto16,$monto0,$iva,$tipo,$factu){
+		
+	}	
+		function venta($mysqli,$fecha,$ref,$monto16,$monto0,$iva,$tipo,$factu){
 		//esta funcion inserta en el diario los movimientos de una venta
 		//en todos los casos
 		$table='diario';
@@ -110,8 +91,16 @@ function venta($mysqli,$fecha,$ref,$monto16,$monto0,$iva,$tipo,$factu){
 				$resul=-1;
 			}
 		
-		 return $resul;
-}
+		//return$resul;
+		echo "resultado: ".$resul;
+	}
 	
+    $funcbase = new dbutils;
+/*** conexion a bd ***/
+    $mysqli = $funcbase->conecta();
+    if (is_object($mysqli)) {
+    	venta($mysqli,"2017-01-05","1",60.00,40.00,16.00,2,1);
+    }else{echo "ERROR EN CONEXION";}
+
 
 ?>

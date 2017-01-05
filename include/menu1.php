@@ -13,8 +13,7 @@
                   <li class="currentsub"><a class="fly">Clientes</a>
                     	<ul class="sub1">
                     		<li ><a href="listasp.php">Listas de Precios</a></li>
-	                        <li><a href="#">Salidas</a></li>
-	                        <li ><a href="#">Remisiones</a></li>
+	                        <li><a href="pedido.php">Pedidos</a></li>
 	                        <li><a href="#">Muestras</a></li>
 	                        <li><a href="#">Producción</a></li>
                         </ul>
@@ -22,9 +21,10 @@
                    </li>
                     <li class="currentsub"><a class="fly">Proveedores</a>
                     	<ul class="fly2">
+                    		<li ><a href="cxp.php">Cuentas por pagar</a></li>
                 			<li class="currentfly"><a href="oc.php">Emisión OC</a></li>
-                			<li class="currentfly"><a href="listoc.php">Recepción OC</a></li>
-                			<li class="currentfly"><a href="pagooc.php">Pago OC</a></li>
+                			<li><a href="listoc.php">Recepción OC</a></li>
+                			<li><a href="pagooc.php">Pago OC</a></li>
                 		</ul>
                 	</li>
                     	

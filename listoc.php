@@ -10,7 +10,7 @@
 /*** checa login***/
        $funcbase->checalogin($mysqli);
     } else {
-        //die ("<h1>'No se establecio la conexion a bd'</h1>");
+        die ("<h1>'No se establecio la conexion a bd'</h1>");
     }
     
 ?>
@@ -24,7 +24,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<title>Vannetti Cucina</title>
 	<meta name="author" content="jmv">
-	<meta name="viewport" content="width=device-width; initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="shortcut icon" href="img/logomin.gif" />  
 	<link rel="apple-touch-icon" href="img/logomin.gif">
 	<link rel="stylesheet" href= "css/jquery.mobile-1.4.5.min.css" />
@@ -68,6 +68,7 @@
 	 			<li><a href="listoc.php" data-ajax="false">Rec. de OC</a></li>
 		    	<li><a href="pedido.php" data-ajax="false">Pedidos</a></li>
 		    	<li><a href="listasp.php" data-ajax="false">Listas de Productos</a></li>
+		    	<li><a href="portal.php" data-ajax="false">Portal</a></li>
 	 		</ul>	    	
  		</div>
   </div>

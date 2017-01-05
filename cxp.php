@@ -3,6 +3,11 @@
 	  require('include/' . strtolower($class) . '.class.php');
     }
     
+	function diasvenc($fechamov,$diascred){
+		//esta funcion calcula los dias vencidos de una factura
+		$a=ceil((time() - (strtotime($fechamov)))/(60* 60*24))-$diascred;
+		return $a;
+	}
     $funcbase = new dbutils;
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
@@ -39,29 +44,33 @@
 
   <main class="main">
 	 <br/>
-	 <h2>CONSULTA DE INVENTARIOS</h2>
-	 <h3>Ultimo movimiento:</h3>
+	 <h2>CUENTAS POR PAGAR</h2>
 	  
 	  <?php
 	  		include_once "include/menu1.php";
 	  ?>
 
 <table id"tblinv"name= "tblinv" class="db-table">
-	<tr><th>PRODUCTO</th><th>CODIGO</th><th>EXISTENCIA</th><th>MINIMO</th><th>FALTAN</th></tr>
+	<tr><th>PROVEEDOR</th><th>FECHA</th><th>OC</th><th>FACTURA</th><th>MONTO</th><th>IVA</th><th>TOTAL</th><th>DIAS VENC</th></tr>
 	
 
 <?php
 //-----CONSTRUCCION DE LA TABLA------------------------------------------------------------------------
- $table = 'productos';
- $table2 = 'inventario';
- $sql= "SELECT t2.idproductos,T2.codigo, t2.nombre, (SUM(CASE WHEN t1.tipomov=1 THEN t1.cant ELSE 0 END)-SUM(CASE WHEN t1.tipomov=2 THEN t1.cant ELSE 0 END))
- AS total FROM inventario AS t1 RIGHT JOIN productos AS t2 ON t1.idproductos = t2.idproductos WHERE t2.status <2 GROUP BY t2.idproductos ORDER BY t2.nombre ";
- 
+ $table = 'oc';
+ $table2 = 'proveedores';
+ $sql= "SELECT t2.razon_social,t1.fecharec, t1.idoc,t1.factura,t1.monto,t1.iva,t1.total,t2.diascred FROM $table
+ AS t1 INNER JOIN $table2 AS t2 ON t1.idproveedores= t2.idproveedores WHERE t1.status >10 AND t1.credito = 1 ORDER BY fechamov";
  $result2 = mysqli_query($mysqli,$sql)or die ("ERROR EN CONSULTA DE INVENTARIOS.".mysqli_error($mysqli));;
   if(mysqli_num_rows($result2)) {
+ 
+  	 //construir tabla
   	 while($row2=mysqli_fetch_row($result2)){
-  	 				if($row2[3]==""){$exis=0;}else{$exis=$row2[3];};
-				 	echo "<tr><td>$row2[1]</td><td>$row2[2]</td><td>$exis</td></tr>";
+  	 				$fechamov=date_create($row2[1]);
+		 			$diascred=$row2[7];
+		 			$fechamod=date_format($fechamov,'Y/m/d');
+					$calc=diasvenc($row2[1], $diascred);
+				 	echo "<tr><td>$row2[0]</td><td>$fechamod</td><td>$row2[2]</td><td>$row2[3]</td><td>$row2[4]</td><td>$row2[5]</td>
+				 	<td>$row2[6]</td><td>".$calc."</td></tr>";
 				 } 
   }
 ?>
