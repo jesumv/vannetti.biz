@@ -1,5 +1,13 @@
 <?php
 
+function diasvenc($fechamov,$diascred){
+		//esta funcion calcula los dias vencidos de una factura
+		$a=ceil((time() - (strtotime($fechamov)))/(60* 60*24))-$diascred;
+		//if($a>0){$amod=$a;}else{$amod=0;}
+		$amod = ($a < 0 ? 0 : $a);
+		return $amod;
+	}
+
 function cambiafact($booleano){
 	//esta funcion cambia booleano por entero
 		switch($booleano){
@@ -23,10 +31,10 @@ function converfecha($fechao){
 	return $fechac;
 }
 
-function operdiario($mysqli,$cuenta,$tipoper,$tipom,$ref,$monto,$fecha,$factu){
+function operdiario($mysqli,$cuenta,$tipoper,$tipom,$ref,$monto,$fecha,$sfactu,$subcta='NULL'){
 		//esta funcion realiza 1 movimiento contable en diario. $tipom determina
-		//si el movimiento es debe o haber
-		//determinacion de referencia
+		//si el movimiento es debe = 0 o haber = else
+		//determinacion de referencia orden de compra o pedido
 		if($tipoper==0){$refe="oc".$ref;}else{$refe="pd".$ref;}
 		//determinacion de tipo de movimiento
 		if($tipom==0){
@@ -34,10 +42,52 @@ function operdiario($mysqli,$cuenta,$tipoper,$tipom,$ref,$monto,$fecha,$factu){
 		}else{
 			$colum="haber";
 		}
-		$mysqli->query("INSERT INTO diario(cuenta,referencia,$colum,fecha,facturar)VALUES($cuenta,'$refe',$monto,'$fecha',$factu )");
+		$mysqli->query("INSERT INTO diario(cuenta,referencia,$colum,fecha,facturar,subcuenta)VALUES($cuenta,'$refe',$monto,'$fecha',$sfactu,$subcta)");
+}
+
+function metpago($metpago){
+	//define cuenta de abono segun metodo pago de pedidos
+	if($metpago=="01"){$cuenta="101.01";}else{$cuenta="102.01";}
+	return $cuenta;
+}
+function epagoped($mysqli,$fecha,$ref,$monto,$iva,$total,$factu,$mpago,$sfactu,$cte,$arch=NULL){
+	//registra un pago de pedido a credito
+			try{
+				$mysqli->autocommit(false);
+			//la referencia es pedido
+				$tipoper=1;
+			//movimientos de diario
+				//cargo en entrada de efectivo segun metodo de pago
+					$cuenta1=metpago($mpago);
+					$tipom1=0;
+					operdiario($mysqli, $cuenta1, $tipoper, $tipom1, $ref, $total, $fecha,$sfactu);
+			//abono a clientes
+					$cuenta4="105.01";
+					$tipom4=1;
+					operdiario($mysqli,$cuenta4,$tipoper,$tipom4,$ref,$total,$fecha,$sfactu,$cte);
+				//cargo a iva trasladado no cobrado
+					$cuenta2="209.01";
+					$tipom2=0;
+					operdiario($mysqli,$cuenta2,$tipoper,$tipom2,$ref,$iva,$fecha,$sfactu);
+				//abono a iva trasladado
+					$cuenta3="208.01";
+					$tipom3=1;
+					operdiario($mysqli,$cuenta3,$tipoper,$tipom3,$ref,$iva,$fecha,$sfactu);
+
+			//actualizacion en pedidos
+					$mysqli->query("UPDATE pedidos SET status=40,fechapago='$fecha',factura=$factu,arch=$arch WHERE idpedidos=$ref");
+			//efectuar la operacion
+				$mysqli->commit();
+				$resul=0;
+			}catch (Exception $e) {
+					//error en las operaciones de bd
+				    $mysqli->rollback();
+				   	$resul=-2;
+				}
+	return $resul;
 }
 	
-function venta($mysqli,$fecha,$ref,$monto16,$monto0,$iva,$tipo,$factu){
+function venta($mysqli,$fecha,$ref,$monto16,$monto0,$iva,$tipo,$factu,$cte){
 		//esta funcion inserta en el diario los movimientos de una venta
 		//en todos los casos
 		$table='diario';
@@ -60,12 +110,12 @@ function venta($mysqli,$fecha,$ref,$monto16,$monto0,$iva,$tipo,$factu){
 					$cargo="501.01";
 					operdiario($mysqli,$cargo,1,0,$ref,$costo,$fecha,$factu);
 					//abono a ventas segun tasa
-					//ventas tasa general 401.01
+					//ventas tasa general 
 						$abono="401.01";
-						operdiario($mysqli,$abono,1,1,$ref,$monto16,$fecha,$factu);
-					//ventas tasa 0 401.04
+						operdiario($mysqli,$abono,1,1,$ref,$monto16,$fecha,$factu,$cte);
+					//ventas tasa 0 
 						$abono="401.04";
-						operdiario($mysqli,$abono,1,1,$ref,$monto0,$fecha,$factu);
+						operdiario($mysqli,$abono,1,1,$ref,$monto0,$fecha,$factu,$cte);
 					//movimientos por tipo de venta
 						switch($tipo){
 							case 0:
@@ -86,9 +136,9 @@ function venta($mysqli,$fecha,$ref,$monto16,$monto0,$iva,$tipo,$factu){
 								operdiario($mysqli,$abono,1,1,$ref,$iva,$fecha,$factu);
 								break;
 							case 2:
-								//credito cargo a clientes 105.01
+								//credito cargo a clientes
 								$cargo="105.01";
-								operdiario($mysqli,$cargo,1,0,$ref,$montof,$fecha,$factu);
+								operdiario($mysqli,$cargo,1,0,$ref,$montof,$fecha,$factu,$cte);
 								//iva trasladado no cobrado 209.01
 								$abono="209.01";
 								operdiario($mysqli,$abono,1,1,$ref,$iva,$fecha,$factu);	
@@ -113,5 +163,3 @@ function venta($mysqli,$fecha,$ref,$monto16,$monto0,$iva,$tipo,$factu){
 		 return $resul;
 }
 	
-
-?>

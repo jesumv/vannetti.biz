@@ -30,6 +30,7 @@
 	<link rel="stylesheet" href= "css/movil.css" />
 	<script src="js/jquery.js"></script>
 	<script src="js/jquery.mobile-1.4.5.min.js"></script>
+	<script src="js/fauxcx.js"></script>
 	<script>
 	'use strict';
 	(function() {
@@ -40,7 +41,7 @@
 		var fact;
 		var ivat;
 		var mtot;
-		
+			
 		function getpar(name){
 		//esta funcion obtiene el numero de orden de compra del string GET
 	   		if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
@@ -448,15 +449,20 @@
 		 	var dseleco=[];
 		 	//esta funcion manda los datos de recepcion a bd
 		 		var resp =validacheck();
-		 		remi= document.getElementById("remi").value;
-				fact = document.getElementById("fact").value;
-				ivat= document.getElementById("itot").innerHTML;
-				mtot= document.getElementById("mtot").innerHTML;
-				fechar = document.getElementById("fecha").value;
+		 		    var fechaf=document.getElementById("fecha");
+		 		    fechar=fechaf.value;
 					if(resp==false){
 					// se avisa que se debe oprimir un check
 						aviso("NO SE RECIBIO NINGUN ARTICULO:<br>REVISE");	
-					}else{
+					}else if(!isValidDate(fechar)){
+						aviso("FALTA FECHA")
+						fechaf.focus();
+						}else{
+						//recoge datos grales
+						remi= document.getElementById("remi").value;
+						fact = document.getElementById("fact").value;
+						ivat= document.getElementById("itot").innerHTML;
+						mtot= document.getElementById("mtot").innerHTML;
 						//recorre los checks y anota los datos
 		 				dseleco = revisacheck();
 		 				//envia los datos
@@ -488,7 +494,7 @@
 		$( document ).on( "pageinit", "#pagrecoc", function( event ) {
 			//obtener datos para la construccion
 				para = getpar('oc');
-				if(!para){
+			if(!para){
 				aviso("NO HAY ORDEN DE COMPRA SELECCIONADA");
 			//retraso para retirar la pantalla
 				window.setTimeout(function(){window.location.href = "listoc.php";}, 2000);	
@@ -501,7 +507,7 @@
 					//colocar titulo
 							$("<H3>ORDEN DE COMPRA NO. "+para+"</H3>").insertAfter("H1");
 					//fecha por defecto
-	  				document.getElementById("fecha ").valueAsDate = new Date();	
+	  				document.getElementById("fecha").valueAsDate = new Date();	
 					//colocar renglones
 						for (var i = 0; i < noprods; i++) {
 							var nombre = liprodoc[i].nom;
@@ -516,7 +522,7 @@
 							var estecheck = document.getElementById("chk"+i)
 							estecheck.addEventListener('change',pesoa,false);
 							var btnrecibe = document.getElementById("recibe")
-							recibe.addEventListener('click',registra,false);
+							btnrecibe.addEventListener('click',registra,false);
 						}
 						//obtener cantidad de reglones con pag construida
 						cantreng = calcreng();									

@@ -142,8 +142,8 @@ function tiposurt($mysqli,$oc){
 				$costo= $arts[$i][2];
 				
 				//cargo a inventario
-						$sqlCommand1 = "INSERT INTO inventario (idproductos,tipomov,cant,monto,usu,idoc,debe,factu,fechamov)
-			    		SELECT idproductos,$tipomov,$cant,$costo,'$usu',$oc,$costo,$facturar,'$fechaconv' from artsoc WHERE idartsoc=".$id; 
+						$sqlCommand1 = "INSERT INTO inventario (idproductos,tipomov,cant,usu,idoc,debe,factu,fechamov)
+			    		SELECT idproductos,$tipomov,$cant,'$usu',$oc,$costo,$facturar,'$fechaconv' from artsoc WHERE idartsoc=".$id; 
 						$query1 = mysqli_query($mysqli, $sqlCommand1) or die ('error en alta inventarios: '.mysqli_error($mysqli));
 						if($query1){
 							//marcar los articulos como ingresados a inventario

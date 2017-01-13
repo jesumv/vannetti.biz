@@ -1,7 +1,12 @@
 	<div id="menuPositioner">
     <div id="menuHolder">
             <ul id="menu">
-                <li><a href="portal.php"><b>Inicio</b></a></li>
+                <li><a class="fly"><b>Inicio</b></a>
+                	<ul class="sub1">
+                		<li><a href="portal.php">PC</a></li>
+                		<li><a href="portalmov.php">Movil</a></li>
+                	</ul>
+                </li>
                 <li class="currentsub"><a class="fly" >Consultas</a>
                 	<ul class="sub1">
                 		<li ><a href="inventarios.php">Inventarios</a></li>
@@ -12,10 +17,10 @@
                   </li>
                   <li class="currentsub"><a class="fly">Clientes</a>
                     	<ul class="sub1">
-                    		<li ><a href="listasp.php">Listas de Precios</a></li>
-	                        <li><a href="pedido.php">Pedidos</a></li>
+                    		<li ><a href="pedido.php">Pedidos</a></li>
+	                        <li><a href="cxc.php">Cuentas por cobrar</a></li>
 	                        <li><a href="#">Muestras</a></li>
-	                        <li><a href="#">Producción</a></li>
+	                        <li><a href="listasp.php">Listas de Precios</a></li>
                         </ul>
 
                    </li>

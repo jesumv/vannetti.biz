@@ -28,23 +28,62 @@
 	}
 	
 	
-	function cstatus($tipoventa){
+	function cstatus($tipoventa,$facturar){
 		//asigna el status del pedido  y articulos de acuerdo al tipo de venta
 		//para el alta del pedido
-		switch ($tipoventa) {
-			case 0:
-				$pdst= 40;
-				$arst=99;
-				break;
-			case 1:
-				$pdst= 20;
-				$arst=10;
-				break;
-			case 2:
-				$pdst= 30;
-				$arst=10;
-				break;
+		// SI SE VA A FACTURAR
+		if($facturar==1){
+			switch ($tipoventa) {
+				//mostrador
+				case 0:
+					//X FACTURAR
+					$pdst= 25;
+					//surtido
+					$arst=99;
+					break;
+				//contado
+				case 1:
+					//X FACTURAR
+					$pdst= 25;
+					//xsurtir OJO
+					$arst=99;
+					break;
+				case 2:
+				//credito
+					//X FACTURAR
+					$pdst= 25;
+					//xsurtir
+					$arst=99;
+					break;
+			}
+		}else{
+		//SI NO SE VA A FACTURAR
+			switch ($tipoventa) {
+				//mostrador
+				case 0:
+					//PAGADO
+					$pdst= 40;
+					//surtido
+					$arst=99;
+					break;
+				//contado
+				case 1:
+					//AL COBRO
+					$pdst= 20;
+					//xsurtir
+					$arst=99;
+					break;
+				case 2:
+				//credito
+					//X COBRAR
+					$pdst= 30;
+					//xsurtir
+					$arst=99;
+					break;
+			}
+			
 		}
+
 		return array($pdst,$arst);
 	}
 		
@@ -66,10 +105,11 @@
 	$totiva=$_POST["totiva"];
 	$total=$_POST["total"];
 	$usu= $_SESSION['usuario'];
-	$status= cstatus($tventa);
+	$status= cstatus($tventa,$facturarb);
 	$statusp=$status[0];
 	$statusa=$status[1];
 	$pedido;
+	//arreglo con datos de producto
 	$arts=$_POST['prods'];
 	//afectacion a bd
 	//alta de pedido
@@ -88,6 +128,10 @@
 				$pract=$arts[$i][2];
 				$moact=$arts[$i][3];
 				$ivact=$arts[$i][4];
+				$presact=$arts[$i][5];
+				$pesoact=$arts[$i][6];
+				$precioact=$presact*$caact;
+				
 				if($ivact==0){
 					//suma de ventas tasa0
 					array_push($vtas0,$moact);
@@ -97,13 +141,13 @@
 				}
 
 				//alta de articulos del pedido
-				$sqlCommand2= "INSERT INTO artsped (idpedido,idproductos,cant,preciou,preciot,status)
-				VALUES ($pedido,$idact,$caact,$pract,$moact,$statusa)";
-				$query2=mysqli_query($mysqli, $sqlCommand2)or die("error en alta artsped:".mysqli_error($mysqli));
-				if($query2) {
+					$sqlCommand2= "INSERT INTO artsped (idpedido,idproductos,cant,preciou,preciot,status)
+					VALUES ($pedido,$idact,$caact,$pract,$moact,$statusa)";
+					$query2=mysqli_query($mysqli, $sqlCommand2)or die("error en alta artsped:".mysqli_error($mysqli));
+					if($query2) {
 					//afectacion a inventario
 					$sqlCommand3= "INSERT INTO inventario (idproductos,tipomov,cant,fechamov,usu,idoc,factu,haber)
-					SELECT $idact,2,$caact,'$fechaconv','$usu',$pedido,$facturarb,costo FROM productos WHERE idproductos = $idact";
+					SELECT $idact,2,$caact,'$fechaconv','$usu',$pedido,$facturarb,(costo*$caact*$pesoact) FROM productos WHERE idproductos = $idact";
 					$query3=mysqli_query($mysqli, $sqlCommand3)or die("error en salida invent: ".mysqli_error($mysqli));
 					if(!$query3){
 						$resul=-3;	
@@ -116,7 +160,7 @@
 				$sventas0=array_sum($vtas0);
 				$sventas16=array_sum($vtas16);
 				//afectacion a diario
-				$resul2=venta($mysqli,$fechaconv,$pedido,$sventas16,$sventas0,$totiva,$tventa,$facturarb);
+				$resul2=venta($mysqli,$fechaconv,$pedido,$sventas16,$sventas0,$totiva,$tventa,$facturarb,$cte);
 				if($resul2!=0){$resul=-3;};
 				
 		}else{$resul=-1;}
@@ -127,7 +171,7 @@
    $jsondata['ped']=$pedido;
    $jsondata['tventa']=$tventa;
    //salida
+   mysqli_close($mysqli);
    echo json_encode($jsondata);
    
-   ?>
     

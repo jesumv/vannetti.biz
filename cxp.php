@@ -3,12 +3,10 @@
 	  require('include/' . strtolower($class) . '.class.php');
     }
     
-	function diasvenc($fechamov,$diascred){
-		//esta funcion calcula los dias vencidos de una factura
-		$a=ceil((time() - (strtotime($fechamov)))/(60* 60*24))-$diascred;
-		return $a;
-	}
-    $funcbase = new dbutils;
+//funciones auxiliares
+require 'include/funciones.php';
+
+   $funcbase = new dbutils;
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
     if (is_object($mysqli)) {

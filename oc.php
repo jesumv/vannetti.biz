@@ -64,6 +64,7 @@
 							var cant=[];
 							var preciou=[];
 							var preciot=[];
+							var present=[];
 							var longcants = 0;
 							for(var z=0; z <longi; z++){
 								if($("#cant".concat(z)).val()!==""){
@@ -71,6 +72,7 @@
 									cant[longcants] = $("#cant".concat(z)).val();
 									preciou[longcants]= $("#costo".concat(z)).text();
 									preciot[longcants]= $("#subtoc".concat(z)).text();
+									present[longcants]
 									longcants++;
 								}
 							}
@@ -183,10 +185,12 @@
 	    			</fieldset>
 	    		</div>
 	    		<fieldset class="ui-grid-b" id="octabla">
+	    			<div class="ocult">reng</div>
 					<div class="ocult">id</div>
 				    <div class="ui-block-a"><div class="ui-bar ui-bar-b">Producto</div></div>
 				 	<div class="ocult">Costo</div>
 				    <div class="ui-block-b"><div class="ui-bar ui-bar-b">Cantidad</div></div>
+				    <div class="ocult">Presen</div>
 				    <div class="ui-block-c"><div class="ui-bar ui-bar-b">Subtotal</div></div>
 				    <div class="ocult">subtotalo</div>
 				</fieldset>		

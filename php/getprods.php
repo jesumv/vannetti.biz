@@ -13,12 +13,12 @@ if(isset($_GET['idprov'])){$cad = "idproveedores=".$_GET['idprov']; }else{$cad =
 
 /**trae id y nom corto de productos no cancelados**/
     if (is_object($mysqli)) {
-    	$sqlCommand = "SELECT idproductos,nom_corto,costo FROM productos WHERE ".$cad." ORDER BY nom_corto";		
+    	$sqlCommand = "SELECT idproductos,nom_corto,costo,cant FROM productos WHERE ".$cad." ORDER BY nom_corto";		
 	 // Execute the query here now
 			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE SELEC PROD. ".mysqli_error($mysqli));
 //inicializacion de arreglo
 			 while($tempo=mysqli_fetch_array($query1, MYSQLI_ASSOC)){
-			 	$result[] = array('id' => $tempo['idproductos'],'nombre' => $tempo['nom_corto'],'costo'=>$tempo['costo']);
+			 	$result[] = array('id' => $tempo['idproductos'],'nombre' => $tempo['nom_corto'],'costo'=>$tempo['costo'],'presen'=>$tempo['cant']);
 			 };
 	/* liberar la serie de resultados */
 			  mysqli_free_result($query1);			  

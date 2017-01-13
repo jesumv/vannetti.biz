@@ -48,4 +48,11 @@ margin-left:auto;margin-right:auto;margin-top:50px; margin-bottom:auto; }
 table.db-table th	{ background:#eee; padding:5px; border-left:1px solid #ccc; border-top:1px solid #ccc; }
 table.db-table td	{ padding:5px; border-left:1px solid #ccc; border-top:1px solid #ccc; }
 
-.ed,.el{text-align:center}
+.ed,.el,{text-align:center}
+
+.edac{
+text-align:center;
+background-color:#80ff80;
+}
+
+.ocult{display:none;}

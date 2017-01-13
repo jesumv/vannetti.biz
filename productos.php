@@ -304,7 +304,7 @@
   		
 			  $(document).on("submit","#altaprod", function(){
 	  					if(validar){
-										$.post('php/altaprod.php', $(this).serialize(), function(data){
+							$.post('php/altaprod.php', $(this).serialize(), function(data){
 							if(data == -1){
 								alert("error en movimiento de producto");
 							} else if (data == 0){
@@ -449,7 +449,6 @@ include_once "include/menu1.php";
 		            	<label>P1 </label><input type="text" name="p1"  id="p1" class="cajam"/>
 		            	<label>P2 </label><input type="text" name="p2"  id="p2" class="cajam"/>
 		            	<label>P3 </label><input type="text" name="p3"  id="p3" class="cajam"/>
-		            	
 		            </div>        
 			   </div>
 				      <div class="dialog-buttons">

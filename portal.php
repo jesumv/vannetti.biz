@@ -38,7 +38,7 @@
 
   <main class="main">
  <br />
- <h2>VANNETTI CONSULENTI</h2>
+ <h2>VANNETTI CUCINA</h2>
   
   <?php
   		include_once "include/menu1.php";

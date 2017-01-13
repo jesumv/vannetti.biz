@@ -38,9 +38,10 @@
             }
             else {
                  die('error en calculo iva ');	
-		}
+			}
 			
-		}public function conecta() {
+		}
+		public function conecta() {
 	    /***esta funcion establece la conexion a sql***/
 		/***variables de conexion ***/
 		$mysql_hostname = "localhost";

@@ -30,6 +30,7 @@
 	<script src="js/jquery.js"></script>
 	<script src="js/jquery.mobile-1.4.5.min.js"></script>
 	<script src="js/jquery.number.js"></script>
+	
 
 	<script>
 	'use strict';
@@ -103,7 +104,7 @@
 function sumaprecio(){
 	//esta funcion suma los precios
 	var preciot =0;
-	var arre = document.getElementsByClassName("subt") ;
+	var arre = document.getElementsByClassName("stotoc") ;
 	var longit = arre.length;
 	for(var z=0; z<longit; z++){
 		var preact = Number(arre[z].innerText);
@@ -115,7 +116,7 @@ function sumaprecio(){
 function sumaiva(){
 	//esta funcion suma los ivas
 	var ivat=0;
-	var arre = document.getElementsByClassName("subiva") ;
+	var arre = document.getElementsByClassName("ivaoc") ;
 	var longit = arre.length;
 	for(var z=0; z<longit; z++){
 		var ivact = Number(arre[z].innerText);
@@ -125,9 +126,9 @@ function sumaiva(){
 }
 
 function sumatotas(){
-	//esta funcion suma el monto total de cada renglon
+	//esta funcion suma los montos totales de todos los renglones
 	var grant=0;
-	var arret= document.getElementsByClassName("gsubt");
+	var arret= document.getElementsByClassName("totoc");
 	var longit = arret.length;
 	for(var z=0; z<longit; z++){
 		var totact = Number(arret[z].innerText);
@@ -146,12 +147,14 @@ function sacareng(nombre){
 
 function quita(){
 	  		//quitar cajas de peso
-			 var pesos = document.getElementById('dialpeso').getElementsByTagName("input");
-			 var x = pesos.length;
+			 //var pesos = document.getElementById('dialpeso').getElementsByTagName("input");
+			 //var x = pesos.length;
 			 $("#pidepeso").popup("close");
-			 for(var i=0; i<x; i++) {
-			 	pesos[0].parentNode.removeChild(pesos[0]);
-			 }
+			// for(var i=0; i<x; i++) {
+			 	//pesos[0].parentNode.removeChild(pesos[0]);
+			 //}
+			 $('.divpeso').remove();
+			 $('#regpeso').remove();
 			 //limpiar titulo
 			 document.getElementById("tpeso").innerHTML ="PESO ARTICULO(S) EN ";
 	}
@@ -183,10 +186,16 @@ function regpeso(reng){
 				pesosum.push(pesoact);
 			}
 			var pesof=pesosum.reduce(getSum);
+			document.getElementById("pesor"+ reng).innerHTML= pesof;
 			precioact = document.getElementById("precio"+ reng).innerHTML;
 			costocalc = ocosto(precioact,pesof)
 			$("#pidepeso").popup("close");
-			document.getElementById("psubt"+ reng).innerHTML= costocalc.toFixed(3);			
+			document.getElementById("psubt"+ reng).innerHTML= costocalc.toFixed(2);	
+			document.getElementById("stotoc"+ reng).innerHTML= Number(costocalc,2);	
+			//calculo de datos renglon
+	 		calculareng(reng)
+	 		//calcula totales
+	 		calculatots();		
 }
 	
 function pidepeso(arts,reng){
@@ -203,6 +212,7 @@ function pidepeso(arts,reng){
 		boton.id = "regpeso"
 		for(var i=0;i<arts;i++){
 			var divi = document.createElement("DIV");
+			divi.className="divpeso"
 			var caja = document.createElement("INPUT");
 			caja.id = "pesoac"+i;
 			caja.className= "cajapeso";
@@ -212,10 +222,11 @@ function pidepeso(arts,reng){
 		}
 		origen.appendChild(boton);
 		var cancela = document.getElementById("cancpeso");
-		cancela.addEventListener('click',quita,false);
+		cancela.addEventListener('click',function(){quita()},false);
 		var registra = document.getElementById("regpeso");
 		registra.addEventListener('click',function(){
 		regpeso(reng);
+		quita();
 		},false);
 		$("#pidepeso").popup("open");
 		$("#pesoac0").focus();
@@ -223,7 +234,7 @@ function pidepeso(arts,reng){
 }
 
 function calculatots(){
-	//esta funcion calcula los totale x columna y los escribe
+	//esta funcion calcula los totales x columna y los escribe
 			var sumacants = sumacant();
 			document.getElementById("sumcantp").innerHTML = sumacants;
 			var sumaprecs = sumaprecio();
@@ -240,10 +251,46 @@ function calculatots(){
 function quitadatos(rengl){
 	//esta funcion quita los datos de un renglon cuando se borra la cantidad
 	document.getElementById("psubt"+ rengl).innerHTML="0.00";
+	document.getElementById("stotoc"+ rengl).innerHTML="0.00";
 	document.getElementById("piva"+ rengl).innerHTML="0.00";
+	document.getElementById("ivaoc"+ rengl).innerHTML="0.00";
 	document.getElementById("ptot"+ rengl).innerHTML="0.00";
-}	
-	function multiplica(){
+	document.getElementById("totoc"+ rengl).innerHTML="0.00";
+	
+}
+
+function calculareng(rengl){
+	//calcula datos de un renglon luego de modificacion
+		 		//retomar el subtotal, para los calculos
+	var subt= document.getElementById("stotoc"+ rengl).innerHTML;
+	//si se va a facturar se busca iva por articulo
+	 		if(facturarped==true){
+	 			//si el articulo causa iva, se agrega a la columna
+	 			var civa2 = document.getElementById("iva"+rengl).innerHTML;
+	 			var iva1;
+	 			var ivacalc;
+	 				if(civa2==1){
+			 			//si causa iva, se calcula
+			 			var iva1= subt*.16;
+						ivacalc=$.number((iva1),2);
+	 				}else{
+	 					ivacalc=$.number((0),2);
+	 					iva1=0;
+	 					}
+	 		}else{
+	 			ivacalc=$.number((0),2);
+	 			iva1=0;
+	 			}
+	//se añade el iva
+		document.getElementById("ivaoc"+rengl).innerHTML= iva1;
+		document.getElementById("piva"+rengl).innerHTML= ivacalc;
+	//se modifica el total del renglon
+	 			var total=	parseFloat(subt)+parseFloat(ivacalc);
+	 			document.getElementById("ptot"+rengl).innerHTML= $.number(total,2);	
+	 			document.getElementById("totoc"+rengl).innerHTML= total;			
+}
+
+function multiplica(){
 		//esta funcion obtiene el precio final en base a los datos de cantidad
 		//se valida si la entrada es numerica
 	 	var checa = checaval(this.value);
@@ -257,6 +304,7 @@ function quitadatos(rengl){
 		var subt;
 		var ivacalc;
 		var total;
+		//si la casilla tiene valor, se examina
 	 	if (checa==true && valor!='') {
 	 		//si el articulo se vende por peso, se muestra el combo
 	 		var peso=document.getElementById("peso"+rengl).innerHTML;
@@ -264,26 +312,17 @@ function quitadatos(rengl){
 	 				multip=pidepeso(valor,rengl);
 	 			}else{
 	 				multip=valor;
-					//se toma el precio oculto, se multiplica x cantidad y se añade a la tabla
-			var preciot = ocosto(precio,multip);
-			document.getElementById("psubt"+ rengl).innerHTML = $.number(preciot,2);
+				//se toma el precio oculto, se multiplica x cantidad y se añade a la tabla
+					var preciot = ocosto(precio,multip);
+					document.getElementById("psubt"+ rengl).innerHTML = $.number(preciot,2);
+					document.getElementById("stotoc"+ rengl).innerHTML  = preciot;
+				//calculo de datos renglon
+	 				calculareng(rengl)
+	 			// se modifican los totales
+					calculatots();
 	 			}
-	 		//retomar el subtotal, para los calculos
-	 		subt= document.getElementById("psubt"+ rengl).innerHTML;
-	 		//si se va a facturar se busca iva por articulo
-	 		if(facturarped==true){
-	 			//si el articulo causa iva, se agrega a la columna
-	 			var civa2 = document.getElementById("iva"+rengl).innerHTML;
-	 				if(civa2==1){
-			 			//si causa iva, se calcula
-						ivacalc=$.number((subt*.16),2);
-	 				}else{ivacalc=$.number((0),2);}
-	 		}else{ivacalc=$.number((0),2);}
-	 		//se añade el iva
-	 		document.getElementById("piva"+rengl).innerHTML= ivacalc;
-	 		//se modifica el total del renglon
-	 			total=	parseFloat(subt)+parseFloat(ivacalc);
-	 			document.getElementById("ptot"+rengl).innerHTML= $.number(total,2);		
+
+	 		
 	 	}else{
 	 		if(valor!=''){
 	 		//el valor no es admisible
@@ -297,14 +336,14 @@ function quitadatos(rengl){
 		 	if(checa==true){
 		 		//si la cantidad está en blanco, se quitan los datos del renglon
 		 		quitadatos(rengl);
+		 		calculatots();
 		 	}	
 			};
 			
-			// se modifican los totales
-			calculatots();
+
 		}
 		
-		function addrengart(id,categ,nombre,precio,linea,iva,spesov,ud){
+		function addrengart(id,categ,nombre,precio,linea,iva,spesov,ud,presen){
 			//esta funcion agrega los renglones de articulos para una categoría.
 			var ancla = document.getElementById("cat"+categ);
 		//celdas ocultas
@@ -349,6 +388,23 @@ function quitadatos(rengl){
 			var node = document.createTextNode(ud);
 			udr.appendChild(node);
 			ancla.appendChild(udr);
+		//presentacion
+			var prer = document.createElement("DIV");
+			prer.className = "ocult pres";
+			prer.id = "prer"+linea;
+			prer.name = "prer"+linea;
+			var node = document.createTextNode(presen);
+			prer.appendChild(node);
+			ancla.appendChild(prer);
+		//peso total de articulos
+			var pesor = document.createElement("DIV");
+			pesor.className = "ocult peso";
+			pesor.id = "pesor"+linea;
+			pesor.name = "pesor"+linea;
+			var node = document.createTextNode("1");
+			pesor.appendChild(node);
+			ancla.appendChild(pesor);
+			
 			
 		//columna 1
 			var rengpa = document.createElement("DIV");
@@ -388,6 +444,30 @@ function quitadatos(rengl){
 			var textope = document.createTextNode("0.00");
 			rengpe.appendChild(textope);
 			ancla.appendChild(rengpe);
+		//subtotal oculto sin formato
+			var stotoc = document.createElement("DIV");
+			stotoc.className = "ocult stotoc";
+			stotoc.id = "stotoc"+linea;
+			stotoc.name = "stotoc"+linea;
+			var nodestot = document.createTextNode("0.00");
+			stotoc.appendChild(nodestot);
+			ancla.appendChild(stotoc);
+		//iva sin formato
+			var ivaoc = document.createElement("DIV");
+			ivaoc.className = "ocult ivaoc";
+			ivaoc.id = "ivaoc"+linea;
+			ivaoc.name = "ivaoc"+linea;
+			var nodeivao = document.createTextNode("0.00");
+			ivaoc.appendChild(nodeivao);
+			ancla.appendChild(ivaoc);
+		//total oculto sin formato
+			var totoc = document.createElement("DIV");
+			totoc.className = "ocult totoc";
+			totoc.id = "totoc"+linea;
+			totoc.name = "totoc"+linea;
+			var nodetot = document.createTextNode("0.00");
+			totoc.appendChild(nodetot);
+			ancla.appendChild(totoc);
 			
 		//agregar funcion de escucha
 			document.getElementById(checkp.id).addEventListener('input', multiplica,false);	
@@ -407,7 +487,8 @@ function quitadatos(rengl){
 						var iva = objarts[i].iva;
 						var spesov = objarts[i].spesov;
 						var ud= objarts[i].ud;
-						addrengart(idprod,grupo,nombre,precio,i,iva,spesov,ud);
+						var presen=objarts[i].presen;
+						addrengart(idprod,grupo,nombre,precio,i,iva,spesov,ud,presen);
 					}			
 				});
 		}
@@ -517,15 +598,9 @@ function quitadatos(rengl){
 					var barra  = document.createElement("DIV");
 					barra.name="gr"+id;
 					barra.id = "gr"+id;
-					var atrib= document.createAttribute("data-role");
-					atrib.value = "collapsible";
-					barra.setAttributeNode(atrib);
-					var tema = document.createAttribute("data-theme");
-					tema.value="a";
-					var temaint	= document.createAttribute("data-content-theme");
-					temaint.value ="a";
-					barra.setAttributeNode(tema);
-					barra.setAttributeNode(temaint);
+					barra.setAttribute("data-role","collapsible");
+					barra.setAttribute("data-theme","a")
+					barra.setAttribute("data-content-theme","a")
 					var subtit  = document.createElement("H2");
 					var texto = document.createTextNode(nombre);
 					subtit.appendChild(texto);
@@ -631,8 +706,10 @@ function quitadatos(rengl){
 				var cants=document.getElementsByClassName("cantp");
 				var ids=document.getElementsByClassName("idp");
 				var pus=document.getElementsByClassName("prp");
+				var pres=document.getElementsByClassName("pres");
 				var monts=document.getElementsByClassName("subt");
 				var civas=document.getElementsByClassName("ivap");
+				var pesos=document.getElementsByClassName("peso");
 				var longi= cants.length;
 				for(var i=0;i<longi;i++){
 					var rengcant=cants[i];
@@ -640,15 +717,19 @@ function quitadatos(rengl){
 					var rengpr=pus[i];
 					var rengmon=monts[i];
 					var rengiva=civas[i];
-					var cantprod=rengcant.value;
+					var rengpres=pres[i];
+					var rengpes=pesos[i];
 					var idprod=rengid.innerHTML;
+					var cantprod=rengcant.value;
 					var prprod=rengpr.innerHTML;
 					var montop=rengmon.innerHTML;
 					var ivap=rengiva.innerHTML;
+					var presp=rengpres.innerHTML;
+					var pesop=rengpes.innerHTML;
 					var checact= checadato(cantprod);
 					if(checact==true){
 					//si hay cantidad, se registra el dato
-						prods.push([idprod,cantprod,prprod,montop,ivap]);
+						prods.push([idprod,cantprod,prprod,montop,ivap,presp,pesop]);
 					}
 				}
 				return prods;
@@ -697,9 +778,10 @@ function quitadatos(rengl){
 	  			var prods= llenaprod();
 	  			//revisar que se hayan introducido datos
 	  			var resul1 = validaelem("sumtotp","0.00");
-	  			var resul2=validainput("fechav","");
-	  			if(resul2===0){
-	  				aviso("POR FAVOR INTRODUZCA UNA FECHA");
+	  			var fechav=document.getElementById("fechav").value
+	  			var resul2=isValidDate(fechav)
+	  			if(!resul2){
+	  				aviso("POR FAVOR INTRODUZCA UNA FECHA VALIDA (AAAA-MM-DD)");
 	  				$("#aviso").on( "popupafterclose", function( event, ui ) {
 							document.getElementById("fechav").focus();
 						} );
@@ -720,21 +802,17 @@ function quitadatos(rengl){
 		  					var total =document.getElementById("sumtotp").innerHTML;
 					//envio a bd
 							$.post( "php/enviaped.php",
-							{	//longi:longcants,
+							{	facturarp:facturarped,
+								prods:prods,
 								cte:cte,
 								fecha:fecha,
 								tipoventa:tventa,
-								facturarp:facturarped,
 								totarts:totarts,
 								montot:montot,
 								totiva:ivat,
-								total:total,
-								prods:prods,								
+								total:total								
 							 }, null, "json" )
 	    						.done(function( data) {
-	    							//var nped= data.nped;
-	    							//var arts =data.arts;
-	    							//var total = data.total;
 	    							var resul=data.resul;
 	    							var ped= data.ped;
 	    							var tped= data.tventa;
@@ -757,15 +835,17 @@ function quitadatos(rengl){
 	  			
 	  		});	
 		});
-	})();	
+	})();
+	//TODO hoja de envio de levantamiento y salida de pedido separadas-	
 	</script>
+	<script src="js/fauxcx.js"></script>
 </head>
 
 <body>
   <div data-role="page" id="pedpag"> 
 	<div data-role="header">
     	<a href="portalmov.php" data-ajax="false" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-home">Inicio</a>
-		<h1>Toma de Pedido</h1>
+		<h1>Salida de Pedido</h1>
     	<a href="logout.php" data-ajax="false" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-delete">Cerrar</a>
 	</div>
 
@@ -806,8 +886,7 @@ function quitadatos(rengl){
 				</div>	
 			     	<input data-theme="b" data-icon="check" data-iconshadow="true" value="Enviar" type="button" 
 				    name="penvia"id="penvia">
-				    <div class="ui-input-btn ui-btn ui-btn-b ui-icon-delete ui-btn-icon-left ui-shadow-icon" 
-				    name="pcancela"id="pcancela">
+				    <div class="ui-input-btn ui-btn ui-btn-b ui-icon-delete ui-btn-icon-left ui-shadow-icon" name="pcancela"id="pcancela">
 				        Cancelar
 				    	<input data-enhanced="true" value="Enhanced" type="button">
 			    	</div>
