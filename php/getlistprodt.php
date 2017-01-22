@@ -8,23 +8,18 @@
     $funcbase = new dbutils;
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
-/*** obtiene proveedor si lo hay ***/
-if(!isset($_GET['oc'])){$result= 0 ;}else{
 	/**trae datos de ordenes de compra sin surtir**/
     if (is_object($mysqli)) {
-
-    	$oc= $_GET['oc'];
-    	$sqlCommand = "SELECT t1.idartsoc, t1.cant, t2.nom_corto, t2.speso, t2.costo,t2.iva,t3.nombre AS ud FROM artsoc AS t1 LEFT JOIN productos AS t2
-    	ON t1.idproductos = t2.idproductos INNER JOIN  unidades AS t3 ON t2.unidad= t3.idunidades WHERE t1.idoc = ".$oc." AND t1.status = 1 ORDER BY t2.nom_corto";		
+		$cadena=$_GET["q"];
+    	$sqlCommand = "SELECT idproductos,nombre,costo  FROM  productos  WHERE nombre LIKE ('%".$cadena."%') ORDER BY nombre";		
 	 // Execute the query here now
-			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE ARTSOC SOL. ".mysqli_error($mysqli));
-	//trae las unidades para la caja de dialogo
+			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE LISTA PRODUCTOS. ".mysqli_error($mysqli));
+	//trae los productos para la caja de dialogo
 //inicializacion de arreglo
 			$filas = $query1->num_rows;
 			if($filas > 0){
 				while($tempo=mysqli_fetch_array($query1, MYSQLI_ASSOC)){
-			 	$result[] = array('idart' => $tempo['idartsoc'],'cant' => $tempo['cant'],'nom' => $tempo['nom_corto'],
-			 	'speso' => $tempo['speso'],'costo' => $tempo['costo'],'civa'=>$tempo['iva'],'ud'=>$tempo['ud']);
+			 	$result[] = array('idprod' => $tempo['idproductos'],'nombre' => $tempo['nombre'],'costo' => $tempo['costo']);
 			 }
 			}else{$result= 1;}
 			 
@@ -33,7 +28,7 @@ if(!isset($_GET['oc'])){$result= 0 ;}else{
 	}else{die ("<h1>'No se establecio la conexion a bd'</h1>");};
     		  
 	/* cerrar la conexi�n */
-}
+
 	 mysqli_close($mysqli);
 	 echo json_encode($result);	 	
 ?>

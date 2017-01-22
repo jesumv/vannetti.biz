@@ -170,6 +170,7 @@ function getSum(total,num) {
     return total + num;
 }			
 function regpeso(reng){
+	// TODO revisar el producto salmon fresco s/p y salmon congelado segun peso
 	//esta funcion registra en el html el costo de los articulos por peso
 	var caspeso = document.getElementsByClassName("cajapeso");
 	var nopesos = caspeso.length;
@@ -190,7 +191,7 @@ function regpeso(reng){
 			precioact = document.getElementById("precio"+ reng).innerHTML;
 			costocalc = ocosto(precioact,pesof)
 			$("#pidepeso").popup("close");
-			document.getElementById("psubt"+ reng).innerHTML= costocalc.toFixed(2);	
+			document.getElementById("psubt"+ reng).innerHTML= $.number(costocalc,2);	
 			document.getElementById("stotoc"+ reng).innerHTML= Number(costocalc,2);	
 			//calculo de datos renglon
 	 		calculareng(reng)
@@ -240,12 +241,15 @@ function calculatots(){
 			var sumaprecs = sumaprecio();
 			var sumapreciost= $.number(sumaprecs,2);
 			document.getElementById("sumstotp").innerHTML = sumapreciost;
+			document.getElementById("sumstotoc").innerHTML = sumaprecs;
 			var sumatots= sumatotas();
 			var sumatots2= $.number(sumatots,2);
 			document.getElementById("sumtotp").innerHTML = sumatots2;
+			document.getElementById("sumtotoc").innerHTML = sumatots;
 			var sumaivas=sumaiva();
 			var sumaivas2=$.number(sumaivas,2);
-			document.getElementById("sumivap").innerHTML = sumaivas2;	
+			document.getElementById("sumivap").innerHTML = sumaivas2;
+			document.getElementById("sumivaoc").innerHTML = sumaivas;	
 }
 
 function quitadatos(rengl){
@@ -541,11 +545,11 @@ function multiplica(){
 			var envolt = document.createElement("DIV");
 			envolt.id = "totales";
 			envolt.className = "ui-grid-d";
-			for(var i=0;i<5; i++){
-					var ancla = document.getElementById("totales");
+			var ancla = document.getElementById("totales");
+			for(var i=0;i<8; i++){
 					var atr;
-					var texto;
 					var rid;
+					var texto;
 					switch(i){
 						case 0:
 							atr="ui-block-a ";
@@ -563,14 +567,29 @@ function multiplica(){
 							rid="sumstotp";
 						break;
 						case 3:
+							atr="ocult";
+							texto="0.00";
+							rid="sumstotoc";
+						break;
+						case 4:
 							atr="ui-block-d gtot";
 							texto="0.00";
 							rid="sumivap";
 						break;
-						case 4:
+						case 5:
+							atr="ocult";
+							texto="0.00";
+							rid="sumivaoc";
+						break;
+						case 6:
 							atr="ui-block-e gtot";
 							texto="0.00";
 							rid="sumtotp";
+						break;
+						case 7:
+							atr="ocult";
+							texto="0.00";
+							rid="sumtotoc";
 						break;
 					} 
 					var reng =document.createElement("DIV");
@@ -707,8 +726,8 @@ function multiplica(){
 				var ids=document.getElementsByClassName("idp");
 				var pus=document.getElementsByClassName("prp");
 				var pres=document.getElementsByClassName("pres");
-				var monts=document.getElementsByClassName("subt");
-				var civas=document.getElementsByClassName("ivap");
+				var monts=document.getElementsByClassName("stotoc");
+				var civas=document.getElementsByClassName("ivaoc");
 				var pesos=document.getElementsByClassName("peso");
 				var longi= cants.length;
 				for(var i=0;i<longi;i++){
@@ -797,9 +816,9 @@ function multiplica(){
 		  					var fecha = document.getElementById("fechav").value;
 		  					var tventa = $("#tventa :radio:checked").val();
 		  					var totarts =document.getElementById("sumcantp").innerHTML;
-		  					var montot=document.getElementById("sumstotp").innerHTML;
-		  					var ivat=document.getElementById("sumivap").innerHTML;
-		  					var total =document.getElementById("sumtotp").innerHTML;
+		  					var montot=document.getElementById("sumstotoc").innerHTML;
+		  					var ivat=document.getElementById("sumivaoc").innerHTML;
+		  					var total =document.getElementById("sumtotoc").innerHTML;
 					//envio a bd
 							$.post( "php/enviaped.php",
 							{	facturarp:facturarped,
@@ -907,13 +926,14 @@ function multiplica(){
 		</div>
   	</div>
   		<div data-role="panel" id="navpanel" data-display="overlay">
- 		<ul data-role ="listview">
- 			<li><a href="oc.php" data-ajax="false">Ordenes de Compra</a></li>
- 			<li><a href="listoc.php" data-ajax="false">Rec. de OC</a></li>
-	    	<li><a href="pedido.php" data-ajax="false">Pedidos</a></li>
-	    	<li><a href="listasp.php" data-ajax="false">Listas de Productos</a></li>
-	    	<li><a href="portal.php" data-ajax="false">Portal</a></li>
- 		</ul>	    	
+	 		<ul data-role ="listview">
+	 			<li><a href="oc.php" data-ajax="false">Ordenes de Compra</a></li>
+	 			<li><a href="listoc.php" data-ajax="false">Rec. de OC</a></li>
+		    	<li><a href="pedido.php" data-ajax="false">Pedidos</a></li>
+		    	<li><a href="regmues.php" data-ajax="false">Muestras</a></li>
+		    	<li><a href="listasp.php" data-ajax="false">Listas de Productos</a></li>
+		    	<li><a href="portal.php" data-ajax="false">Portal</a></li>
+	 		</ul>	    	
  		</div>
   </div>
 </body>

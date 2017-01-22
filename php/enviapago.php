@@ -82,4 +82,3 @@
 	} else {
         die ("<h1>'No se establecio la conexion a bd'</h1>");
     }
-	?>

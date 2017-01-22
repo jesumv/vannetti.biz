@@ -1,3 +1,27 @@
+/*estilos generales*/
+#botoncent{
+	margin:auto;
+	width:30%;
+}
+.button {
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 8px;
+    transition-duration: 0.4s;
+}
+
+.a{background-color: #4CAF50; /* Green */display: inline;}
+.b{background-color: #ff0000; /* red */display: inline;}
+.c{background-color: #8080ff; /* blue */display: inline;}
+
+.button:hover {
+    background-color: #c0c0c0; /* Green */
+}
+
 /*estilos para input dentro de dialogo*/
 .cajal {
 	width: 80%;

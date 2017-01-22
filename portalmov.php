@@ -29,13 +29,20 @@
 	   $dato9=$result9->fetch_row();
 	   $result10=$mysqli->query("SELECT SUM(CASE WHEN cuenta='102.01' THEN haber ELSE 0 END)FROM DIARIO");
 	   $dato10=$result10->fetch_row();
+	   $result11=$mysqli->query("SELECT SUM(CASE WHEN cuenta LIKE'6%' THEN debe ELSE 0 END)FROM DIARIO");
+	   $dato11=$result11->fetch_row();
 	   $vta=number_format($dato1[0],2);
 	   $cvta=number_format($dato2[0],2);
-	   $ubruta=$vta-$cvta;
+	   $gastos1=$dato11[0];
+	   $gastos=number_format($gastos1,2);
+	   $ubruta1=$dato1[0]-$dato2[0];
+	   $ubruta=number_format($ubruta1,2);
+	   $uait=number_format($ubruta1-$gastos1,2);
 	   $prov=number_format($dato3[0]-$dato4[0],2);
 	   $cxc=number_format($dato5[0]-$dato6[0],2);
 	   $caja=number_format($dato7[0]-$dato8[0],2);
 	   $bancos=number_format($dato9[0]-$dato10[0],2);
+	   
 	   $mysqli->close(); 
     } else {
         //die ("<h1>'No se establecio la conexion a bd'</h1>");
@@ -91,10 +98,11 @@
   	<tr>
   		<td>VENTAS</td>
   		<?php 
-  		echo'<td>'.$vta.'</td><td></td><td>PROVEEDORES</td><td>'.$prov.'</td></tr>';
-  		echo'<tr><td>MENOS</td></tr><tr><td>COSTO DE VENTAS</td><td>'.$cvta.'</td><td></td><td>CUENTAS POR COBRAR</td><td>'.$cxc.'</td></tr>';
-  		echo '<tr><td>UTILIDAD BRUTA</td><td>'.$ubruta.'</td><td></td><td>CAJA</td><td>'.$caja.'</td></tr>';
-		echo '<tr><td></td><td></td><td></td><td>BANCOS</td><td>'.$bancos.'</td></tr>';
+  		echo'<td>'.$vta.'</td><td>-----</td><td>PROVEEDORES</td><td>'.$prov.'</td></tr>';
+  		echo'<tr><td>MENOS</td></tr><tr><td>COSTO DE VENTAS</td><td>'.$cvta.'</td><td>-----</td><td>CUENTAS POR COBRAR</td><td>'.$cxc.'</td></tr>';
+  		echo '<tr><td>UTILIDAD BRUTA</td><td>'.$ubruta.'</td><td>-----</td><td>CAJA</td><td>'.$caja.'</td></tr>';
+		echo '<tr><td>GASTOS</td><td>'.$gastos.'</td><td>-----</td><td>BANCOS</td><td>'.$bancos.'</td></tr>';
+		echo '<tr><td>UIAT</td><td>'.$uait.'</td><td>-----</td><td></td><td></td></tr>';
   		?>
   		
   </table>

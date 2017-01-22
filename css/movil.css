@@ -1,8 +1,13 @@
 /* estilos para las pantalla de movil */
 /* para ocultar tablas */
 .tablaoculta{opacity:0;}
-.tablaocultav{opacity:1;}
+.tablaocultav{opacity:1}
 .ocult{display:none;}
+
+.ui-filter-inset {
+    margin-top: 0;
+}
+
 h3 {
 	text-align: center
 }

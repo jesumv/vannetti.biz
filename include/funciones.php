@@ -73,9 +73,8 @@ function epagoped($mysqli,$fecha,$ref,$monto,$iva,$total,$factu,$mpago,$sfactu,$
 					$cuenta3="208.01";
 					$tipom3=1;
 					operdiario($mysqli,$cuenta3,$tipoper,$tipom3,$ref,$iva,$fecha,$sfactu);
-
 			//actualizacion en pedidos
-					$mysqli->query("UPDATE pedidos SET status=40,fechapago='$fecha',factura=$factu,arch=$arch WHERE idpedidos=$ref");
+					$mysqli->query("UPDATE pedidos SET status=40,fechapago='$fecha',factura='$factu',arch='$arch' WHERE idpedidos='$ref'");
 			//efectuar la operacion
 				$mysqli->commit();
 				$resul=0;
@@ -86,7 +85,43 @@ function epagoped($mysqli,$fecha,$ref,$monto,$iva,$total,$factu,$mpago,$sfactu,$
 				}
 	return $resul;
 }
-	
+
+function epagoc($mysqli,$fecha,$ref,$monto,$iva,$total,$factu,$mpago,$sfactu,$prov,$folio,$arch=NULL,$cta=NULL){
+	//registra pago de una orden de compra
+			try{
+				$mysqli->autocommit(false);
+			//la referencia es oc
+				$tipoper=0;
+			//movimientos de diario
+				//cargo en salida de efectivo de efectivo segun metodo de pago
+					$cuenta1=metpago($mpago);
+					//tipo 0 es debe
+					$tipom1=1;
+					operdiario($mysqli,$cuenta1,$tipoper,$tipom1,$ref,$total,$fecha,$sfactu,$cta);
+				//abono a proveedores
+					$cuenta2="201.01";
+					$tipom2=0;
+					operdiario($mysqli,$cuenta2,$tipoper,$tipom2,$ref,$monto,$fecha,$sfactu,$prov);
+				//abono a iva acreditable por pagar
+					$cuenta3="119.01";
+					$tipom3=1;
+					operdiario($mysqli,$cuenta3,$tipoper,$tipom3,$ref,$iva,$fecha,$sfactu);
+				//cargo a iva acreditable pagado
+					$cuenta4="118.01";
+					$tipom4=0;
+					operdiario($mysqli,$cuenta4,$tipoper,$tipom4,$ref,$iva,$fecha,$sfactu);
+				//actualizacion de orden de compra
+					$mysqli->query("UPDATE oc SET status=99,fechapago='$fecha',factura='$factu',arch='$arch',foliomov='$folio' WHERE idoc='$ref'");				
+			//efectuar la operacion
+				$mysqli->commit();
+				$resul=0;
+			}catch (Exception $e) {
+					//error en las operaciones de bd
+				    $mysqli->rollback();
+				   	$resul=-2;
+				}
+	return $resul;
+}	
 function venta($mysqli,$fecha,$ref,$monto16,$monto0,$iva,$tipo,$factu,$cte){
 		//esta funcion inserta en el diario los movimientos de una venta
 		//en todos los casos

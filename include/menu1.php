@@ -19,7 +19,7 @@
                     	<ul class="sub1">
                     		<li ><a href="pedido.php">Pedidos</a></li>
 	                        <li><a href="cxc.php">Cuentas por cobrar</a></li>
-	                        <li><a href="#">Muestras</a></li>
+	                        <li><a href="regmues.php">Muestras</a></li>
 	                        <li><a href="listasp.php">Listas de Precios</a></li>
                         </ul>
 
@@ -35,6 +35,7 @@
                     	
                     <li><a><b>Administración</b></a>
                         <ul class="sub1">
+                        	<li><a href="reggasto.php">Gastos</a></li>
                             <li><a href="#">Clientes</a></li>
                             <li><a href="proveedores.php">Proveedores</a></li>
                             <li><a href="productos.php">Productos</a></li>

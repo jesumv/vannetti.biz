@@ -106,7 +106,6 @@ $table2 = 'clientes';
 				limpia()
 			}		   	
 		   	function valida(indic){
-		   		var resul=0;
 		   		var fecha=document.getElementById('fpago').value;
 		   		var factu= document.getElementById('facti'+indic).innerHTML;
 		   		var nfactu=document.getElementById('nfact').value;
@@ -343,7 +342,7 @@ $table2 = 'clientes';
 							<option value="04">Tarjetas de Credito</option>
 							<option value="99">Otros</option>
          				</select>
-         				<label>Cuenta: </label><input type="date" name="cuenta"  id="cuenta" class="cajac" maxlength="4"/>
+         				<label>Cuenta: </label><input type="text" name="cuenta"  id="cuenta" class="cajac" maxlength="4"/>
 	    			</div>
 	    			<div class="rengn">
 	    				<h4 id="avisor"></h4>
