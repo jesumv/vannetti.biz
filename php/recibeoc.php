@@ -67,8 +67,9 @@ function tiposurt($mysqli,$oc){
 		//surtido total
 		$resul = 11;
 	}else{
-		//error
-		$resul = -99;
+		//error. tambien si se anotan mas articulos de los pedidos. por el momento se cambia para que se anote el estado correcto
+		//$resul = -99;
+		$resul=11;
 	}
 	//resultado
 	return $resul;
@@ -177,4 +178,4 @@ function tiposurt($mysqli,$oc){
     /* cerrar la conexion */
 	    mysqli_close($mysqli);
 	//salida de respuesta
-		 echo json_encode($jsondata);
+		echo json_encode($jsondata);

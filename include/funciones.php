@@ -122,6 +122,7 @@ function epagoc($mysqli,$fecha,$ref,$monto,$iva,$total,$factu,$mpago,$sfactu,$pr
 				}
 	return $resul;
 }	
+
 function venta($mysqli,$fecha,$ref,$monto16,$monto0,$iva,$tipo,$factu,$cte){
 		//esta funcion inserta en el diario los movimientos de una venta
 		//en todos los casos

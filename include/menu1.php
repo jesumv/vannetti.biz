@@ -18,6 +18,7 @@
                   <li class="currentsub"><a class="fly">Clientes</a>
                     	<ul class="sub1">
                     		<li ><a href="pedido.php">Pedidos</a></li>
+                    		<li><a href="mostrador.php">Vtas Mostrador</a></li>
 	                        <li><a href="cxc.php">Cuentas por cobrar</a></li>
 	                        <li><a href="regmues.php">Muestras</a></li>
 	                        <li><a href="listasp.php">Listas de Precios</a></li>

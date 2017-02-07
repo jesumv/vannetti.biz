@@ -35,25 +35,7 @@
 	<script>
 	'use strict';
 	(function() {
-		var facturarped;
-		function llenactes(){
-	//esta funcion añade opciones a la lista de clientes
-			$.get('php/getctes.php',function(data){
-			var obj1 = JSON.parse(data);
-			for( var z=0; z <obj1.length; z++) {
-	//extraccion de datos del array
-				var id = obj1[z].id;
-				var nombre = obj1[z].nombre;		
-	//adicion de opciones select
-			  	var men = document.getElementById('pcte');
-				var option = document.createElement("option");
-				option.text = nombre;
-				option.value = id;
-				men.add(option);
-				};
-			});	
-		}
-		
+		var tventam;
 		function aviso(texto){
 				//esta funcion enciende el aviso de la pagina con el aviso
 				//pasado como parametro.
@@ -63,7 +45,7 @@
 			
 		function hazvisib(visible){
 			//esta funcion presenta la tabla de productos
-		var tabla = document.getElementById('ocultable');
+		var tabla = document.getElementById('ocultablem');
 			    if (visible) {
 			      tabla.classList.add('tablaocultav');
 			    } else {
@@ -104,7 +86,7 @@
 function sumaprecio(){
 	//esta funcion suma los precios
 	var preciot =0;
-	var arre = document.getElementsByClassName("stotoc") ;
+	var arre = document.getElementsByClassName("stmos") ;
 	var longit = arre.length;
 	for(var z=0; z<longit; z++){
 		var preact = Number(arre[z].innerText);
@@ -161,7 +143,8 @@ function quita(){
 	
 function ocosto(costo,peso){
 		//esta funcion obtiene el costo de un articulo
-		//en base a su peso
+		//en base a su peso, o a la cantidad ordenada, de acuerdo con el tipo
+
 		var costoc= costo*peso;
 		return costoc;	
 		}
@@ -188,11 +171,11 @@ function regpeso(reng){
 			}
 			var pesof=pesosum.reduce(getSum);
 			document.getElementById("pesor"+ reng).innerHTML= pesof;
-			precioact = document.getElementById("precio"+ reng).innerHTML;
+			precioact = document.getElementById("incostm"+ reng).value;
 			costocalc = ocosto(precioact,pesof)
 			$("#pidepeso").popup("close");
-			document.getElementById("psubt"+ reng).innerHTML= $.number(costocalc,2);	
-			document.getElementById("stotoc"+ reng).innerHTML= Number(costocalc,2);	
+			document.getElementById("incostm"+ reng).innerHTML= $.number(costocalc,2);	
+			document.getElementById("stmos"+ reng).innerHTML= Number(costocalc,2);	
 			//calculo de datos renglon
 	 		calculareng(reng)
 	 		//calcula totales
@@ -241,7 +224,7 @@ function calculatots(){
 			var sumaprecs = sumaprecio();
 			var sumapreciost= $.number(sumaprecs,2);
 			document.getElementById("sumstotp").innerHTML = sumapreciost;
-			document.getElementById("sumstotoc").innerHTML = sumaprecs;
+			document.getElementById("sumstmos").innerHTML = sumaprecs;
 			var sumatots= sumatotas();
 			var sumatots2= $.number(sumatots,2);
 			document.getElementById("sumtotp").innerHTML = sumatots2;
@@ -252,10 +235,10 @@ function calculatots(){
 			document.getElementById("sumivaoc").innerHTML = sumaivas;	
 }
 
-function quitadatos(rengl){
+function quitadatos(rengl,precio){
 	//esta funcion quita los datos de un renglon cuando se borra la cantidad
-	document.getElementById("psubt"+ rengl).innerHTML="0.00";
-	document.getElementById("stotoc"+ rengl).innerHTML="0.00";
+	document.getElementById("incostm"+ rengl).value=$.number(precio,2);
+	document.getElementById("stmos"+ rengl).innerHTML="0.00";
 	document.getElementById("piva"+ rengl).innerHTML="0.00";
 	document.getElementById("ivaoc"+ rengl).innerHTML="0.00";
 	document.getElementById("ptot"+ rengl).innerHTML="0.00";
@@ -263,12 +246,12 @@ function quitadatos(rengl){
 	
 }
 
-function calculareng(rengl){
+function calculareng(rengl,tipo){
 	//calcula datos de un renglon luego de modificacion
 		 		//retomar el subtotal, para los calculos
-	var subt= document.getElementById("stotoc"+ rengl).innerHTML;
+	var subt= document.getElementById("stmos"+ rengl).innerHTML;
+	//si el pago es con tarjeta, se modifica el precio
 	//si se va a facturar se busca iva por articulo
-	 		if(facturarped==true){
 	 			//si el articulo causa iva, se agrega a la columna
 	 			var civa2 = document.getElementById("iva"+rengl).innerHTML;
 	 			var iva1;
@@ -281,10 +264,6 @@ function calculareng(rengl){
 	 					ivacalc=$.number((0),2);
 	 					iva1=0;
 	 					}
-	 		}else{
-	 			ivacalc=$.number((0),2);
-	 			iva1=0;
-	 			}
 	//se añade el iva
 		document.getElementById("ivaoc"+rengl).innerHTML= iva1;
 		document.getElementById("piva"+rengl).innerHTML= ivacalc;
@@ -302,7 +281,8 @@ function multiplica(){
 	 	var longi = this.name.length;
 	    var pos = cad.indexOf("k");
 		var rengl = cad.slice(pos+1);
-		var precio = document.getElementById("precio"+ rengl).innerHTML;
+		var precio = document.getElementById("incostm"+ rengl).value;
+		var precioi= document.getElementById("precio"+ rengl).innerHTML;
 		var valor = document.getElementById("chk"+ rengl).value;
 		var multip;	
 		var subt;
@@ -318,8 +298,8 @@ function multiplica(){
 	 				multip=valor;
 				//se toma el precio oculto, se multiplica x cantidad y se añade a la tabla
 					var preciot = ocosto(precio,multip);
-					document.getElementById("psubt"+ rengl).innerHTML = $.number(preciot,2);
-					document.getElementById("stotoc"+ rengl).innerHTML  = preciot;
+					document.getElementById("incostm"+ rengl).value = $.number(preciot,2);
+					document.getElementById("stmos"+ rengl).innerHTML  = preciot;
 				//calculo de datos renglon
 	 				calculareng(rengl)
 	 			// se modifican los totales
@@ -339,13 +319,14 @@ function multiplica(){
 	 		}
 		 	if(checa==true){
 		 		//si la cantidad está en blanco, se quitan los datos del renglon
-		 		quitadatos(rengl);
+		 		quitadatos(rengl,precioi);
 		 		calculatots();
 		 	}	
 			};
 			
 
 		}
+		
 		
 		function addrengart(id,categ,nombre,precio,linea,iva,spesov,ud,presen){
 			//esta funcion agrega los renglones de articulos para una categoría.
@@ -411,8 +392,14 @@ function multiplica(){
 			
 			
 		//columna 1
+			var rengpb = document.createElement("DIV");
+			rengpb.className = "ui-block-a"
+			var textopb = document.createTextNode(nombre);
+			rengpb.appendChild(textopb);
+			ancla.appendChild(rengpb);
+		//columna2	
 			var rengpa = document.createElement("DIV");
-			rengpa.className = "ui-block-a";
+			rengpa.className = "ui-block-b";
 			var checkp = document.createElement("INPUT");
 			checkp.name = "chk"+linea;
 			checkp.id = "chk"+linea;
@@ -420,19 +407,15 @@ function multiplica(){
 			checkp.className = "cantp";
 			rengpa.appendChild(checkp);
 			ancla.appendChild(rengpa);
-		//columna2	
-			var rengpb = document.createElement("DIV");
-			rengpb.className = "ui-block-b";
-			rengpb.id = "pnom"+linea;
-			var textopb = document.createTextNode(nombre);
-			rengpb.appendChild(textopb);
-			ancla.appendChild(rengpb);
 		//columna3	
 			var rengpc = document.createElement("DIV");
 			rengpc.className = "ui-block-c subt";
-			rengpc.id= "psubt"+linea;
-			var textopc = document.createTextNode("0.00");
-			rengpc.appendChild(textopc);
+			var incostm= document.createElement("INPUT");
+			incostm.name="incostm"+linea
+			incostm.id= "incostm"+linea;
+			incostm.size="6";
+			incostm.value=$.number(precio,2);
+			rengpc.appendChild(incostm);
 			ancla.appendChild(rengpc);
 		//columna4
 			var rengpd = document.createElement("DIV");
@@ -449,13 +432,13 @@ function multiplica(){
 			rengpe.appendChild(textope);
 			ancla.appendChild(rengpe);
 		//subtotal oculto sin formato
-			var stotoc = document.createElement("DIV");
-			stotoc.className = "ocult stotoc";
-			stotoc.id = "stotoc"+linea;
-			stotoc.name = "stotoc"+linea;
+			var stmos = document.createElement("DIV");
+			stmos.className = "ocult stmos";
+			stmos.id = "stmos"+linea;
+			stmos.name = "stmos"+linea;
 			var nodestot = document.createTextNode("0.00");
-			stotoc.appendChild(nodestot);
-			ancla.appendChild(stotoc);
+			stmos.appendChild(nodestot);
+			ancla.appendChild(stmos);
 		//iva sin formato
 			var ivaoc = document.createElement("DIV");
 			ivaoc.className = "ocult ivaoc";
@@ -474,24 +457,32 @@ function multiplica(){
 			ancla.appendChild(totoc);
 			
 		//agregar funcion de escucha
-			document.getElementById(checkp.id).addEventListener('input', multiplica,false);	
+			document.getElementById(checkp.id).addEventListener('input', multiplica,false);		
 		}
 		
-		function addarts(nocte){
+		function addarts(tventam){
 			//esta funcion añade todos los artículos por categoría
-			$.get('php/getlprodped.php',{idcte:nocte},function(data){
+			$.get('php/getlprodped.php',{idcte:1},function(data){
 					var objarts = JSON.parse(data);
 					var cantarts = objarts.length;
+					var precio;
+					var grupo;
+					var idprod;
+					var nombre;
+					var iva;
+					var spesov;
+					var ud;
+					var presen;
 					for (var i=0;i<cantarts;i++){
 						//obtener los valores
-						var idprod = objarts[i].idprod;
-						var grupo = objarts[i].gpo;
-						var nombre = objarts[i].nombre;
-						var precio =  objarts[i].precio;
-						var iva = objarts[i].iva;
-						var spesov = objarts[i].spesov;
-						var ud= objarts[i].ud;
-						var presen=objarts[i].presen;
+						idprod = objarts[i].idprod;
+						grupo = objarts[i].gpo;
+						nombre = objarts[i].nombre;
+						if(tventam==1){precio = $.number(objarts[i].precio*1.04,0)}else{precio=objarts[i].precio}
+						iva = objarts[i].iva;
+						spesov = objarts[i].spesov;
+						ud= objarts[i].ud;
+						presen=objarts[i].presen;
 						addrengart(idprod,grupo,nombre,precio,i,iva,spesov,ud,presen);
 					}			
 				});
@@ -508,15 +499,15 @@ function multiplica(){
 				switch(i){
 					case 0:
 						atr="ui-block-a ";
-						texto="cantidad";
+						texto="Producto";
 					break;
 					case 1:
 						atr="ui-block-b";
-						texto="Producto";
+						texto="Cantidad";
 					break;
 					case 2:
 						atr="ui-block-c";
-						texto="monto";
+						texto="Costo";
 					break;
 					case 3:
 						atr="ui-block-d";
@@ -541,7 +532,7 @@ function multiplica(){
 		
 		function agregatots(){
 			//esta funcion agrega el renglon de totales
-			var origen = document.getElementById("ptabla");
+			var origen = document.getElementById("ptablam");
 			var envolt = document.createElement("DIV");
 			envolt.id = "totales";
 			envolt.className = "ui-grid-d";
@@ -569,7 +560,7 @@ function multiplica(){
 						case 3:
 							atr="ocult";
 							texto="0.00";
-							rid="sumstotoc";
+							rid="sumstmos";
 						break;
 						case 4:
 							atr="ui-block-d gtot";
@@ -609,7 +600,7 @@ function multiplica(){
 			$.get('php/getcats.php',function(data){
 				var obj1 = JSON.parse(data);
 	//cabezales de categorias
-				var origen = document.getElementById("ptabla");
+				var origen = document.getElementById("ptablam");
 				for( var z=0; z <obj1.length; z++) {
 					//extraccion de datos del array
 					var id = obj1[z].id;
@@ -629,12 +620,10 @@ function multiplica(){
 					agregacab(id);
 				};
 	//lista de articulos
-		//	obtener el no. de cliente
-					var numcte = document.getElementById("pcte").value;
-					addarts(numcte);
+					addarts(tventam);
 	//renglon de totales
 					agregatots();
-					$("#ptabla").enhanceWithin();
+					$("#ptablam").enhanceWithin();
 			});
 		}
 		
@@ -660,7 +649,7 @@ function multiplica(){
 	
 		function tipovta(){
 			//esta funcion revisa que tipo de venta se registrará
-			var radios = document.getElementsByName('rcredcon');
+			var radios = document.getElementsByName('recredmos');
 
 				for (var i = 0, length = radios.length; i < length; i++) {
 				    if (radios[i].checked) {
@@ -673,24 +662,8 @@ function multiplica(){
 
 		}
 			
-		function tipopedt(tipoped){
-			var resul;
-			switch(parseInt(tipoped)){
-				case 0:
-				resul = "MOSTRADOR";
-				break;
-				case 1:
-				resul = "CONTADO";
-				break;
-				case 2:
-				resul = "CREDITO";
-				break;
-				default:
-				resul= "NO ESTA BIEN";
-			}
-			return resul;
-		}   
-		function evalua(resul,ped,tipoped){
+  
+		function evalua(resul,ped){
 			/** se evalua la respuesta del servidor**/
 			switch (resul){
 				case -99:
@@ -704,11 +677,10 @@ function multiplica(){
 					resp = "ERROR EN ALTA ARTS PEDIDO";
 					break;
 				case -3:
-				resp = "ERROR EN INSERCIONES A DIARIO0";
+				resp = "ERROR EN INSERCIONES A DIARIO";
 				break;
 				default:
-					var textof = tipopedt(tipoped);
-					resp = "PEDIDO <br>Numero: "+ ped + "<br>"+"FORMA: "+textof+"<br>REGISTRO CORRECTO";
+					resp = "VENTA MOSTRADOR <br>Numero: "+ ped + "<br>"+"REGISTRO CORRECTO";
 			}
 			return resp;
 		}
@@ -726,7 +698,7 @@ function multiplica(){
 				var ids=document.getElementsByClassName("idp");
 				var pus=document.getElementsByClassName("prp");
 				var pres=document.getElementsByClassName("pres");
-				var monts=document.getElementsByClassName("stotoc");
+				var monts=document.getElementsByClassName("stmos");
 				var civas=document.getElementsByClassName("ivaoc");
 				var pesos=document.getElementsByClassName("peso");
 				var longi= cants.length;
@@ -753,56 +725,45 @@ function multiplica(){
 				}
 				return prods;
 			}
-		$( document ).on( "pageinit", "#pedpag", function(event) {
+		$( document ).on( "pagecreate", "#mostpag", function(event) {
 			//fecha por defecto
-	  		document.getElementById("fechav").valueAsDate = new Date();	
+	  		document.getElementById("fechamos").valueAsDate = new Date();	
 	  		//escucha del boton cancelar
-			$("#pcancela").click(function(){
-					document.getElementById("fechav").valueAsDate = new Date();
+			$("#mcancela").click(function(){
+					document.getElementById("fechamos").valueAsDate = new Date();
 					//fecha por defecto	
 			   		location.reload();
-			   		$('#pcte').selectmenu( "enable" );
 			   });
-			   
-			//modificacion de las etiquetas del flipswitch
-			$( "#fact" ).flipswitch({
-  				onText: "Si",
-  				offText:"No"
-			});
-			//llenar el combo de clientes
-			llenactes();			
-	    	//agregar las categorías de productos
-	    		document.getElementById('pcte').addEventListener('change', function() {	
-	    			//decision de facturar
-					facturarped = $("#fact").prop("checked");
-					//desactivar flip facturar
-					$( "#fact" ).flipswitch( "option", "disabled", true );
+//escucha del elemento flip
+					$( document ).on( 'change', '#tventam', function( e ) {
+						//obtener el valor del tipo de venta
+					tventam = $("#tventam :radio:checked").val();
+					//agregar las categorías de productos	
 	    			//agregar categorias
 	    			llenacats();
 					//se muestra tabla
 					hazvisib(true);
 					//agregar estilo mobile
-					$("#pedpag").enhanceWithin();
-					//desenchufar select
-					$('#pcte').selectmenu( "disable" );
+					$("#mostpag").enhanceWithin();
 				    //enfoque en primer elemento
-	  				document.getElementById("fechav").focus();
-		  	});	
+	  				document.getElementById("fechamos").focus();	
+
+					});
 		  		  	
 	  		//escucha del boton enviar
-	  		document.getElementById('penvia').addEventListener('click',function(){
+	  		document.getElementById('menvia').addEventListener('click',function(){
 	  			//identificacion de la primera linea
 	  			var conjunto=document.getElementsByClassName("cantp");
 	  			var primera=conjunto[0].id;
 	  			var prods= llenaprod();
 	  			//revisar que se hayan introducido datos
 	  			var resul1 = validaelem("sumtotp","0.00");
-	  			var fechav=document.getElementById("fechav").value
-	  			var resul2=isValidDate(fechav)
+	  			var fechamos=document.getElementById("fechamos").value
+	  			var resul2=isValidDate(fechamos)
 	  			if(!resul2){
 	  				aviso("POR FAVOR INTRODUZCA UNA FECHA VALIDA (AAAA-MM-DD)");
 	  				$("#aviso").on( "popupafterclose", function( event, ui ) {
-							document.getElementById("fechav").focus();
+							document.getElementById("fechamos").focus();
 						} );
 	  			}else{
 		  			if(resul1==0){
@@ -812,20 +773,18 @@ function multiplica(){
 							} );
 		  			}else{
 		  				//recolección de variables
-		  					var cte = document.getElementById("pcte").value;
-		  					var fecha = document.getElementById("fechav").value;
-		  					var tventa = $("#tventa :radio:checked").val();
+		  					var cte = 1;
+		  					var fecha = document.getElementById("fechamos").value;
 		  					var totarts =document.getElementById("sumcantp").innerHTML;
-		  					var montot=document.getElementById("sumstotoc").innerHTML;
+		  					var montot=document.getElementById("sumstmos").innerHTML;
 		  					var ivat=document.getElementById("sumivaoc").innerHTML;
 		  					var total =document.getElementById("sumtotoc").innerHTML;
 					//envio a bd
-							$.post( "php/enviaped.php",
-							{	facturarp:facturarped,
-								prods:prods,
+							$.post( "php/enviamos.php",
+							{	prods:prods,
 								cte:cte,
 								fecha:fecha,
-								tipoventa:tventa,
+								tipoventa:tventam,
 								totarts:totarts,
 								montot:montot,
 								totiva:ivat,
@@ -834,12 +793,10 @@ function multiplica(){
 	    						.done(function( data) {
 	    							var resul=data.resul;
 	    							var ped= data.ped;
-	    							var tped= data.tventa;
-	    							var cad = evalua(resul,ped,tped);
+	    							var cad = evalua(resul,ped);
 									aviso(cad);
 									$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
 										location.reload();
-										$('#pcte').selectmenu( "enable" );
 									} );
 	    						})
 	    						.fail(function(data) {
@@ -855,57 +812,41 @@ function multiplica(){
 	  		});	
 		});
 	})();
-	//TODO hoja de envio de levantamiento y salida de pedido separadas-	
 	</script>
 	<script src="js/fauxcx.js"></script>
 </head>
 
 <body>
-  <div data-role="page" id="pedpag"> 
+  <div data-role="page" id="mostpag"> 
 	<div data-role="header">
     	<a href="portalmov.php" data-ajax="false" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-home">Inicio</a>
-		<h1>Salida de Pedido</h1>
+		<h1>Venta de Mostrador</h1>
     	<a href="logout.php" data-ajax="false" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-delete">Cerrar</a>
 	</div>
 
     <div role="main " class="ui-content">
 			<a href="#navpanel" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-bars">Navegaci&oacute;n</a>
 		<form  method="post"
-		enctype="application/x-www-form-urlencoded" name="pforma" id="pforma">
-		
-		<div class="cajacent">
-			<label for"fact">Facturar?</label>
-	    	<input type="checkbox" data-role="flipswitch" id="fact" name="fact"/>
-		</div>
-			<div>
-				<label for="pcte" class="select">Cliente</label>
-				<select name="pcte" id="pcte">
-			    	<option value="0">Seleccione al Cliente</option>
-				</select>
-			</div>
-			<div id="ocultable" class="tablaoculta">
+		enctype="application/x-www-form-urlencoded" name="mforma" id="mforma">
+		<fieldset id="tventam" name="tventam" data-role="controlgroup" data-type="horizontal">
+		    		<legend>Elija el Tipo de Venta</legend>
+		    		<label>
+		    			<input type="radio" id="recredmos-a" name="recredmos" value= "0" />Efectivo
+		    		</label>
+		    		<label>
+		    			<input type="radio" id="recredmos-b" name="recredmos" value= "1" />T.Crédito
+		    		</label>
+    	</fieldset>	
+			<div id="ocultablem" class="tablaoculta">
 				<div class="cajacent">
 					<label for ="fecha">Fecha:</label>
-					 <input type="date" name="fechav" id="fechav">
+				<input type="date" name="fechamos" id="fechamos">
 				</div>
-				<fieldset id="tventa" name="tventa" data-role="controlgroup" data-type="horizontal">
-		    		<legend>Tipo de Venta</legend>
-		    		<label>
-		    			<input type="radio" id="rcredcon-a" name="rcredcon" value= "0" checked="checked"/>Mostrador
-		    		</label>
-		    		<label>
-		    			<input type="radio" id="rcredcon-b" name="rcredcon" value= "1" />Contado
-		    		</label>
-		    		<label>
-		    			<input type="radio" id="rcredcon-c" name="rcredcon" value= "2" />Credito
-		    		</label>
-    			</fieldset>	
-
-				<div id="ptabla">
+				<div id="ptablam">
 				</div>	
 			     	<input data-theme="b" data-icon="check" data-iconshadow="true" value="Enviar" type="button" 
-				    name="penvia"id="penvia">
-				    <div class="ui-input-btn ui-btn ui-btn-b ui-icon-delete ui-btn-icon-left ui-shadow-icon" name="pcancela"id="pcancela">
+				    name="menvia"id="menvia">
+				    <div class="ui-input-btn ui-btn ui-btn-b ui-icon-delete ui-btn-icon-left ui-shadow-icon" name="mcancela"id="mcancela">
 				        Cancelar
 				    	<input data-enhanced="true" value="Enhanced" type="button">
 			    	</div>

@@ -265,7 +265,7 @@
 		function calcivar(costo,reng){
 			//esta funcion calcula el iva de un art. y lo registra en HMTL
 			var ivaact= costo *.16;
-			document.getElementById("iva"+reng).innerHTML= ivaact;	
+			document.getElementById("iva"+reng).innerHTML= ivaact.toFixed(2);	
 		}
 		
 		function calcosto(reng){
@@ -280,7 +280,7 @@
 			if (civa==1){
 				calcivar(costof,reng);
 			}
-			document.getElementById("costof"+reng).innerHTML= costof;
+			document.getElementById("costof"+reng).innerHTML= costof.toFixed(2);
 			calctot();
 		}
 		
@@ -416,7 +416,7 @@
 			function tiporect(tiposurt){
 				var texto;
 				//esta funcion traduce el tipo de surtido a texto
-				if(tiposurt == 10){texto="PARCIAL";}else if(tiposurt == 11){texto="TOTAL";}else{texto="ERROR";}
+				if(tiposurt == 10){texto="PARCIAL";}else if(tiposurt ==11){texto="TOTAL";}else{texto="ERROR";}
 				return texto;
 			}
 			
@@ -485,9 +485,9 @@
 									window.location.href = "listoc.php";
 								} );
     						})
-    						.fail(function( data ) {
+    						.fail(function(xhr, textStatus, errorThrown) {
     							var err1 = data.success;
-    							aviso("error alta de rec oc: "+err1);
+    							aviso("error alta de rec oc: "+xhr.responseText);
 							});	
 		 			}
 		 }
@@ -600,6 +600,8 @@
 	 			<li><a href="oc.php" data-ajax="false">Ordenes de Compra</a></li>
 	 			<li><a href="listoc.php" data-ajax="false">Rec. de OC</a></li>
 		    	<li><a href="pedido.php" data-ajax="false">Pedidos</a></li>
+		    	<li><a href="mostrador.php" data-ajax="false">Vtas Mostrador</a></li>
+		    	li><a href="regmues.php" data-ajax="false">Muestras</a></li>
 		    	<li><a href="listasp.php" data-ajax="false">Listas de Productos</a></li>
 		    	<li><a href="portal.php" data-ajax="false">Portal</a></li>
 	 		</ul>	    	

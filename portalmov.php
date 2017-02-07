@@ -61,7 +61,7 @@
   <title>Vannetti Cucina</title>
   <meta name="description" content="">
   <meta name="author" content="jmv">
-
+  <meta http-equiv="refresh" content="30">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="shortcut icon" href="img/logomin.gif" />  
 	<link rel="apple-touch-icon" href="img/logomin.gif">
@@ -113,6 +113,8 @@
 	 			<li><a href="oc.php" data-ajax="false">Ordenes de Compra</a></li>
 	 			<li><a href="listoc.php" data-ajax="false">Rec. de OC</a></li>
 		    	<li><a href="pedido.php" data-ajax="false">Pedidos</a></li>
+		    	<li><a href="mostrador.php" data-ajax="false">Vtas Mostrador</a></li>
+		    	<li><a href="regmues.php" data-ajax="false">Muestras</a></li>
 		    	<li><a href="listasp.php" data-ajax="false">Listas de Productos</a></li>
 		    	<li><a href="portal.php" data-ajax="false">Portal</a></li>
 	 		</ul>	    	

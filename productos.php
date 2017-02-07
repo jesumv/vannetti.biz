@@ -357,7 +357,7 @@
   </header>
   <main class="main">
  	<br />
- <h2>PRODUCTOS</h2>
+ <h2>CATALOGO DE PRODUCTOS</h2>
    <button type="button" id="altaprodb">ALTA PRODUCTO</button>
   	<?php
 /*menu de navegación*/

@@ -45,7 +45,7 @@
 
   <main class="main">
   	<br />
-  <h2>  VANNETTI CONSULENTI</h2>
+  <h2>  VANNETTI CUCINA</h2>
   </main>
 
   <div class="dialog-container">
@@ -64,8 +64,6 @@
         <button id="butAddCancel" class="button">Cancelar</button>
     </div>
   </div>
-
-  
 
   <!-- Insert link to app.js here -->
   <script src="js/app.js"></script>
