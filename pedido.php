@@ -378,7 +378,7 @@ function multiplica(){
 		
 		//venta por peso
 			var spesor = document.createElement("DIV");
-			spesor.className = "ocult";
+			spesor.className = "ocult spesov";
 			spesor.id = "peso"+linea;
 			spesor.name = "peso"+linea;
 			var node = document.createTextNode(spesov);
@@ -729,26 +729,29 @@ function multiplica(){
 				var monts=document.getElementsByClassName("stotoc");
 				var civas=document.getElementsByClassName("ivaoc");
 				var pesos=document.getElementsByClassName("peso");
+				var spesov=document.getElementsByClassName("spesov");
 				var longi= cants.length;
 				for(var i=0;i<longi;i++){
 					var rengcant=cants[i];
 					var rengid=ids[i];
 					var rengpr=pus[i];
+					var rengpres=pres[i];
 					var rengmon=monts[i];
 					var rengiva=civas[i];
-					var rengpres=pres[i];
 					var rengpes=pesos[i];
-					var idprod=rengid.innerHTML;
+					var rengspesov=spesov[i];
 					var cantprod=rengcant.value;
+					var idprod=rengid.innerHTML;
 					var prprod=rengpr.innerHTML;
+					var presp=rengpres.innerHTML;
 					var montop=rengmon.innerHTML;
 					var ivap=rengiva.innerHTML;
-					var presp=rengpres.innerHTML;
 					var pesop=rengpes.innerHTML;
+					var spesovp=rengspesov.innerHTML;
 					var checact= checadato(cantprod);
 					if(checact==true){
 					//si hay cantidad, se registra el dato
-						prods.push([idprod,cantprod,prprod,montop,ivap,presp,pesop]);
+						prods.push([idprod,cantprod,prprod,montop,ivap,presp,pesop,spesovp]);
 					}
 				}
 				return prods;

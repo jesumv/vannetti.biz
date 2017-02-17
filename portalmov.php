@@ -9,9 +9,11 @@
     if (is_object($mysqli)) {
 /*** checa login***/
        $funcbase->checalogin($mysqli);
-	   $result1=$mysqli->query("SELECT (SUM(CASE WHEN cuenta='401.01' THEN haber ELSE 0 END)+SUM(CASE WHEN cuenta='401.04' THEN haber ELSE 0 END))FROM DIARIO");
+	   $result1=$mysqli->query("SELECT (SUM(CASE WHEN cuenta='401.01' THEN haber ELSE 0 END)+SUM(CASE WHEN cuenta='401.04' THEN haber ELSE 0 END))FROM DIARIO
+	    WHERE fecha >'2016-10-31'");
 	   $dato1=$result1->fetch_row();
-	   $result2=$mysqli->query("SELECT SUM(CASE WHEN cuenta='501.01' THEN debe ELSE 0 END)FROM DIARIO");
+	   $result2=$mysqli->query("SELECT SUM(CASE WHEN cuenta='501.01' THEN debe ELSE 0 END)FROM DIARIO
+	   WHERE fecha >'2016-10-31'");
 	   $dato2=$result2->fetch_row();
 	   $result3=$mysqli->query("SELECT SUM(CASE WHEN cuenta='201.01' THEN haber ELSE 0 END)FROM DIARIO");
 	   $dato3=$result3->fetch_row();
@@ -29,7 +31,8 @@
 	   $dato9=$result9->fetch_row();
 	   $result10=$mysqli->query("SELECT SUM(CASE WHEN cuenta='102.01' THEN haber ELSE 0 END)FROM DIARIO");
 	   $dato10=$result10->fetch_row();
-	   $result11=$mysqli->query("SELECT SUM(CASE WHEN cuenta LIKE'6%' THEN debe ELSE 0 END)FROM DIARIO");
+	   $result11=$mysqli->query("SELECT SUM(CASE WHEN cuenta LIKE'6%' THEN debe ELSE 0 END)+SUM(CASE WHEN cuenta LIKE'7%' THEN debe ELSE 0 END)FROM DIARIO
+	   WHERE fecha>'2016-10-31'");
 	   $dato11=$result11->fetch_row();
 	   $vta=number_format($dato1[0],2);
 	   $cvta=number_format($dato2[0],2);
@@ -89,7 +92,7 @@
 		<div class="ui-content">
 			<a href="#navpanel" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-bars">Navegaci&oacute;n</a>
 			<h2>INDICADORES DE DESEMPEÑO</H2>
-				<h2>MES DE AGOSTO 2016</h2>
+				<h2>MES DE NOVIEMBRE 2016</h2>
   <table id="kpo">
   	<tr>
 	  	<th>INDICADOR</th>

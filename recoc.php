@@ -49,7 +49,7 @@
 		}
 		
 		function aviso(texto){
-			//esta funcion enciende el aviso de la pagina con el aviso
+			//esta funcion enciende el aviso de la pagina con el texto
 			//pasado como parametro.
 			$("#aviso").html(texto);
 			$("#aviso").popup("open");
@@ -59,6 +59,7 @@
 			//esta funcion añade un renglon de la tabla de articulos
 			var origen = document.getElementById("tbrecoc");
 			var nombre1 = document.createElement("DIV");
+			//el numero de renglon
 			nombre1.className = "ocult";
 			nombre1.id = "ren"+reng;
 			nombre1.name = "ren"+reng;
@@ -75,7 +76,7 @@
 				var node;
 				var tipo;
 				
-			for(var z=0;z<10;z++){
+			for(var z=0;z<11;z++){
 				nombre1 = document.createElement("DIV");
 				switch(z){
 					 case 0:
@@ -128,7 +129,7 @@
 				    	elem ="DIV";
 				    	idt = "speso" + reng;
 				    	clase = "ocult";
-				    	clase2 = "";
+				    	clase2 = "speso";
 				    	texto = speso;
 				        break;
 				        
@@ -154,7 +155,15 @@
 			    	clase = "ocult";
 			    	clase2 = "";
 			    	texto = cud;
-			        break;			 	    
+			        break;
+			        case 10:
+			        elem ="DIV";
+			    	idt="cpeso"+reng;
+			    	clase = "ocult";
+			    	clase2 = "pesos";
+			    	texto = 0;
+			        break;
+			        			 	    
 				}
 	//adicion de elementos al DOM					
 						nombre2 = document.createElement(elem);
@@ -204,13 +213,15 @@
 			var nopesos = caspeso.length;
 			var idart;
 			var pesoact;
+			var pesosum;
 			var costoact;
 			var costocalc;
 			var costosum;
 			var civa;
 			var ivacalc;
-			//inicializacion de suma costo
-			costosum =0;
+			//inicializacion de suma costo y suma peso
+			pesosum=0;
+			costosum=0;
 			for(var i = 0;i < nopesos; i++){
 				idart= document.getElementById("id"+reng).innerHTML;
 				pesoact = document.getElementById("peso"+i).value;
@@ -218,9 +229,11 @@
 				civa = document.getElementById("civa"+reng).innerHTML;
 				costocalc= ocosto(costoact,pesoact);
 				costosum = costosum+costocalc;
+				pesosum= pesosum+pesoact;
 			}
 			$("#pidepeso").popup("close");
 			document.getElementById("costof"+reng).innerHTML= costosum.toFixed(3);
+			document.getElementById("cpeso"+reng).innerHTML= pesosum;
 			if(civa==1){
 				ivacalc = calcivar(costosum);
 				document.getElementById("iva"+reng).innerHTML= ivacalc;
@@ -384,6 +397,8 @@
 				var nart;
 				var cant;
 				var costo;
+				var speso;
+				var pesoact;
 				var selec=[];
 				nart = document.getElementById("id"+reng).innerHTML;
 				selec.push(nart)
@@ -391,6 +406,11 @@
 				selec.push(cant);
 				costo = document.getElementById("costof"+reng).innerHTML;
 				selec.push(costo);
+				speso = document.getElementById("speso"+reng).innerHTML;
+				selec.push(speso);
+				pesoact = document.getElementById("cpeso"+reng).innerHTML;
+				selec.push(pesoact);
+				
 				return selec;
 			}
 			
@@ -601,7 +621,7 @@
 	 			<li><a href="listoc.php" data-ajax="false">Rec. de OC</a></li>
 		    	<li><a href="pedido.php" data-ajax="false">Pedidos</a></li>
 		    	<li><a href="mostrador.php" data-ajax="false">Vtas Mostrador</a></li>
-		    	li><a href="regmues.php" data-ajax="false">Muestras</a></li>
+		    	<li><a href="regmues.php" data-ajax="false">Muestras</a></li>
 		    	<li><a href="listasp.php" data-ajax="false">Listas de Productos</a></li>
 		    	<li><a href="portal.php" data-ajax="false">Portal</a></li>
 	 		</ul>	    	

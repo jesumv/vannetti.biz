@@ -78,10 +78,11 @@
 			//alta de articulos del pedido
 					$mysqli->query("INSERT INTO artsped (idpedido,idproductos,cant,preciou,preciot,status)
 					VALUES ($pedido,$idact,$caact,$pract,$moact,99)");
-					
+			//calculo del costo. si el peso es 1,no se calcula segun peso
+					if($pesoact==1){$umulti=($caact);}else{$umulti=($pesoact);};		
 			//afectacion a inventario
 					$mysqli->query("INSERT INTO inventario(idproductos,tipomov,cant,fechamov,usu,idoc,factu,haber)
-					SELECT $idact,2,$caact,'$fechaconv','$usu',$pedido,0,(costo*$caact*$pesoact) FROM productos WHERE idproductos = $idact");		
+					SELECT $idact,2,$caact,'$fechaconv','$usu',$pedido,0,(costov*$umulti) FROM productos WHERE idproductos = $idact");		
 				$i++;	
 			}
 	//FIN DEL CICLO ARTICULOS

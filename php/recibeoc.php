@@ -17,12 +17,12 @@
 				    $cargo2="118.01";
 					$cabono="101.01";
 				//cargo
-					$sqlmov ="INSERT INTO diario(cuenta,referencia,debe,fecha)VALUES($cargo,'$refe',$monto,'$fechaconv' )";
+					$sqlmov ="INSERT INTO diario(cuenta,referencia,debe,fecha,facturar)VALUES($cargo,'$refe',$monto,'$fechaconv',$fact )";
 					$querydiac = mysqli_query($mysqli, $sqlmov) or die ('error en cargo1: '.mysqli_error($mysqli));
-					$sqlmov ="INSERT INTO diario(cuenta,referencia,debe,fecha)VALUES($cargo2,'$refe',$iva,'$fechaconv' )";
+					$sqlmov ="INSERT INTO diario(cuenta,referencia,debe,fecha,facturar)VALUES($cargo2,'$refe',$iva,'$fechaconv',$fact)";
 					$querydiac = mysqli_query($mysqli, $sqlmov) or die ('error en cargo2: '.mysqli_error($mysqli));			
 				//abono
-					$sqlmov ="INSERT INTO diario(cuenta,referencia,haber,fecha)VALUES($cabono,'$refe',$total,'$fechaconv' )";
+					$sqlmov ="INSERT INTO diario(cuenta,referencia,haber,fecha,facturar)VALUES($cabono,'$refe',$total,'$fechaconv',$fact )";
 					$querydiac = mysqli_query($mysqli, $sqlmov) or die ('error en abono: '.mysqli_error($mysqli));			
 			break;
 			//credito
@@ -30,12 +30,12 @@
 					$cargo2="119.01";
 					$cabono="201.01";
 				//cargo
-					$sqlmov ="INSERT INTO diario(cuenta,referencia,debe,fecha)VALUES($cargo,'$refe',$monto,'$fechaconv' )";
+					$sqlmov ="INSERT INTO diario(cuenta,referencia,debe,fecha,facturar)VALUES($cargo,'$refe',$monto,'$fechaconv',$fact)";
 					$querydiac = mysqli_query($mysqli, $sqlmov) or die ('error en cargo1: '.mysqli_error($mysqli));
-					$sqlmov ="INSERT INTO diario(cuenta,referencia,debe,fecha)VALUES($cargo2,'$refe',$iva,'$fechaconv')";
+					$sqlmov ="INSERT INTO diario(cuenta,referencia,debe,fecha,facturar)VALUES($cargo2,'$refe',$iva,'$fechaconv',$fact)";
 					$querydiac = mysqli_query($mysqli, $sqlmov) or die ('error en cargo2: '.mysqli_error($mysqli));	
 				//abono
-					$sqlmov ="INSERT INTO diario(cuenta,subcuenta,referencia,haber,fecha)VALUES($cabono,$prov,'$refe',$total,'$fechaconv' )";
+					$sqlmov ="INSERT INTO diario(cuenta,subcuenta,referencia,haber,fecha,facturar)VALUES($cabono,$prov,'$refe',$total,'$fechaconv',$fact )";
 					$querydiac = mysqli_query($mysqli, $sqlmov) or die ('error en abono: '.mysqli_error($mysqli));
 			break;
 		}
@@ -114,6 +114,7 @@ function tiposurt($mysqli,$oc){
     $oc = $_POST["oc"];
 	$arts= $_POST["arts"];
 	$remi = $_POST["remi"];
+	//numero de factura
 	$fact =$_POST["fact"];
 	$montot = $_POST["monto"];
 	$ivat = $_POST["ivat"];
@@ -141,10 +142,14 @@ function tiposurt($mysqli,$oc){
 				$id= $arts[$i][0];
 				$cant= $arts[$i][1];
 				$costo= $arts[$i][2];
+				$speso= $arts[$i][3];
+				$pesoact=$arts[$i][4];
 				
+				//decision de unidad a insertar
+				if($speso==0){$umulti=$cant;}else{$umulti=$pesoact;}
 				//cargo a inventario
 						$sqlCommand1 = "INSERT INTO inventario (idproductos,tipomov,cant,usu,idoc,debe,factu,fechamov)
-			    		SELECT idproductos,$tipomov,$cant,'$usu',$oc,$costo,$facturar,'$fechaconv' from artsoc WHERE idartsoc=".$id; 
+			    		SELECT idproductos,$tipomov,$umulti,'$usu',$oc,$costo,$facturar,'$fechaconv' from artsoc WHERE idartsoc=".$id; 
 						$query1 = mysqli_query($mysqli, $sqlCommand1) or die ('error en alta inventarios: '.mysqli_error($mysqli));
 						if($query1){
 							//marcar los articulos como ingresados a inventario

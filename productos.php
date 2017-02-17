@@ -65,6 +65,7 @@
 		var cantsel = obj1[0].cant;
 		var barrasel = obj1[0].cbarras;
 		var costosel = obj1[0].costo;
+		var costovsel= obj1[0].costov;
 		var descsel = obj1[0].desc;
 		var ivasel= converbool(obj1[0].iva);
 		var pesosel=converbool(obj1[0].speso)
@@ -95,6 +96,8 @@
 		barrascas.value = barrasel;
 		var costocas =  document.getElementById('cost');
 		costocas.value = costosel;
+		var costovcas =  document.getElementById('costv');
+		costovcas.value = costovsel;
 		var ivacas = document.getElementById('chiva');
 		ivacas.checked = ivasel;
 		var pesocas = document.getElementById('chpeso');
@@ -160,6 +163,12 @@
 			$("#cost").focus();
 			return false;
 		}
+		if($("#costv").val() === ''){
+			alert("Debe proporcionar el costo de venta del producto");
+			$("#costv").focus();
+			return false;
+		}
+		
 		if($("#desc").val() === ''){
 			alert("Debe proporcionar la descripción");
 			$("#desc").focus();
@@ -440,10 +449,14 @@ include_once "include/menu1.php";
 		            <div class="rengn">
 		            	<label>Descripción:</label><input type="text" name="desc"  id="desc" class="cajal"/>
 		            </div> 
-		            <div class="rengn"><label>Causa Iva?</label><input type="checkbox" id="chiva" name="chiva" />
+		            <div class="rengn">
 		            	<label>Costo:</label><input type="text" name="cost"  id="cost" class="cajac"/>
+		            	<label>Costo de Ventas:</label><input type="text" name="costv"  id="costv" class="cajac"/>
+		            </div>
+		            <div class="rengn">
 		            	<label>Costo según peso?</label><input type="checkbox" id="chpeso" name="chpeso" />
 		            	<label>Venta según peso?</label><input type="checkbox" id="chpesov" name="chpesov" />
+		            	<label>Causa Iva?</label><input type="checkbox" id="chiva" name="chiva" />
 		            </div>
 		            <div class="rengn">
 		            	<label>P1 </label><input type="text" name="p1"  id="p1" class="cajam"/>
@@ -452,8 +465,8 @@ include_once "include/menu1.php";
 		            </div>        
 			   </div>
 				      <div class="dialog-buttons">
-				      	<input type="submit" value=" Enviar "/>
-				      	<button id="butAddCancel" class="button" style="margin-left: 50px">Cancelar</button>
+				      	<input class="button a" type="submit" value=" Enviar "/>
+				      	<button id="butAddCancel" class="button b" style="margin-left: 5px">Cancelar</button>
 				      </div>
 		      		   
 		      	</form>

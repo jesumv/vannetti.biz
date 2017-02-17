@@ -63,7 +63,8 @@ require 'include/funciones.php';
 			    } else {
 			      app.addDialog2.classList.remove('dialog-container--visible');
 			    }
-			  }; 
+			  };
+			  
 			  	   
 			    if (app.isLoading) {
 							      app.spinner.setAttribute('hidden', true);
@@ -97,8 +98,7 @@ require 'include/funciones.php';
    				app.toggleAddDialog2(true)
    				document.getElementById('ftras').focus();
    			}
-   			
-   			
+   				 			
    			function enviagas(){
    				//envio de gasto a la base de datos
    				//recoleccion de variables
@@ -134,7 +134,7 @@ require 'include/funciones.php';
 									app.toggleAddDialog(false);
 	    						})
 	    						.fail(function(xhr, textStatus, errorThrown ) {		
-	    							document.write("ERROR EN REGISTRO");
+	    							document.write("ERROR EN REGISTRO:"+errorThrown);
 								});	
    				
    			}
@@ -222,6 +222,7 @@ require 'include/funciones.php';
 			document.getElementById("regtras").addEventListener('click',regt,false)
 			//boton cancela traspaso
 			document.getElementById("cancelt").addEventListener('click',cancelat,false)
+			
 			//calculo de iva
 			document.getElementById("montog").addEventListener('change',calciva,false)
 			
@@ -345,6 +346,7 @@ require 'include/funciones.php';
 			    	</div>
 		    </div>
 		  </div>
+		  
 
   <div class="loader">
     <svg viewBox="0 0 32 32" width="32" height="32">

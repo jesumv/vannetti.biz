@@ -7,7 +7,7 @@ function __autoload($class){
 	
 		function movmuestra($mysqli,$prod,$monto,$fecha,$cant,$usu,$coment='NULL'){
 				$ref="muestra";
-				$sfactu=0;
+				$sfactu=1;
 				$mysqli->autocommit(false);
 			try{
 		//movimientos contables en diario.

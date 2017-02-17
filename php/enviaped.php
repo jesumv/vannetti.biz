@@ -130,6 +130,7 @@
 				$ivact=$arts[$i][4];
 				$presact=$arts[$i][5];
 				$pesoact=$arts[$i][6];
+				$spesovact=$arts[$i][7];
 				$precioact=$presact*$caact;
 				
 				if($ivact==0){
@@ -143,11 +144,15 @@
 				//alta de articulos del pedido
 					$sqlCommand2= "INSERT INTO artsped (idpedido,idproductos,cant,preciou,preciot,status)
 					VALUES ($pedido,$idact,$caact,$pract,$moact,$statusa)";
+				//calculo del costo. si el peso es 1,no se calcula segun peso
+					if($pesoact==1){$umulti=($caact);}else{$umulti=($pesoact);};
 					$query2=mysqli_query($mysqli, $sqlCommand2)or die("error en alta artsped:".mysqli_error($mysqli));
 					if($query2) {
-					//afectacion a inventario
+					//afectacion a inventario de acuerdo a tipo de articulo
+					if($spesovact==1){$cantif=$caact;}else{$cantif=$pesoact;}
+					
 					$sqlCommand3= "INSERT INTO inventario (idproductos,tipomov,cant,fechamov,usu,idoc,factu,haber)
-					SELECT $idact,2,$caact,'$fechaconv','$usu',$pedido,$facturarb,(costo*$caact*$pesoact) FROM productos WHERE idproductos = $idact";
+					SELECT $idact,2,$cantif,'$fechaconv','$usu',$pedido,$facturarb,(costov*$umulti) FROM productos WHERE idproductos = $idact";
 					$query3=mysqli_query($mysqli, $sqlCommand3)or die("error en salida invent: ".mysqli_error($mysqli));
 					if(!$query3){
 						$resul=-3;	
