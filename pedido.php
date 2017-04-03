@@ -170,7 +170,7 @@ function getSum(total,num) {
     return total + num;
 }			
 function regpeso(reng){
-	// TODO revisar el producto salmon fresco s/p y salmon congelado segun peso
+// TODO revisar el producto salmon fresco s/p y salmon congelado segun peso
 	//esta funcion registra en el html el costo de los articulos por peso
 	var caspeso = document.getElementsByClassName("cajapeso");
 	var nopesos = caspeso.length;
@@ -704,7 +704,7 @@ function multiplica(){
 					resp = "ERROR EN ALTA ARTS PEDIDO";
 					break;
 				case -3:
-				resp = "ERROR EN INSERCIONES A DIARIO0";
+				resp = "ERROR EN INSERCIONES A DIARIO";
 				break;
 				default:
 					var textof = tipopedt(tipoped);
@@ -845,11 +845,10 @@ function multiplica(){
 										$('#pcte').selectmenu( "enable" );
 									} );
 	    						})
-	    						.fail(function(data) {
-	    							var err1 = data.resul;
-	    							aviso("error alta de pedido: "+err1);
+	    						.fail(function(xhr, textStatus, errorThrown ) {		
+	    							document.write("ERROR EN ALTA DE PEDIDO:"+errorThrown);
 								});	
-			  									  			
+		  									  			
 		  			}
 	  				
 	  			}

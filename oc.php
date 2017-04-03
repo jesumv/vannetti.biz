@@ -179,7 +179,7 @@
 	    			<fieldset>
 	    				<div data-role="fieldcontain">
 		    				<label >
-			    				<input type="checkbox" data-role="flipswitch" id="factp" name="factp"/>Facturada?
+			    				<input type="checkbox" data-role="flipswitch" id="factp" name="factp" checked/>Facturada?
 			    			</label>
 	    				</div>	    				
 	    			</fieldset>

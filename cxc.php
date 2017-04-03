@@ -40,7 +40,7 @@ $table = 'pedidos';
 $table2 = 'clientes';
  $sql= "SELECT t2.razon_social,t1.fecha, t1.idpedidos,t1.factura,t1.monto,t1.iva,t1.total,t2.diascred,t1.status,t1.facturar,t1.idclientes FROM $table
  AS t1 INNER JOIN $table2 AS t2 ON t1.idclientes= t2.idclientes WHERE t1.status >19 AND t1.status <40 AND t1.tipovta = 2 ORDER BY t1.fecha";
- $result2 = mysqli_query($mysqli,$sql)or die ("ERROR EN CONSULTA DE INVENTARIOS.".mysqli_error($mysqli));; 
+ $result2 = mysqli_query($mysqli,$sql)or die ("ERROR EN CONSULTA DE CUENTAS POR COBRAR.".mysqli_error($mysqli));; 
 
     } else {
         //die ("<h1>'No se establecio la conexion a bd'</h1>");

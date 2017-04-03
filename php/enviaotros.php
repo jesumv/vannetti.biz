@@ -7,7 +7,7 @@
     $funcbase = new dbutils;
 	$resul;
 	
-	function movdiario($mysqli,$cuenta,$tipom,$ref,$monto,$fecha,$sfactu,$concep,$subcta='NULL'){
+	function movdiario($mysqli,$cuenta,$tipom,$ref,$monto,$fecha,$sfactu,$concep,$subcta=NULL){
 		//esta funcion realiza 1 movimiento contable en diario. $tipom determina
 		//determinacion de tipo de movimiento
 		if($tipom==0){
@@ -108,11 +108,13 @@
 				case 2:
 			//transferencia
 				case 3:
+			//tarjeta de debito
+				case 28:
 					$abono="102.01";
 				break;	
 			//tarjetas de credito
 				case 4:
-					$abono="205.01";
+					$abono="205.06";
 				break;	
 			//otros
 				default:

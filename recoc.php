@@ -232,11 +232,11 @@
 				pesosum= pesosum+pesoact;
 			}
 			$("#pidepeso").popup("close");
-			document.getElementById("costof"+reng).innerHTML= costosum.toFixed(3);
+			document.getElementById("costof"+reng).innerHTML= costosum.toFixed(2);
 			document.getElementById("cpeso"+reng).innerHTML= pesosum;
 			if(civa==1){
 				ivacalc = calcivar(costosum);
-				document.getElementById("iva"+reng).innerHTML= ivacalc;
+				document.getElementById("iva"+reng).innerHTML= ivacalc.ToFixed(2);
 			}
 			calctot();
 			quita();

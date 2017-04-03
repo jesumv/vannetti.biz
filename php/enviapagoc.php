@@ -25,7 +25,9 @@
 		$factura=$_POST["factu"];
 		$arch=$_POST["arch"];
 		$metpago=$_POST["metpago"];
-		$cta=$_POST["cta"];	
+		//prevision para cuando no hay cuenta
+		$cta;
+		if (!$_POST["cta"]){$cta=NULL;}else{$cta=$_POST["cta"];};
 		$folio=$_POST["folio"];
 		$subt= $_POST["subt"];
 		$iva= $_POST["iva"];

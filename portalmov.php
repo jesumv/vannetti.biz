@@ -10,10 +10,10 @@
 /*** checa login***/
        $funcbase->checalogin($mysqli);
 	   $result1=$mysqli->query("SELECT (SUM(CASE WHEN cuenta='401.01' THEN haber ELSE 0 END)+SUM(CASE WHEN cuenta='401.04' THEN haber ELSE 0 END))FROM DIARIO
-	    WHERE fecha >'2016-10-31'");
+	    WHERE fecha >'2016-12-31'");
 	   $dato1=$result1->fetch_row();
 	   $result2=$mysqli->query("SELECT SUM(CASE WHEN cuenta='501.01' THEN debe ELSE 0 END)FROM DIARIO
-	   WHERE fecha >'2016-10-31'");
+	   WHERE fecha >'2016-12-31'");
 	   $dato2=$result2->fetch_row();
 	   $result3=$mysqli->query("SELECT SUM(CASE WHEN cuenta='201.01' THEN haber ELSE 0 END)FROM DIARIO");
 	   $dato3=$result3->fetch_row();
@@ -32,7 +32,7 @@
 	   $result10=$mysqli->query("SELECT SUM(CASE WHEN cuenta='102.01' THEN haber ELSE 0 END)FROM DIARIO");
 	   $dato10=$result10->fetch_row();
 	   $result11=$mysqli->query("SELECT SUM(CASE WHEN cuenta LIKE'6%' THEN debe ELSE 0 END)+SUM(CASE WHEN cuenta LIKE'7%' THEN debe ELSE 0 END)FROM DIARIO
-	   WHERE fecha>'2016-10-31'");
+	   WHERE fecha>'2016-12-31'");
 	   $dato11=$result11->fetch_row();
 	   $vta=number_format($dato1[0],2);
 	   $cvta=number_format($dato2[0],2);
@@ -44,7 +44,7 @@
 	   $prov=number_format($dato3[0]-$dato4[0],2);
 	   $cxc=number_format($dato5[0]-$dato6[0],2);
 	   $caja=number_format($dato7[0]-$dato8[0],2);
-	   $bancos=number_format($dato9[0]-$dato10[0],2);
+	   $bancos=number_format($dato9[0]-$dato10[0]-53.17,2);
 	   
 	   $mysqli->close(); 
     } else {

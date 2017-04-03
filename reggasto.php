@@ -72,6 +72,7 @@ require 'include/funciones.php';
 							      app.isLoading = false;
 						    }
 			//metodos de los elementos de la pagina
+			
 			function valida(elemen){
 		   		var fecha=document.getElementById(elemen).value;
 		   	    //corregir funcion fecha
@@ -131,7 +132,9 @@ require 'include/funciones.php';
 							 }, null, "json" )
 							 .done(function(data) {
 	    							var resul= data.resul;
+	    							document.getElementById('rgasto').reset();
 									app.toggleAddDialog(false);
+									
 	    						})
 	    						.fail(function(xhr, textStatus, errorThrown ) {		
 	    							document.write("ERROR EN REGISTRO:"+errorThrown);
@@ -205,9 +208,19 @@ require 'include/funciones.php';
    				var valor=document.getElementById("montog").value;
    				var ivac=valor*.16
    				var civa=document.getElementById("ivag");
-   				civa.value= ivac;
+   				civa.value= ivac.toFixed(2);
    				civa.focus();
    				
+   			}
+   			
+   			function cuentasi(){
+   				//esta funcion pone el numero de cuenta default
+   				var cuenta = document.getElementById("cuenta");
+   				var elec = document.getElementById("smpago").value;
+   				if(elec==28){
+   					cuenta.value='2648';
+   				}
+   				cuenta.focus();
    			}
    			//escuchas
    			//boton gasto
@@ -222,10 +235,10 @@ require 'include/funciones.php';
 			document.getElementById("regtras").addEventListener('click',regt,false)
 			//boton cancela traspaso
 			document.getElementById("cancelt").addEventListener('click',cancelat,false)
-			
 			//calculo de iva
 			document.getElementById("montog").addEventListener('change',calciva,false)
-			
+			//metodo de pago
+			document.getElementById("smpago").addEventListener('change',cuentasi,false)
    		 });
    	})();
    </script>
@@ -263,7 +276,7 @@ require 'include/funciones.php';
 			    			<div class="rengn">
 			    			<label>Fecha: </label><input type="date" name="fgas"  id="fgas" class="cajam"/>
 			    			<label>Subtotal:</label><input type="text" name="montog" id="montog"/>
-			    			<label>Iva:</label><input type="text" name="ivag" id="ivag"/>
+			    			<label>Iva:</label><input type="text" name="ivag" id="ivag" size="10"/>
 			    			</div>
 			    			<div class="rengn">
 			    				<label>Factura: </label><input type="text" name="nfact"  id="nfact" class="cajam"/>	
@@ -290,6 +303,7 @@ require 'include/funciones.php';
 									<option value="02">Cheque</option>
 									<option value="03">Transferencia</option>
 									<option value="04">Tarjetas de Credito</option>
+									<option value="28">Tarjetas de Débito</option>
 									<option value="99">Otros</option>
 		         				</select>
 		         				<label>Cuenta: </label><input type="text" name="cuenta"  id="cuenta" class="cajac" maxlength="4" />

@@ -799,9 +799,8 @@ function multiplica(){
 										location.reload();
 									} );
 	    						})
-	    						.fail(function(data) {
-	    							var err1 = data.resul;
-	    							aviso("error alta de pedido: "+err1);
+	    						.fail(function(xhr, textStatus, errorThrown ) {		
+	    							document.write("ERROR EN REGISTRO:"+errorThrown);
 								});	
 			  									  			
 		  			}

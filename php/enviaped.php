@@ -149,8 +149,7 @@
 					$query2=mysqli_query($mysqli, $sqlCommand2)or die("error en alta artsped:".mysqli_error($mysqli));
 					if($query2) {
 					//afectacion a inventario de acuerdo a tipo de articulo
-					if($spesovact==1){$cantif=$caact;}else{$cantif=$pesoact;}
-					
+					if($spesovact==0){$cantif=$caact;}else{$cantif=$pesoact;}
 					$sqlCommand3= "INSERT INTO inventario (idproductos,tipomov,cant,fechamov,usu,idoc,factu,haber)
 					SELECT $idact,2,$cantif,'$fechaconv','$usu',$pedido,$facturarb,(costov*$umulti) FROM productos WHERE idproductos = $idact";
 					$query3=mysqli_query($mysqli, $sqlCommand3)or die("error en salida invent: ".mysqli_error($mysqli));

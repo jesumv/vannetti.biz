@@ -31,7 +31,7 @@ function converfecha($fechao){
 	return $fechac;
 }
 
-function operdiario($mysqli,$cuenta,$tipoper,$tipom,$ref,$monto,$fecha,$sfactu,$subcta='NULL'){
+function operdiario($mysqli,$cuenta,$tipoper,$tipom,$ref,$monto,$fecha,$sfactu,$subcta=NULL){
 		//esta funcion realiza 1 movimiento contable en diario. $tipom determina
 		//si el movimiento es debe = 0 o haber = else
 		//determinacion de referencia orden de compra o pedido
@@ -42,7 +42,8 @@ function operdiario($mysqli,$cuenta,$tipoper,$tipom,$ref,$monto,$fecha,$sfactu,$
 		}else{
 			$colum="haber";
 		}
-		$mysqli->query("INSERT INTO diario(cuenta,referencia,$colum,fecha,facturar,subcuenta)VALUES($cuenta,'$refe',$monto,'$fecha',$sfactu,$subcta)");
+		$mysqli->query("INSERT INTO diario(cuenta,referencia,$colum,fecha,facturar,subcuenta)VALUES($cuenta,'$refe',$monto,'$fecha',$sfactu,'$subcta')")
+		or die("Error en registro contable: ".mysqli_error($mysqli));
 }
 
 function metpago($metpago){
@@ -86,14 +87,14 @@ function epagoped($mysqli,$fecha,$ref,$monto,$iva,$total,$factu,$mpago,$sfactu,$
 	return $resul;
 }
 
-function epagoc($mysqli,$fecha,$ref,$monto,$iva,$total,$factu,$mpago,$sfactu,$prov,$folio,$arch=NULL,$cta=NULL){
+function epagoc($mysqli,$fecha,$ref,$monto,$iva,$total,$factu,$mpago,$sfactu,$prov,$folio,$arch=NULL,$cta){
 	//registra pago de una orden de compra
 			try{
 				$mysqli->autocommit(false);
 			//la referencia es oc
 				$tipoper=0;
 			//movimientos de diario
-				//cargo en salida de efectivo de efectivo segun metodo de pago
+				//cargo en salida de efectivo de recursos segun metodo de pago
 					$cuenta1=metpago($mpago);
 					//tipo 0 es debe
 					$tipom1=1;

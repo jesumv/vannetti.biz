@@ -22,7 +22,7 @@
 			//adecuacion de campo de precio, para el caso de clientes al costo.
 			if($nivel == 0){$nivelcor ='costo';}else{$nivelcor ='precio'.$nivel;}
 			$sqlCommand = "SELECT t1.grupo,t1.nom_corto,t1.idproductos,$nivelcor,t1.iva,t1.spesov,t1.cant,t2.nombre AS unidad FROM productos AS t1 
-			INNER JOIN unidades AS t2 ON t1.unidad= t2.idunidades WHERE 1 ORDER BY grupo, nom_corto";		
+			INNER JOIN unidades AS t2 ON t1.unidad= t2.idunidades WHERE t1.status = 0 ORDER BY grupo, nom_corto";		
 	 // Execute the query here now
 			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE PRODS PEDL. ".mysqli_error($mysqli));
 //inicializacion de arreglo

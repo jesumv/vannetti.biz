@@ -66,8 +66,7 @@
 				$ivact=$arts[$i][4];
 				$presact=$arts[$i][5];
 				$pesoact=$arts[$i][6];
-				$precioact=$presact*$caact;
-				
+			
 				if($ivact==0){
 					//suma de ventas tasa0
 					array_push($vtas0,$moact);
@@ -78,11 +77,12 @@
 			//alta de articulos del pedido
 					$mysqli->query("INSERT INTO artsped (idpedido,idproductos,cant,preciou,preciot,status)
 					VALUES ($pedido,$idact,$caact,$pract,$moact,99)");
-			//calculo del costo. si el peso es 1,no se calcula segun peso
-					if($pesoact==1){$umulti=($caact);}else{$umulti=($pesoact);};		
+			//calculo del costo y cantidad  para inventario. si el peso es 1,no se calcula segun peso
+			$umulti;
+					if($pesoact==1){$umulti=$caact;}else{$umulti=$pesoact;};		
 			//afectacion a inventario
 					$mysqli->query("INSERT INTO inventario(idproductos,tipomov,cant,fechamov,usu,idoc,factu,haber)
-					SELECT $idact,2,$caact,'$fechaconv','$usu',$pedido,0,(costov*$umulti) FROM productos WHERE idproductos = $idact");		
+					SELECT $idact,2,$umulti,'$fechaconv','$usu',$pedido,0,(costov*$umulti) FROM productos WHERE idproductos = $idact")or die (mysqli_error($mysqli));		
 				$i++;	
 			}
 	//FIN DEL CICLO ARTICULOS

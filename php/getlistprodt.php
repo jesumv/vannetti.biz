@@ -11,7 +11,7 @@
 	/**trae datos de ordenes de compra sin surtir**/
     if (is_object($mysqli)) {
 		$cadena=$_GET["q"];
-    	$sqlCommand = "SELECT idproductos,nombre,costo  FROM  productos  WHERE nombre LIKE ('%".$cadena."%') ORDER BY nombre";		
+    	$sqlCommand = "SELECT idproductos,nombre,costov  FROM  productos  WHERE nombre LIKE ('%".$cadena."%') ORDER BY nombre";		
 	 // Execute the query here now
 			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE LISTA PRODUCTOS. ".mysqli_error($mysqli));
 	//trae los productos para la caja de dialogo
@@ -19,7 +19,7 @@
 			$filas = $query1->num_rows;
 			if($filas > 0){
 				while($tempo=mysqli_fetch_array($query1, MYSQLI_ASSOC)){
-			 	$result[] = array('idprod' => $tempo['idproductos'],'nombre' => $tempo['nombre'],'costo' => $tempo['costo']);
+			 	$result[] = array('idprod' => $tempo['idproductos'],'nombre' => $tempo['nombre'],'costo' => $tempo['costov']);
 			 }
 			}else{$result= 1;}
 			 
