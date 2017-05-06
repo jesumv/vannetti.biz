@@ -4,6 +4,7 @@
 	width:30%;
 }
 .button {
+	margin-right: 15px;
     border: none;
     color: white;
     padding: 15px 32px;
@@ -17,6 +18,7 @@
 .a{background-color: #4CAF50; /* Green */display: inline;}
 .b{background-color: #ff0000; /* red */display: inline;}
 .c{background-color: #8080ff; /* blue */display: inline;}
+.cent{background-color: #4CAF50; /* Green */display: block; margin:auto;}
 
 .button:hover {
     background-color: #c0c0c0; /* Green */
@@ -47,6 +49,11 @@
     
 }
 
+
+.cajaml{
+	width:200px;
+	font-size: 115%;
+}
 .celda .pagada{
 	background-color:#008040;
 }
@@ -69,10 +76,18 @@
 
 table.db-table 		{ border-right:1px solid #ccc; border-bottom:1px solid #ccc; 
 margin-left:auto;margin-right:auto;margin-top:50px; margin-bottom:auto; }
-table.db-table th	{ background:#eee; padding:5px; border-left:1px solid #ccc; border-top:1px solid #ccc; }
-table.db-table td	{ padding:5px; border-left:1px solid #ccc; border-top:1px solid #ccc; }
 
-.ed,.el,{text-align:center}
+table.db-table2 {border-right:1px solid #ccc; border-bottom:1px solid #ccc; 
+margin-left:auto;margin-right:auto;margin-top:50px; margin-bottom:auto; width:80%; }
+
+table.db-table th	{ background:#eee; padding:5px; border-left:1px solid #ccc; border-top:1px solid #ccc; }
+table.db-table td { padding:5px; border-left:1px solid #ccc; border-top:1px solid #ccc; }
+
+table.db-table2 th	{ background:#eee; padding:5px; border-left:1px solid #ccc; border-top:1px solid #ccc; }
+table.db-table2 td	{ padding:5px; border-left:1px solid #ccc; border-top:1px solid #ccc; }
+
+
+.ed,.el{text-align:center}
 
 .edac{
 text-align:center;

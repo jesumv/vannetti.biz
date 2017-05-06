@@ -7,9 +7,15 @@
     $funcbase = new dbutils;
 	$resul;
 	
-	function movdiario($mysqli,$cuenta,$tipom,$ref,$monto,$fecha,$sfactu,$concep,$subcta=NULL){
+	function movdiario($mysqli,$cuenta,$tipom,$ref,$monto,$fecha,$sfactu,$concep,$subcta=NULL,$arch=NULL){
 		//esta funcion realiza 1 movimiento contable en diario. $tipom determina
 		//determinacion de tipo de movimiento
+		//preparacion de string arch
+		$archm;
+		if($arch!=NULL){
+			$archm= substr($arch,11);
+		}else{$archm = NULL;}
+		
 		if($tipom==0){
 			$colum="debe";
 		}else{
@@ -17,8 +23,8 @@
 		}
 		try{
 			$mysqli->autocommit(false);
-			$mysqli->query("INSERT INTO diario(cuenta,referencia,$colum,fecha,facturar,subcuenta,coment)
-			VALUES($cuenta,'$ref',$monto,'$fecha',$sfactu,'$subcta','$concep')");
+			$mysqli->query("INSERT INTO diario(cuenta,referencia,$colum,fecha,facturar,subcuenta,coment,arch)
+			VALUES($cuenta,'$ref',$monto,'$fecha',$sfactu,'$subcta','$concep','$archm')");
 			//efectuar la operacion
 			$mysqli->commit();
 			$resul=0;
@@ -151,8 +157,9 @@
 		$resul1=0;
 		$resul2=0;
 		$resul3=0;
-		//determinacion de facturacion. todos los gastos se facturan
-		$facturar= 1;
+		//determinacion de facturacion
+		$facturar;
+		if(empty($_POST["fact"])  && empty($_POST["arch"] )){$facturar=0;}else{$facturar= 1;};
 		//afectacion a bd
 		switch($tipo){
 			case "g":
@@ -161,13 +168,11 @@
 				$cargo=$cuentas['c'];
 				$abono=$cuentas['a'];
 				//cargo a gastos
-				$resul1=movdiario($mysqli,$cargo,0,$fact,$monto,$fecha,$facturar,$concep);
+				$resul1=movdiario($mysqli,$cargo,0,$fact,$monto,$fecha,$facturar,$concep,NULL,$arch);
 				//iva
 				$resul3=movivag($mysqli,$mpago,$fact,$iva,$fecha,$facturar,$concep);
 				//abono a cuenta origen del pago
 				$resul2=movdiario($mysqli,$abono,1,$fact,$total,$fecha,$facturar,$concep,$cuenta);
-				
-
         	break;	
 			default:
 				$resul1=movtras($mysqli, $origen, $destino, $monto, $fecha, $concep);

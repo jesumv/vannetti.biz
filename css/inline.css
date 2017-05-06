@@ -214,6 +214,10 @@ text-align:center}
   transition: transform 0.333s cubic-bezier(0, 0, 0.21, 1) 0.05s;
   transition: transform 0.333s cubic-bezier(0, 0, 0.21, 1) 0.05s, -webkit-transform 0.333s cubic-bezier(0, 0, 0.21, 1) 0.05s;
   padding: 24px; }
+  
+ .g{
+ 	width: 75%;
+ }
 
 .dialog-title{
 	background-color:#80ff80;
@@ -222,7 +226,7 @@ text-align:center}
 }
 
 .dialog-buttons{
-	width:40%;
+	width:60%;
 	margin-left:auto;margin-right:auto;margin-top:10px; margin-bottom:10px; 
 }
 .rengn{

@@ -355,11 +355,11 @@
 				if(cantot.length>0){cantf= cantot.reduce(function(ant,act){return ant+=act;})}else{cantf= 0;}
 				document.getElementById("ctot").innerHTML= cantf;
 				costf= costot.reduce(function(cant,cact){return cant+=cact;});
-				document.getElementById("mtot").innerHTML= costf.toFixed(3);
+				document.getElementById("mtot").innerHTML= costf.toFixed(2);
 				ivaf=ivatot.reduce(function(iant,iact){return iant+=iact;});
 				grantot=costf+ivaf;
-				document.getElementById("itot").innerHTML= ivaf.toFixed(3);
-				document.getElementById("gtot").innerHTML= grantot.toFixed(3);
+				document.getElementById("itot").innerHTML= ivaf.toFixed(2);
+				document.getElementById("gtot").innerHTML= grantot.toFixed(2);
 		}
 		
 		function pesoa(){

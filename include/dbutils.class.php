@@ -101,6 +101,7 @@
             }
         }
 		
+	
 		public function leelprod($mysqli,$nivel=3){
           //***lee todos los datos de una tabla, un registro o todos los registros, de acuerdo con el argumento $filtro ***/
           if ($nivel ==3) {
@@ -110,8 +111,7 @@
           }else{
           	 $nprecio = "precio"."$nivel";
           }
-          
-         
+                
             $sqlCommand = "SELECT codigo,nombre,".$nprecio." FROM productos WHERE status < 1 ORDER BY nombre";		
 	 // Execute the query here now
 			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE SELEC PROD. ".mysqli_error($mysqli));

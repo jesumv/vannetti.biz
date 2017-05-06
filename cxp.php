@@ -15,7 +15,7 @@ require 'include/funciones.php';
 			$table = 'oc';
 		 	$table2 = 'proveedores';
 			 $sql= "SELECT t2.razon_social,t1.fecharec, t1.idoc,t1.factura,t1.remision,t1.monto,t1.iva,t1.total,t2.diascred,t1.facturar,t1.idproveedores FROM $table
-			 AS t1 INNER JOIN $table2 AS t2 ON t1.idproveedores= t2.idproveedores WHERE t1.status >10 AND t1.status <99 AND t1.credito = 1 ORDER BY fechamov";
+			 AS t1 INNER JOIN $table2 AS t2 ON t1.idproveedores= t2.idproveedores WHERE t1.status >10 AND t1.status <99 AND t1.credito = 1 ORDER BY fecharec,idoc";
 			 $result2 = mysqli_query($mysqli,$sql)or die ("ERROR EN CONSULTA DE CUENTAS POR PAGAR.".mysqli_error($mysqli));;
 			 	 if(mysqli_num_rows($result2)) {
 		 
@@ -224,7 +224,7 @@ require 'include/funciones.php';
 				document.getElementById('smpago').addEventListener('change',function(){
 						var mpago=document.getElementById('smpago').value;
 						if(mpago!=1){
-							document.getElementById('cuenta').value="5815";
+							document.getElementById('cuenta').value="2648";
 							document.getElementById('cuenta').focus()
 							}else{
 							document.getElementById('regpago').focus()
@@ -374,8 +374,8 @@ require 'include/funciones.php';
 	    				<h4 id="avisor"></h4>
 	    			</div>
 	    			<div class="dialog-buttons">
-				      	<input type="submit" value="Registrar" id="regpago"/>
-				      	<button id="butAddCancel" class="button" style="margin-left: 10px">Cancelar</button>
+				      	<input type="submit" value="Registrar" id="regpago" class="button a"/>
+				      	<button id="butAddCancel" class="button b" style="margin-left: 10px">Cancelar</button>
 				    </div>
 	    		</form>
 	    	</div>

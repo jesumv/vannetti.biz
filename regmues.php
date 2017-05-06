@@ -68,7 +68,7 @@ require 'include/funciones.php';
 	                    	q: $input.val()
 	                	}
 	            	})
-	            	.then( function ( response ) {
+	            	.then( function (response) {
 	            		var nombre;
 	            		var idprod;
 	            		var costo;
@@ -84,9 +84,9 @@ require 'include/funciones.php';
 		                	//agrega el no producto al html
 		                	var este = document.getElementById("prod");
 		                	este.innerHTML=prod;
-		                	document.getElementById("fmues").focus();
 		                	var selectedItem = $(this).html();
-      						$(this).parent().parent().find('input').val(selectedItem);   
+      						$(this).parent().parent().find('input').val(selectedItem);
+      						document.getElementById("fmues").focus();
       						$('#listap').hide();     
 		                }
 		                for (var i = 0; i < bmues.length; i++) {
@@ -102,11 +102,6 @@ require 'include/funciones.php';
             	};			
    			});
    			
-   		});
-   		
-   		$( document ).on( "pageinit", "#pagmues", function(event) {
-   
-
 		   /*****************************************************************************
 		   *
 		   * Metodos para actualizar/refrescar la IU
@@ -240,6 +235,11 @@ require 'include/funciones.php';
    			
    			function cancelam(){
    				document.getElementById('rmues').reset();
+   			}
+   			
+   			function textoinput(){
+   				 var text = $(this).text();
+    			$(this).closest("ul").prev("form").find("input").val(text);
    			}
    			
    			//escuchas

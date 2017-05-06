@@ -204,11 +204,20 @@ require 'include/funciones.php';
    				}
    			}
    			
+   			function calctotal(){
+   				var base = document.getElementById("montog").value;
+   				var iva = document.getElementById("ivag").value;
+   				var total = Number(base) + Number(iva);
+   				var ctotal = document.getElementById("totalg");
+   				ctotal.value = total.toFixed(2);
+   			}
+   			
    			function calciva(){
    				var valor=document.getElementById("montog").value;
-   				var ivac=valor*.16
+   				var ivac=valor*.16;
    				var civa=document.getElementById("ivag");
    				civa.value= ivac.toFixed(2);
+   				calctotal();
    				civa.focus();
    				
    			}
@@ -237,6 +246,8 @@ require 'include/funciones.php';
 			document.getElementById("cancelt").addEventListener('click',cancelat,false)
 			//calculo de iva
 			document.getElementById("montog").addEventListener('change',calciva,false)
+			//calculo de total
+			document.getElementById("ivag").addEventListener('change',calctotal,false)
 			//metodo de pago
 			document.getElementById("smpago").addEventListener('change',cuentasi,false)
    		 });
@@ -275,8 +286,11 @@ require 'include/funciones.php';
 			    		<form id="rgasto" method ="post" action="#" onsubmit="return false;">
 			    			<div class="rengn">
 			    			<label>Fecha: </label><input type="date" name="fgas"  id="fgas" class="cajam"/>
+			    			</div>
+			    			<div class="rengn">
 			    			<label>Subtotal:</label><input type="text" name="montog" id="montog"/>
 			    			<label>Iva:</label><input type="text" name="ivag" id="ivag" size="10"/>
+			    			<label>TOTAL:</label><input type="text" name="totalg" id="totalg" disabled="TRUE"/>
 			    			</div>
 			    			<div class="rengn">
 			    				<label>Factura: </label><input type="text" name="nfact"  id="nfact" class="cajam"/>	
@@ -336,13 +350,13 @@ require 'include/funciones.php';
 			    				<select id="origent" name="origent">
 									<option value="0">Seleccione la cuenta origen</option>
 									<option value="101.01">Caja</option>
-									<option value="102.01">Bancomer</option>
+									<option value="102.01">Banorte</option>
 		         				</select>
 		         				<label>A la Cuenta: </label>
 			    				<select id="destinot" name="destinot">
 									<option value="0">Seleccione la cuenta destino</option>
 									<option value="101.01">Caja</option>
-									<option value="102.01">Bancomer</option>
+									<option value="102.01">Banorte</option>
 		         				</select>		
 			    				
 			    			</div>

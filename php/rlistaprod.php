@@ -8,8 +8,8 @@
     $funcbase = new dbutils;
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
-	$nivel= $_GET["nivel"];
-	$fecha= "FECHA DE ELABORACION: ".date("Y-m-d");
+	$pedido= $_GET["pedido"];
+	
 if (is_object($mysqli)) {
 
 	require_once('fpdf.php');

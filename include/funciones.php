@@ -102,7 +102,7 @@ function epagoc($mysqli,$fecha,$ref,$monto,$iva,$total,$factu,$mpago,$sfactu,$pr
 				//abono a proveedores
 					$cuenta2="201.01";
 					$tipom2=0;
-					operdiario($mysqli,$cuenta2,$tipoper,$tipom2,$ref,$monto,$fecha,$sfactu,$prov);
+					operdiario($mysqli,$cuenta2,$tipoper,$tipom2,$ref,$total,$fecha,$sfactu,$prov);
 				//abono a iva acreditable por pagar
 					$cuenta3="119.01";
 					$tipom3=1;
@@ -112,7 +112,11 @@ function epagoc($mysqli,$fecha,$ref,$monto,$iva,$total,$factu,$mpago,$sfactu,$pr
 					$tipom4=0;
 					operdiario($mysqli,$cuenta4,$tipoper,$tipom4,$ref,$iva,$fecha,$sfactu);
 				//actualizacion de orden de compra
-					$mysqli->query("UPDATE oc SET status=99,fechapago='$fecha',factura='$factu',arch='$arch',foliomov='$folio' WHERE idoc='$ref'");				
+				$archm;
+				if($arch!=NULL){
+					$archm= substr($arch,11);
+				}else{$archm = NULL;}
+					$mysqli->query("UPDATE oc SET status=99,fechapago='$fecha',factura='$factu',arch='$archm',foliomov='$folio' WHERE idoc='$ref'");				
 			//efectuar la operacion
 				$mysqli->commit();
 				$resul=0;

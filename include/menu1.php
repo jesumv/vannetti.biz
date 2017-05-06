@@ -37,7 +37,7 @@
                     <li><a><b>Administración</b></a>
                         <ul class="sub1">
                         	<li><a href="reggasto.php">Gastos</a></li>
-                            <li><a href="#">Clientes</a></li>
+                            <li><a href="clientes.php">Clientes</a></li>
                             <li><a href="proveedores.php">Proveedores</a></li>
                             <li><a href="productos.php">Productos</a></li>
                             <?php

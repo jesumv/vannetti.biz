@@ -877,7 +877,7 @@ function multiplica(){
 		
 		<div class="cajacent">
 			<label for"fact">Facturar?</label>
-	    	<input type="checkbox" data-role="flipswitch" id="fact" name="fact"/>
+	    	<input type="checkbox" data-role="flipswitch" id="fact" name="fact" checked/>
 		</div>
 			<div>
 				<label for="pcte" class="select">Cliente</label>
@@ -893,13 +893,13 @@ function multiplica(){
 				<fieldset id="tventa" name="tventa" data-role="controlgroup" data-type="horizontal">
 		    		<legend>Tipo de Venta</legend>
 		    		<label>
-		    			<input type="radio" id="rcredcon-a" name="rcredcon" value= "0" checked="checked"/>Mostrador
+		    			<input type="radio" id="rcredcon-a" name="rcredcon" value= "0"/>Mostrador
 		    		</label>
 		    		<label>
 		    			<input type="radio" id="rcredcon-b" name="rcredcon" value= "1" />Contado
 		    		</label>
 		    		<label>
-		    			<input type="radio" id="rcredcon-c" name="rcredcon" value= "2" />Credito
+		    			<input type="radio" id="rcredcon-c" name="rcredcon" value= "2"  checked="checked" />Credito
 		    		</label>
     			</fieldset>	
 

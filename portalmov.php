@@ -4,16 +4,37 @@
     }
     
     $funcbase = new dbutils;
+	
+	
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
     if (is_object($mysqli)) {
-/*** checa login***/
-       $funcbase->checalogin($mysqli);
+	/*** checa login***/
+	       $funcbase->checalogin($mysqli);
+		   
+	function fechainit($mysqli2){
+		/**esta funcion calcula el mes de reporte con base en el ultimo dato capturado**/
+		/** obtene la fecha mas reciente de cierre de mes, de la tabla saldos **/
+		$result= $mysqli2->query("SELECT MAX(fechafin) FROM saldos");
+		$row=mysqli_fetch_row($result);
+		$fechaini=$row[0];
+		return $fechaini;
+	}
+	
+	function fechatope($fechaini){
+		/**obtiene la fecha tope de la consulta**/
+		$fechaemp = date('Y-m-d', strtotime($fechaini. ' + 1 day'));
+		$ultdia= date('t \d\e M \d\e Y',strtotime($fechaemp));
+		return $ultdia;
+	}
+	/**obten fecha para consultas**/
+		$fechainic = fechainit($mysqli);
+		$fechafin = fechatope($fechainic);
 	   $result1=$mysqli->query("SELECT (SUM(CASE WHEN cuenta='401.01' THEN haber ELSE 0 END)+SUM(CASE WHEN cuenta='401.04' THEN haber ELSE 0 END))FROM DIARIO
-	    WHERE fecha >'2016-12-31'");
+	    WHERE fecha >'".$fechainic."'");
 	   $dato1=$result1->fetch_row();
 	   $result2=$mysqli->query("SELECT SUM(CASE WHEN cuenta='501.01' THEN debe ELSE 0 END)FROM DIARIO
-	   WHERE fecha >'2016-12-31'");
+	   WHERE fecha >'".$fechainic."'");
 	   $dato2=$result2->fetch_row();
 	   $result3=$mysqli->query("SELECT SUM(CASE WHEN cuenta='201.01' THEN haber ELSE 0 END)FROM DIARIO");
 	   $dato3=$result3->fetch_row();
@@ -32,7 +53,7 @@
 	   $result10=$mysqli->query("SELECT SUM(CASE WHEN cuenta='102.01' THEN haber ELSE 0 END)FROM DIARIO");
 	   $dato10=$result10->fetch_row();
 	   $result11=$mysqli->query("SELECT SUM(CASE WHEN cuenta LIKE'6%' THEN debe ELSE 0 END)+SUM(CASE WHEN cuenta LIKE'7%' THEN debe ELSE 0 END)FROM DIARIO
-	   WHERE fecha>'2016-12-31'");
+	   WHERE fecha>'".$fechainic."'");
 	   $dato11=$result11->fetch_row();
 	   $vta=number_format($dato1[0],2);
 	   $cvta=number_format($dato2[0],2);
@@ -92,7 +113,7 @@
 		<div class="ui-content">
 			<a href="#navpanel" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-bars">Navegaci&oacute;n</a>
 			<h2>INDICADORES DE DESEMPEÑO</H2>
-				<h2>MES DE NOVIEMBRE 2016</h2>
+				<h2> AL <?php echo $fechafin ?></h2>
   <table id="kpo">
   	<tr>
 	  	<th>INDICADOR</th>

@@ -348,8 +348,8 @@ $table2 = 'clientes';
 	    				<h4 id="avisor"></h4>
 	    			</div>
 	    			<div class="dialog-buttons">
-				      	<input type="submit" value="Registrar" id="regpago"/>
-				      	<button id="butAddCancel" class="button" style="margin-left: 10px">Cancelar</button>
+				      	<input type="submit" value="Registrar" id="regpago" class="button a"/>
+				      	<button id="butAddCancel" class="button b" style="margin-left: 10px">Cancelar</button>
 				    </div>
 	    		</form>
 	    	</div>
