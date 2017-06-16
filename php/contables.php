@@ -106,11 +106,12 @@
 		while ($fila = mysqli_fetch_array($query3)) {
 				echo"<tr>";
 					for ($i=0; $i < 7; $i++) {
-						if ($i>2) {
-							echo "<td>".number_format(floatval($fila[$i]),2)."</td>";
-						} else {
-							echo "<td>".$fila[$i]."</td>";
-						}		 	
+						If($i>2){
+							echo "<td>".number_format($fila[$i],2)."</td>";	
+						}else{
+							echo "<td>".$fila[$i]."</td>";	
+						}			
+								 	
 					}
 				echo"</tr>";
 		}
@@ -127,7 +128,8 @@
     	$fechai= mesmax($mysqli);
 		$ultcierre = ultfin($mysqli);
 		$fechaf = $fechai->modify('last day of');
-		$fechai2= mesmax($mysqli);
+		$fechai2= ultfin($mysqli);
+		$fechai2->modify('+1 day');
 		$result = $fechai2->format('Y-m-d');
 		$result2= $fechaf->format('Y-m-d');
 		echo "<div>
