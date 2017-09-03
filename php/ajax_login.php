@@ -3,10 +3,13 @@
       require('../include/' . strtolower($class) . '.class.php');
     }
     
+
     $funcbase = new dbutils;
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
     if (is_object($mysqli)) {
+    				$fechainic = $funcbase->fechainic($mysqli);
+					$mostrador = $funcbase->mostrador($mysqli);
 						 //asignacion de variables
 					  $myusername = $_POST['username'];
 					  $mypassword = $_POST['password'];
@@ -31,6 +34,8 @@
 					        $_SESSION['nivel']=$nivel;
 					        $_SESSION['empresa']=$empre;
 							$_SESSION['uemail']=$email;
+							$_SESSION['fechainic']=$fechainic;
+							$_SESSION['mostrador']=$mostrador;
 							$_SESSION['root'] = realpath($_SERVER["DOCUMENT_ROOT"]);
 							if($nivel<10){
 								echo "1";

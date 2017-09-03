@@ -142,7 +142,8 @@
 		$tipo= $_POST["tipo"];
 		$fecha=$_POST["fecha"];
 		$monto=$_POST["monto"];
-		$iva=$_POST["iva"];
+		//correcion cuando no hay iva
+		if(empty($_POST["iva"])){$iva=0;}else{$iva=$_POST["iva"];};
 		//numero de factura
 		$fact=$_POST["fact"];
 		$arch=$_POST["arch"];

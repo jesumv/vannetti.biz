@@ -44,6 +44,7 @@
 	$totiva=$_POST["totiva"];
 	$total=$_POST["total"];
 	$usu= $_SESSION['usuario'];
+	$most= $_SESSION['mostrador'];
 	//arreglo con datos de producto
 	$arts=$_POST['prods'];
 	//afectacion a bd
@@ -53,7 +54,7 @@
 		$table="pedidos";
 		//insercion como pedido
 			$mysqli->query("INSERT INTO $table(idclientes,arts,monto,iva,total,fecha,fechapago,tipovta,usu,status,facturar)
-			VALUES ($cte,$totarts,$montot,$totiva,$total,'$fechaconv','$fechaconv',0,'$usu',40,0)");
+			VALUES ($cte,$totarts,$montot,$totiva,$total,'$fechaconv','$fechaconv',0,'$usu',40,$most)");
 			//numero de pedido
 			$pedido=traepedmax($mysqli);
 			//CICLO POR CADA ARTICULO DEL PEDIDO
@@ -82,7 +83,7 @@
 					if($pesoact==1){$umulti=$caact;}else{$umulti=$pesoact;};		
 			//afectacion a inventario
 					$mysqli->query("INSERT INTO inventario(idproductos,tipomov,cant,fechamov,usu,idoc,factu,haber)
-					SELECT $idact,2,$umulti,'$fechaconv','$usu',$pedido,0,(costov*$umulti) FROM productos WHERE idproductos = $idact")or die (mysqli_error($mysqli));		
+					SELECT $idact,2,$umulti,'$fechaconv','$usu',$pedido,$most,(costov*$umulti) FROM productos WHERE idproductos = $idact")or die (mysqli_error($mysqli));		
 				$i++;	
 			}
 	//FIN DEL CICLO ARTICULOS
@@ -91,7 +92,7 @@
 				$sventas0=array_sum($vtas0);
 				$sventas16=array_sum($vtas16);	
 				//afectacion a diario
-				$resul=venta($mysqli,$fechaconv,$pedido,$sventas16,$sventas0,$totiva,0,0,$cte);			
+				$resul=venta($mysqli,$fechaconv,$pedido,$sventas16,$sventas0,$totiva,0,$most,$cte);			
 			//efectuar la operacion
 				$mysqli->commit();
 	}catch (Exception $e) {

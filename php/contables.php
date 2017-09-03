@@ -122,7 +122,12 @@
     $funcbase = new dbutils;
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
-	
+	 if (is_object($mysqli)) {
+/*** checa login***/
+       $funcbase->checalogin($mysqli);
+    } else {
+        //die ("<h1>'No se establecio la conexion a bd'</h1>");
+    }
 	/**trae fechas de la consulta**/
     if (is_object($mysqli)) {
     	$fechai= mesmax($mysqli);
@@ -132,10 +137,13 @@
 		$fechai2->modify('+1 day');
 		$result = $fechai2->format('Y-m-d');
 		$result2= $fechaf->format('Y-m-d');
+		echo "<h3> PHP List All Session Variables</h3>";
+   		foreach ($_SESSION as $key=>$val)
+    		echo $key." ".$val."<br/>";
 		echo "<div>
 				<table border='1' cellspacing='5' cellpadding='5' style='width:80%'>
 					<tr><th colspan='7'>";
-					echo "BALANZA DE COMPROBACION DEL ".$result." AL ".$result2."</th></tr>";
+					echo "BALANZA DE COMPROBACION DEL ".$_SESSION['fechainic']." AL ".$result2."</th></tr>";
 					echo "<tr><th>CUENTA</th><th>DESCRIPCION</th><th>NAT</th><th>INICIAL</th><th>DEBE</th><th>HABER</th><th>SALDO</th></tr>";
 		          	$tabla=balanza($mysqli,$ultcierre);
 		    echo"</table>
