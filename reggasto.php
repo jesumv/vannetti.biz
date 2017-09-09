@@ -270,7 +270,7 @@ function saldobanco($mysqli){
    				var cuenta = document.getElementById("cuenta");
    				var elec = document.getElementById("smpago").value;
    				if(elec==28){
-   					cuenta.value='2648';
+   					cuenta.value='8145';
    				}
    				cuenta.focus();
    			}

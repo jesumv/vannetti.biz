@@ -60,7 +60,7 @@ $table2 = 'clientes';
    <link rel="stylesheet" type="text/CSS" href="css/dropdown_two.css" />
    <link rel="shortcut icon" href="img/logomin.gif" />  
    <link rel="apple-touch-icon" href="img/logomin.gif">
-   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="js/jquery3/jquery-3.0.0.min.js"></script>
    <script>
    'use strict';
    	(function() { 	

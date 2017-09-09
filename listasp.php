@@ -27,7 +27,7 @@
 	<link rel="apple-touch-icon" href="img/logomin.gif">
 	<link rel="stylesheet" href= "css/jquery.mobile-1.4.5.min.css" />
 	<link rel="stylesheet" href= "css/movil.css" />
-	<script src="js/jquery.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="js/jquery.mobile-1.4.5.min.js"></script>
 	<script>
 	'use strict';

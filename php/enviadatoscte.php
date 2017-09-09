@@ -38,7 +38,7 @@
 	   		$sqlCommand= "INSERT INTO $table (razon_social,rfc,nom_corto,domcalle,domnoext,domnoint,domcp,domcol,dommun,domedo,tel1,
 	   		tel2,cel,contacto,email,nivel,usu,diascred,status)
 	    	VALUES ('$razon', '$rfc','$corto','$calle','$noext','$noint','$cp','$col','$mun','$edo','$tel1',
-	    	'$tel2', '$telc','$cont','$corr','$nivel','$diasc','$usu',0)";
+	    	'$tel2', '$telc','$cont','$corr','$nivel','$usu','$diasc',1)";
 
 	    	$query=mysqli_query($mysqli, $sqlCommand) or die ('error en alta cliente: '.mysqli_error($mysqli)); 
 			
