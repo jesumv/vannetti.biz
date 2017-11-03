@@ -15,6 +15,47 @@ require 'include/funciones.php';
         //die ("<h1>'No se establecio la conexion a bd'</h1>");
     }
     
+function consultad($mysqli){	
+//esta funcion crea la tabla con los ultimos 10 movimientos de diario
+$consulta="SELECT iddiario,fecha,cuenta,subcuenta,referencia,aux,debe,haber,facturar,coment,arch FROM diario ORDER BY iddiario DESC LIMIT 10";
+$query= mysqli_query($mysqli, $consulta) or die ("ERROR EN CONSULTA ULTIMOS MOVTOS. ".mysqli_error($mysqli));
+		echo"<DIV style='width:80%'><h3>ULTIMOS DIEZ MOVIMIENTOS DE DIARIO</h3><table border='1' cellspacing='5' cellpadding='5'";
+		echo"<tr><th>iddiario</th><th>fecha</th><th>cuenta</th><th>subcuenta</th><th>refer</th><th>aux</th><th>debe</th>
+		<th>haber</th><th>fact</th><th>coment</th><th>archivo</th></tr>";
+		while ($fila = mysqli_fetch_array($query)) {
+				echo"<tr>";
+					for ($i=0; $i < 11; $i++) {
+							echo "<td>".$fila[$i]."</td>";		 	
+					}
+				echo"</tr>";
+		}
+		echo "</table></DIV>";
+}
+
+function saldobanco($mysqli){
+	//esta funcion presenta el saldo de bancos
+	$consulta1=$mysqli->query("SELECT SUM(CASE WHEN cuenta='102.01' THEN debe ELSE 0 END)FROM DIARIO");
+	$debe=$consulta1->fetch_row();
+	$rdebe=$debe[0];
+	$consulta2=$mysqli->query("SELECT SUM(CASE WHEN cuenta='102.01' THEN haber ELSE 0 END)FROM DIARIO");
+	$haber=$consulta2->fetch_row();
+	$rhaber=$haber[0];
+	$bancos=number_format(($rdebe-$rhaber),2);
+	//caja
+	$consulta3=$mysqli->query("SELECT SUM(CASE WHEN cuenta='101.01' THEN debe ELSE 0 END)FROM DIARIO");
+	$debe3=$consulta3->fetch_row();
+	$rdebe3=$debe3[0];
+	$consulta4=$mysqli->query("SELECT SUM(CASE WHEN cuenta='101.01' THEN haber ELSE 0 END)FROM DIARIO");
+	$haber4=$consulta4->fetch_row();
+	$rhaber4=$haber4[0];
+	$caja=number_format(($rdebe3-$rhaber4),2);
+	
+	
+	echo "<table border='2'>
+				<tr><th>SALDO EN BANCOS:</th><th>".$bancos."</th><th>___</th><th>SALDO EN CAJA:</th><th>".$caja."</th></tr>
+		</table>";
+}
+	
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,6 +72,7 @@ require 'include/funciones.php';
    <link rel="shortcut icon" href="img/logomin.gif" />  
    <link rel="apple-touch-icon" href="img/logomin.gif">
    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+   
    <script>
    	'use strict';
    	(function() {
@@ -134,7 +176,7 @@ require 'include/funciones.php';
 	    							var resul= data.resul;
 	    							document.getElementById('rgasto').reset();
 									app.toggleAddDialog(false);
-									
+									location.reload(true);
 	    						})
 	    						.fail(function(xhr, textStatus, errorThrown ) {		
 	    							document.write("ERROR EN REGISTRO:"+errorThrown);
@@ -169,6 +211,7 @@ require 'include/funciones.php';
 							 .done(function(data) {
 	    							var resul= data.resul;
 									app.toggleAddDialog2(false);
+									location.reload(true);
 	    						})
 	    						.fail(function(xhr, textStatus, errorThrown ) {		
 	    							document.write("ERROR EN REGISTRO");
@@ -227,7 +270,7 @@ require 'include/funciones.php';
    				var cuenta = document.getElementById("cuenta");
    				var elec = document.getElementById("smpago").value;
    				if(elec==28){
-   					cuenta.value='2648';
+   					cuenta.value='8145';
    				}
    				cuenta.focus();
    			}
@@ -262,6 +305,7 @@ require 'include/funciones.php';
 		    </div>
 	    </header>
 		<main class="main">
+
 				 <br/>
 				 <h2>REGISTRO DE GASTOS Y OTROS</h2>
 				  
@@ -277,6 +321,10 @@ require 'include/funciones.php';
 				  	<button class="button c" type="button" id="botont">Traspasos</button>
 				  </div>
 				  <br />
+				   <?php
+				   saldobanco($mysqli);
+				  	consultad($mysqli);
+				  ?>
 		 </main>
 		 <!-- caja dialogo registro pago -->
 		  <div class="dialog-container" id="dialogog">

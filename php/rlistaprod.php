@@ -8,7 +8,7 @@
     $funcbase = new dbutils;
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
-	$pedido= $_GET["pedido"];
+	$nivel= $_GET["nivel"];
 	
 if (is_object($mysqli)) {
 

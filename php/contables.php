@@ -106,11 +106,12 @@
 		while ($fila = mysqli_fetch_array($query3)) {
 				echo"<tr>";
 					for ($i=0; $i < 7; $i++) {
-						if ($i>2) {
-							echo "<td>".number_format(floatval($fila[$i]),2)."</td>";
-						} else {
-							echo "<td>".$fila[$i]."</td>";
-						}		 	
+						If($i>2){
+							echo "<td>".number_format($fila[$i],2)."</td>";	
+						}else{
+							echo "<td>".$fila[$i]."</td>";	
+						}			
+								 	
 					}
 				echo"</tr>";
 		}
@@ -121,19 +122,28 @@
     $funcbase = new dbutils;
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
-	
+	 if (is_object($mysqli)) {
+/*** checa login***/
+       $funcbase->checalogin($mysqli);
+    } else {
+        //die ("<h1>'No se establecio la conexion a bd'</h1>");
+    }
 	/**trae fechas de la consulta**/
     if (is_object($mysqli)) {
     	$fechai= mesmax($mysqli);
 		$ultcierre = ultfin($mysqli);
 		$fechaf = $fechai->modify('last day of');
-		$fechai2= mesmax($mysqli);
+		$fechai2= ultfin($mysqli);
+		$fechai2->modify('+1 day');
 		$result = $fechai2->format('Y-m-d');
 		$result2= $fechaf->format('Y-m-d');
+		echo "<h3> PHP List All Session Variables</h3>";
+   		foreach ($_SESSION as $key=>$val)
+    		echo $key." ".$val."<br/>";
 		echo "<div>
 				<table border='1' cellspacing='5' cellpadding='5' style='width:80%'>
 					<tr><th colspan='7'>";
-					echo "BALANZA DE COMPROBACION DEL ".$result." AL ".$result2."</th></tr>";
+					echo "BALANZA DE COMPROBACION DEL ".$_SESSION['fechainic']." AL ".$result2."</th></tr>";
 					echo "<tr><th>CUENTA</th><th>DESCRIPCION</th><th>NAT</th><th>INICIAL</th><th>DEBE</th><th>HABER</th><th>SALDO</th></tr>";
 		          	$tabla=balanza($mysqli,$ultcierre);
 		    echo"</table>

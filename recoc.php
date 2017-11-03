@@ -192,10 +192,10 @@
 	  		//quitar cajas de peso
 			 var pesos = document.getElementById('dialpeso').getElementsByTagName("input");
 			 var x = pesos.length;
-			 $("#pidepeso").popup("close");
 			 for(var i=0; i<x; i++) {
 			 	pesos[0].parentNode.removeChild(pesos[0]);
 			 }
+			 $("#pidepeso").popup("close");
 			 //limpiar titulo
 			 document.getElementById("tpeso").innerHTML ="PESO ARTICULO(S) EN ";
 		}
@@ -235,8 +235,8 @@
 			document.getElementById("costof"+reng).innerHTML= costosum.toFixed(2);
 			document.getElementById("cpeso"+reng).innerHTML= pesosum;
 			if(civa==1){
-				ivacalc = calcivar(costosum);
-				document.getElementById("iva"+reng).innerHTML= ivacalc.ToFixed(2);
+				ivacalc = calcivar(costosum,reng);
+				document.getElementById("iva"+reng).innerHTML= ivacalc.toFixed(2);
 			}
 			calctot();
 			quita();
@@ -278,7 +278,8 @@
 		function calcivar(costo,reng){
 			//esta funcion calcula el iva de un art. y lo registra en HMTL
 			var ivaact= costo *.16;
-			document.getElementById("iva"+reng).innerHTML= ivaact.toFixed(2);	
+			document.getElementById("iva"+reng).innerHTML= ivaact.toFixed(2);
+			return ivaact;	
 		}
 		
 		function calcosto(reng){

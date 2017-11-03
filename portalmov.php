@@ -65,7 +65,7 @@
 	   $prov=number_format($dato3[0]-$dato4[0],2);
 	   $cxc=number_format($dato5[0]-$dato6[0],2);
 	   $caja=number_format($dato7[0]-$dato8[0],2);
-	   $bancos=number_format($dato9[0]-$dato10[0]-53.17,2);
+	   $bancos=number_format($dato9[0]-$dato10[0],2);
 	   
 	   $mysqli->close(); 
     } else {

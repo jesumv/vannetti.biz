@@ -30,7 +30,7 @@
   <link rel="stylesheet" type="text/css" href="css/plant1.css">
   <link rel="shortcut icon" href="img/logomin.gif" />  
   <link rel="apple-touch-icon" href="img/logomin.gif">
-  <link rel="stylesheet" href="js/jquery-ui.min.css">
+  <link rel="stylesheet" href="css/jquery-ui.min.css">
   <script src="js/jquery.js"></script>
   <script src="js/jquery-ui.min.js"></script>
    <script>

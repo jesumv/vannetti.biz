@@ -83,7 +83,27 @@
             }
         }
 
-        
+       public function fechainic($mysqli){
+	//establece la fecha de inicio para consultas de movimientos
+	/*** obtiene el valor de la fecha maxima de cierre ***/
+		$sql = "SELECT MAX(fechafin) FROM saldos;";
+			// Execute the query here now
+			$query=mysqli_query($mysqli, $sql) or die ("ERROR EN CONSULTA DE FECHA saldo MAXIMA ".mysqli_error($mysqli));
+			$row = mysqli_fetch_row($query);
+			$fechamax= new DateTime($row[0]);
+			$fechamax->modify('+1 day');
+			$result = $fechamax->format('Y-m-d');
+			return $result;
+}
+	   
+	   public function mostrador($mysqli){
+	   	//establece el valor de facturacion para ventas mostrador
+	   	$sql = "SELECT valorent FROM parametros WHERE idparametros = 3";
+		$query=mysqli_query($mysqli, $sql) or die ("ERROR EN CONSULTA DE PARAMETROS INIC ".mysqli_error($mysqli));
+		$row = mysqli_fetch_row($query);
+		$result = $row[0];
+		return $result;	
+	   }
         public function leetodos($mysqli,$table,$filtro='1'){
           //***lee todos los datos de una tabla, un registro o todos los registros, de acuerdo con el argumento $filtro ***/
             $sql= "SELECT * FROM $table WHERE ".$filtro;
