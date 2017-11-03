@@ -104,7 +104,7 @@ require 'include/funciones.php';
 		   				if(nfactu==""){return -2}
 		   				if(arch==""){return -3}
 		   				if(mpag==0){return -4}else if(mpag>1 && ctaact==""){return -5}
-		   				else if(mpag>1 && ctaact==""){return-5}else if(mpag>2 && mpag<4 && folioact==""){return-6};
+		   				else if(mpag>1 && mpag<4 && folioact==""){return-6};
 		   		}	
 		   	}
 		   	  
@@ -223,12 +223,21 @@ require 'include/funciones.php';
 						//metodo de pago
 				document.getElementById('smpago').addEventListener('change',function(){
 						var mpago=document.getElementById('smpago').value;
-						if(mpago!=1){
-							document.getElementById('cuenta').value="8145";
-							document.getElementById('cuenta').focus()
-							}else{
-							document.getElementById('regpago').focus()
-							}
+
+						switch(mpago) {
+					    case "2":
+					    case "3":
+					    		document.getElementById('cuenta').value="8145";
+					    		document.getElementById('folio').focus()
+					        break;
+					    case "28":
+					    	document.getElementById('cuenta').value="2730";
+					    	document.getElementById('folio').focus()
+					        break;
+					    default:
+					    	document.getElementById('regpago').focus()
+					}
+
 						});
 						//cuenta
 						document.getElementById('cuenta').addEventListener('change',function(){
@@ -365,6 +374,7 @@ require 'include/funciones.php';
 							<option value="02">Cheque</option>
 							<option value="03">Transferencia</option>
 							<option value="04">Tarjetas de Credito</option>
+							<option value="28">Tarjetas de Débito</option>
 							<option value="99">Otros</option>
          				</select>
          				<label>Cuenta: </label><input type="text" name="cuenta"  id="cuenta" class="cajac" maxlength="4" />
