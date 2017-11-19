@@ -1,4 +1,5 @@
 <?php
+/*** este script registra el envio de una oc a proveedor***/ 
 /*** Autoload class files ***/ 
     function __autoload($class){
       require('../include/' . strtolower($class) . '.class.php');
@@ -12,6 +13,7 @@
     	$funcbase->checalogin($mysqli);
 		
 	function traeoc($mysqli){
+	//funcion para traer el numero de la ultima oc
 		$req = "SELECT MAX(idoc) FROM oc where 1"; 
     	$result = mysqli_query($mysqli,$req);
 		$row=mysqli_fetch_array($result,MYSQLI_NUM);
@@ -28,6 +30,7 @@
 	$preciou = $_POST["preciou"];
 	$preciot=$_POST["preciot"];
 	$total=$_POST["total"];
+	$tpago=$_POST["tpago"];
 	$credito=$_POST["cred"];
 	$facturar=$_POST["fact"];
 	$jsondata = array();
@@ -35,9 +38,10 @@
 	$arts= array_sum($cants);
 	$usu= $_SESSION['usuario'];
 	$iva=0;
+
 	//creacion de oc en tabla oc
-	$sqlCommand= "INSERT INTO oc (idproveedores,arts,monto,total,usu,status,facturar,credito)
-	    	VALUES ($prov,$arts,$total,$total,'$usu',1,$facturar,$credito)";
+	$sqlCommand= "INSERT INTO oc (idproveedores,arts,monto,total,usu,status,facturar,credito,tpago)
+	    	VALUES ($prov,$arts,$total,$total,'$usu',1,$facturar,$credito,'$tpago')";
 	    	$query=mysqli_query($mysqli, $sqlCommand)or die("error en alta oc:".mysqli_error($mysqli)); 
 			if($query){				
 				//obtencion de numero de orden de compra
@@ -62,6 +66,4 @@
 
 	//salida de respuesta
 		 echo json_encode($jsondata);
-    }else{
-    	
-    }
+    }else{};

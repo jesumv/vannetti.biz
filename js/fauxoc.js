@@ -68,6 +68,16 @@ function hazvisib(visible){
 		    }
 };
 
+function hazvisib2(visible){
+	var tabla = document.getElementById('tpago');
+		    if (visible) {
+		      tabla.classList.add('tablaocultav');
+		      
+		    } else {
+		      tabla.classList.remove('tablaocultav');
+		    }
+};
+
 function addtot(){
 	
 	//se añade la fila de totales

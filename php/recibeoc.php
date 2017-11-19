@@ -1,4 +1,6 @@
 <?php
+/***Este script registra en la bd los datos de una  orden de compra recibida***/ 
+/*** afectando diario,inventario y artsoc ***/ 
 /*** Autoload class files ***/ 
     function __autoload($class){
       require('../include/' . strtolower($class) . '.class.php');
@@ -9,6 +11,8 @@
 	
 	function compra($mysqli,$monto,$refe,$tipo,$prov,$iva,$fact,$fechaconv ){
 		//esta funcion registra en el diario una compra a credito
+		//normalizacion de iva a 0  si no se provee
+		if(!$iva){$iva =0;};
 			$cargo="115.01";
 			$total = $monto+$iva;
 		switch($tipo){
@@ -30,9 +34,11 @@
 					$cargo2="119.01";
 					$cabono="201.01";
 				//cargo
-					$sqlmov ="INSERT INTO diario(cuenta,referencia,debe,fecha,facturar)VALUES($cargo,'$refe',$monto,'$fechaconv',$fact)";
+					$sqlmov ="INSERT INTO diario(cuenta,referencia,debe,fecha,facturar)
+                    VALUES($cargo,'$refe',$monto,'$fechaconv',$fact)";
 					$querydiac = mysqli_query($mysqli, $sqlmov) or die ('error en cargo1: '.mysqli_error($mysqli));
-					$sqlmov ="INSERT INTO diario(cuenta,referencia,debe,fecha,facturar)VALUES($cargo2,'$refe',$iva,'$fechaconv',$fact)";
+					$sqlmov ="INSERT INTO diario(cuenta,referencia,debe,fecha,facturar)
+                    VALUES($cargo2,'$refe',$iva,'$fechaconv',$fact)";
 					$querydiac = mysqli_query($mysqli, $sqlmov) or die ('error en cargo2: '.mysqli_error($mysqli));	
 				//abono
 					$sqlmov ="INSERT INTO diario(cuenta,subcuenta,referencia,haber,fecha,facturar)VALUES($cabono,$prov,'$refe',$total,'$fechaconv',$fact )";
@@ -100,8 +106,7 @@ function tiposurt($mysqli,$oc){
 		$datos[2] = $row[2];
 		return $datos;
 	}
-	
-	
+		
     $funcbase = new dbutils;
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();

@@ -1,5 +1,6 @@
 <?php
 /*** Esta rutina obtiene todos los productos para mostrar en autocomplete***/
+/*** y otros datos necesarios de la orden de compra***/
 	/*** Autoload class files ***/ 
     function __autoload($class){
       require('../include/' . strtolower($class) . '.class.php');
@@ -12,8 +13,9 @@
 if(!isset($_GET['oc'])){$result= 0 ;}else{
 	/**trae datos de ordenes de compra sin surtir**/
     if (is_object($mysqli)) {
-
     	$oc= $_GET['oc'];
+    	//obtener datos de la orden de compra
+    	//obtener datos de los articulos
     	$sqlCommand = "SELECT t1.idartsoc, t1.cant, t2.nom_corto, t2.speso, t2.costo,t2.iva,t3.nombre AS ud FROM artsoc AS t1 LEFT JOIN productos AS t2
     	ON t1.idproductos = t2.idproductos INNER JOIN  unidades AS t3 ON t2.unidad= t3.idunidades WHERE t1.idoc = ".$oc." AND t1.status = 1 ORDER BY t2.nom_corto";		
 	 // Execute the query here now
@@ -36,4 +38,3 @@ if(!isset($_GET['oc'])){$result= 0 ;}else{
 }
 	 mysqli_close($mysqli);
 	 echo json_encode($result);	 	
-?>
