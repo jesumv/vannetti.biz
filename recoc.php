@@ -567,6 +567,7 @@
 		<a href="#navpanel" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-bars">Navegaci&oacute;n</a>
 			<form id="forma" method="post" enctype="application/x-www-form-urlencoded">
 				<div class="cajacent">
+				<h3 id="tpago"></h3>
 					<label for ="fecha">Fecha:</label>
 					 <input type="date" name="fecha" id="fecha">
 				</div>
@@ -612,7 +613,7 @@
 			<label id="tpeso">PESO ARTICULO(S) EN </label>
 			<div id="dialpeso">
 				
-			</div>
+		</div>
 			 
 		</div>
 		

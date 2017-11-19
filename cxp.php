@@ -223,14 +223,7 @@ require 'include/funciones.php';
 						//metodo de pago
 				document.getElementById('smpago').addEventListener('change',function(){
 						var mpago=document.getElementById('smpago').value;
-<<<<<<< Upstream, based on branch 'version2.0' of https://github.com/jesumv/vannetti.biz.git
-						if(mpago!=1){
-							document.getElementById('cuenta').value="8145";
-							document.getElementById('cuenta').focus()
-							}else{
-							document.getElementById('regpago').focus()
-							}
-=======
+
 						switch(mpago) {
 					    case "2":
 					    case "3":
@@ -245,7 +238,6 @@ require 'include/funciones.php';
 					    	document.getElementById('regpago').focus()
 					}
 
->>>>>>> c2cf349 aumento de metodo de pago de oc tarjeta debito
 						});
 						//cuenta
 						document.getElementById('cuenta').addEventListener('change',function(){
