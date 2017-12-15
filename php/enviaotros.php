@@ -7,7 +7,8 @@
     $funcbase = new dbutils;
 	$resul;
 	
-	function movdiario($mysqli,$cuenta,$tipom,$ref,$monto,$fecha,$sfactu,$concep,$subcta=NULL,$arch=NULL){
+	function movdiario($mysqli,$cuenta,$tipom,$ref,$monto,$fecha,$concep,$subcta=NULL,$arch=NULL){
+	    //todos los gastos son facturar 1
 		//esta funcion realiza 1 movimiento contable en diario. $tipom determina
 		//determinacion de tipo de movimiento
 		//preparacion de string arch
@@ -24,7 +25,7 @@
 		try{
 			$mysqli->autocommit(false);
 			$mysqli->query("INSERT INTO diario(cuenta,referencia,$colum,fecha,facturar,subcuenta,coment,arch)
-			VALUES($cuenta,'$ref',$monto,'$fecha',$sfactu,'$subcta','$concep','$archm')");
+			VALUES($cuenta,'$ref',$monto,'$fecha',1,'$subcta','$concep','$archm')");
 			//efectuar la operacion
 			$mysqli->commit();
 			$resul=0;
@@ -36,14 +37,14 @@
 		return $resul;
 }
 	
-	function movivag($mysqli,$tipo,$ref,$monto,$fecha,$sfactu,$concep){
+	function movivag($mysqli,$tipo,$ref,$monto,$fecha,$concep){
 		//registra movimientos en iva acreditable o por pagar, dependiendo del tipo de operacion
 		//tipo es el metodo de pago elegido
 			$cuenta="118.01";	
 		try{
 			$mysqli->autocommit(false);
 			$mysqli->query("INSERT INTO diario(cuenta,referencia,debe,fecha,facturar,coment)
-			VALUES($cuenta,'$ref',$monto,'$fecha',$sfactu,'$concep')")or die (mysqli_error($mysqli));;
+			VALUES($cuenta,'$ref',$monto,'$fecha',1,'$concep')")or die (mysqli_error($mysqli));;
 			//efectuar la operacion
 			$mysqli->commit();
 			$resul=0;
@@ -80,18 +81,19 @@
 	function cgasto($tipo,$mpago,$ndeduc){
 		$cargo;
 		$abono;
+        
 		switch($tipo){
 			//gastos generales
 			case 1:
-				$cargo="601";
+			    if ($ndeduc== 0){$cargo="601.83";}else{$cargo="601";};
 			break;
 			//gastos de venta
 			case 2:
-				$cargo="602";
+			    if ($ndeduc== 0){$cargo="602.83";}else{$cargo="602";};
 			break;
 			//gastos de administracion
 			case 3:
-				$cargo="603";
+			    if ($ndeduc== 0){$cargo="603.81";}else{$cargo="603";};
 			break;
 			//gastos financieros
 			case 4:
@@ -99,7 +101,7 @@
 			break;
 			//reembolso de gastos
 			case 5:
-				$cargo="205";
+				$cargo="205.06";
 			break;
 			//otros gastos
 			default:
@@ -171,15 +173,15 @@
 		switch($tipo){
 			case "g":
         		//definicion de cuentas
-				$cuentas=cgasto($catg,$mpago,$ndeduc);
+				$cuentas=cgasto($catg,$mpago,$facturar);
 				$cargo=$cuentas['c'];
 				$abono=$cuentas['a'];
 				//cargo a gastos
-				$resul1=movdiario($mysqli,$cargo,0,$fact,$monto,$fecha,$facturar,$concep,NULL,$arch);
+				$resul1=movdiario($mysqli,$cargo,0,$fact,$monto,$fecha,$concep,NULL,$arch);
 				//iva
-				$resul3=movivag($mysqli,$mpago,$fact,$iva,$fecha,$facturar,$concep);
+				$resul3=movivag($mysqli,$mpago,$fact,$iva,$fecha,$concep);
 				//abono a cuenta origen del pago
-				$resul2=movdiario($mysqli,$abono,1,$fact,$total,$fecha,$facturar,$concep,$cuenta);
+				$resul2=movdiario($mysqli,$abono,1,$fact,$total,$fecha,$concep,$cuenta);
         	break;	
 			default:
 				$resul1=movtras($mysqli, $origen, $destino, $monto, $fecha, $concep);
