@@ -77,7 +77,7 @@
 		
 	}
 	
-	function cgasto($tipo,$mpago){
+	function cgasto($tipo,$mpago,$ndeduc){
 		$cargo;
 		$abono;
 		switch($tipo){
@@ -131,6 +131,12 @@
 		return $array;
 	}
 	
+	function ndeduc($nfac,$narch){
+	    //esta funcion determina si un gasto es deducible
+	    $ndeduc;
+	    if(empty($nfac)  && empty($narch )){$ndeduc=0;}else{$ndeduc= 1;};
+	    return $ndeduc;
+	}
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
     if(is_object($mysqli)){
@@ -159,13 +165,13 @@
 		$resul2=0;
 		$resul3=0;
 		//determinacion de facturacion
-		$facturar;
-		if(empty($_POST["fact"])  && empty($_POST["arch"] )){$facturar=0;}else{$facturar= 1;};
+		$facturar = ndeduc($fact,$arch);
+		
 		//afectacion a bd
 		switch($tipo){
 			case "g":
         		//definicion de cuentas
-				$cuentas=cgasto($catg,$mpago);
+				$cuentas=cgasto($catg,$mpago,$ndeduc);
 				$cargo=$cuentas['c'];
 				$abono=$cuentas['a'];
 				//cargo a gastos
