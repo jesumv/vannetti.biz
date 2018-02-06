@@ -97,7 +97,7 @@
 			break;
 			//gastos financieros
 			case 4:
-				$cargo="701";
+				$cargo="701.1";
 			break;
 			//reembolso de gastos
 			case 5:
