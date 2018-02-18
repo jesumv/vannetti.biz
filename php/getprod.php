@@ -14,7 +14,7 @@ $cad = "idproductos=".$idprod;
 /**trae datos del producto solicitado**/
     if (is_object($mysqli)) {
     	$sqlCommand = "SELECT idproveedores,grupo,nombre,nom_corto,nom_cat,codigo,unidad,cant,cbarras,
-    	costo,costov,descripcion,iva,speso,precio1,precio2,precio3,spesov FROM productos WHERE ".$cad;		
+    	costo,costov,descripcion,iva,speso,precio1,precio2,precio3,precio4,spesov FROM productos WHERE ".$cad;		
 	 // Execute the query here now
 			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE PRODUCTO ".mysqli_error($mysqli));
 //inicializacion de arreglo
@@ -24,7 +24,7 @@ $cad = "idproductos=".$idprod;
 			 	'codigo'=>$tempo['codigo'],'unidad'=>$tempo['unidad'],'cant'=>$tempo['cant'],
 			 	'cbarras'=>$tempo['cbarras'],'costo'=>$tempo['costo'],'costov'=>$tempo['costov'],'desc'=>$tempo['descripcion'],
 			 	'iva'=>$tempo['iva'],'speso'=>$tempo['speso'],'pr1'=>$tempo['precio1'],'pr2'=>$tempo['precio2'],
-				'pr3'=>$tempo['precio3'],'spesov'=>$tempo['spesov']);
+			 	    'pr3'=>$tempo['precio3'],'pr4'=>$tempo['precio4'],'spesov'=>$tempo['spesov']);
 			 };
 	/* liberar la serie de resultados */
 			  mysqli_free_result($query1);			  
