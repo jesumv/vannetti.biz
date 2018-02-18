@@ -44,7 +44,7 @@
 		try{
 			$mysqli->autocommit(false);
 			$mysqli->query("INSERT INTO diario(cuenta,referencia,debe,fecha,facturar,coment)
-			VALUES($cuenta,'$ref',$monto,'$fecha',1,'$concep')")or die (mysqli_error($mysqli));;
+			VALUES($cuenta,'$ref',$monto,'$fecha',1,'$concep')")or die (mysqli_error($mysqli));
 			//efectuar la operacion
 			$mysqli->commit();
 			$resul=0;
