@@ -22,6 +22,7 @@
 		$refer= $_POST["oc"];
 		$idprov=$_POST["idprov"];
 		$fecha=$_POST["fecha"];
+		$saldoi=$_POST["saldoi"];
 		$factura=$_POST["factu"];
 		$arch=$_POST["arch"];
 		$metpago=$_POST["metpago"];
@@ -32,12 +33,15 @@
 		$subt= $_POST["subt"];
 		$iva= $_POST["iva"];
 		$total= $_POST["total"];	
+		$montop = $_POST["monto"];
+		$saldof=$saldoi-$montop;
 		//afectacion a bd
-			$resul=epagoc($mysqli, $fecha,$refer,$subt,$iva,$total,$factura,$metpago,$sfact,$idprov,$folio,$arch,$cta);
+			$resul=epagoc($mysqli,$fecha,$refer,$subt,$iva,$total,$saldoi,$factura,$metpago,$sfact,$idprov,$folio,$montop,$saldof,$arch,$cta);
 			mysqli_close($mysqli);
 	}else{
 				$resul=-1;
 			}
 //salida
 		$jsondata['resul'] = $resul;
+		$jsondata['saldof'] = $saldof;
    		echo json_encode($jsondata);	

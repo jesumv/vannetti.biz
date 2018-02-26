@@ -87,8 +87,27 @@ function epagoped($mysqli,$fecha,$ref,$monto,$iva,$total,$factu,$mpago,$sfactu,$
 	return $resul;
 }
 
-function epagoc($mysqli,$fecha,$ref,$monto,$iva,$total,$factu,$mpago,$sfactu,$prov,$folio,$arch=NULL,$cta){
+
+function defiva($subt,$saldoi,$pago){
+    //define el monto a aplicar a iva
+    $pagoiva;
+   $resto = $saldoi -$subt;
+   if($resto >0){
+       // queda iva por aplicar
+       if($resto>$pago){$pagoiva=$pago;}else{$pagoiva=$resto;}
+   }else{
+       //todo a capital
+       $pagoiva = 0;
+   }
+   return $pagoiva;
+}
+
+function epagoc($mysqli,$fecha,$ref,$monto,$iva,$total,$saldoi,$factu,$mpago,$sfactu,$prov,$folio,$montop,$saldof,$arch=NULL,$cta){
 	//registra pago de una orden de compra
+	//define los montos de pago
+	$pagoiva =  defiva($monto,$saldoi,$montop);
+	//definicion del status de pago
+	if($montop<$saldoi){$status = 90;}else{$status = 99;};
 			try{
 				$mysqli->autocommit(false);
 			//la referencia es oc
@@ -98,25 +117,25 @@ function epagoc($mysqli,$fecha,$ref,$monto,$iva,$total,$factu,$mpago,$sfactu,$pr
 					$cuenta1=metpago($mpago);
 					//tipo 0 es debe
 					$tipom1=1;
-					operdiario($mysqli,$cuenta1,$tipoper,$tipom1,$ref,$total,$fecha,$sfactu,$cta);
+					operdiario($mysqli,$cuenta1,$tipoper,$tipom1,$ref,$montop,$fecha,$sfactu,$cta);
 				//abono a proveedores
 					$cuenta2="201.01";
 					$tipom2=0;
-					operdiario($mysqli,$cuenta2,$tipoper,$tipom2,$ref,$total,$fecha,$sfactu,$prov);
+					operdiario($mysqli,$cuenta2,$tipoper,$tipom2,$ref,$montop,$fecha,$sfactu,$prov);
 				//abono a iva acreditable por pagar
 					$cuenta3="119.01";
 					$tipom3=1;
-					operdiario($mysqli,$cuenta3,$tipoper,$tipom3,$ref,$iva,$fecha,$sfactu);
+					operdiario($mysqli,$cuenta3,$tipoper,$tipom3,$ref,$pagoiva,$fecha,$sfactu);
 				//cargo a iva acreditable pagado
 					$cuenta4="118.01";
 					$tipom4=0;
-					operdiario($mysqli,$cuenta4,$tipoper,$tipom4,$ref,$iva,$fecha,$sfactu);
+					operdiario($mysqli,$cuenta4,$tipoper,$tipom4,$ref,$pagoiva,$fecha,$sfactu);
 				//actualizacion de orden de compra
 				$archm;
 				if($arch!=NULL){
 					$archm= substr($arch,11);
 				}else{$archm = NULL;}
-					$mysqli->query("UPDATE oc SET status=99,fechapago='$fecha',factura='$factu',arch='$archm',foliomov='$folio' WHERE idoc='$ref'");				
+					$mysqli->query("UPDATE oc SET status=$status,fechapago='$fecha',saldo=$saldof,factura='$factu',arch='$archm',foliomov='$folio' WHERE idoc='$ref'");				
 			//efectuar la operacion
 				$mysqli->commit();
 				$resul=0;

@@ -23,6 +23,10 @@
 .button:hover {
     background-color: #c0c0c0; /* Green */
 }
+/*cambia el fondo de las cajas deshabilitadas*/
+input[type="text"]:disabled {
+    background: #dddddd;
+}
 
 /*estilos para input dentro de dialogo*/
 .cajal {
