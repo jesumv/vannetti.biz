@@ -261,9 +261,9 @@ require 'include/funciones.php';
 
 						//monto del pago
 						document.getElementById('monto').addEventListener('change',function(){
-							var pagon = this.value;
+							var pagon = Number(this.value);
 							var aviso =document.getElementById('avisor');
-							var saldom = document.getElementById('saldo').value;
+							var saldom = Number(document.getElementById('saldo').value);
 							if(pagon<=saldom){
 								var saldon = saldom - pagon;
 								document.getElementById('saldo').value = saldon;

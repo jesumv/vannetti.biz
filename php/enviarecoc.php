@@ -108,8 +108,8 @@ function fallo($mensaje){
         $mysqli->autocommit(false);
         try {
             //creacion de oc en tabla oc
-            $sqlCommand= "INSERT INTO oc (idproveedores,arts,monto,total,fecharec,fechapago,usu,status,factura,facturar,credito,tpago)
-	    	     VALUES ($prov,$arts,$total,$total,'$fecha','$fecha','$usu',11,'$factura',$facturar,$credito,'$tpago')" ;
+            $sqlCommand= "INSERT INTO oc (idproveedores,arts,monto,total,saldo,fecharec,fechapago,usu,status,factura,facturar,credito,tpago)
+	    	     VALUES ($prov,$arts,$total,$total,$total,'$fecha','$fecha','$usu',11,'$factura',$facturar,$credito,'$tpago')" ;
             $mysqli->query($sqlCommand)? null: fallo('alta oc '.mysqli_error($mysqli)); 
             //obtencion de numero de orden de compra
             $noc = traeoc($mysqli);
