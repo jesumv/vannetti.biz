@@ -269,8 +269,17 @@ function saldobanco($mysqli){
    				//esta funcion pone el numero de cuenta default
    				var cuenta = document.getElementById("cuenta");
    				var elec = document.getElementById("smpago").value;
-   				if(elec==28){
+   				switch(elec){
+   				case "02":
+   				case "03":
    					cuenta.value='8145';
+   				break;
+   				case "04":
+   					cuenta.value='8886';
+   				break;
+   				case "28":
+   				cuenta.value='2730';
+   				break;
    				}
    				cuenta.focus();
    			}

@@ -23,28 +23,35 @@
 .button:hover {
     background-color: #c0c0c0; /* Green */
 }
-/*cambia el fondo de las cajas deshabilitadas*/
-input[type="text"]:disabled {
-    background: #dddddd;
-}
 
 /*estilos para input dentro de dialogo*/
 .cajal {
 	width: 80%;
 	font-size: 115%;
 }
+.cajalfc{
+	width: 80%;
+	font-size: 75%;
+}
 .cajam {
 	width: 28%;
 	font-size: 115%;
+}
+
+cajamfc {
+	width: 28%;
+	font-size: 75%;
 }
 .cajac {
 	width: 20%;
 	font-size: 115%;
 }
-.cajalfc{
-	width: 80%;
+cajacfc {
+	width: 28%;
 	font-size: 75%;
 }
+
+
 .celda{
 	background-color:#808080;
 }
@@ -58,8 +65,6 @@ input[type="text"]:disabled {
 	width:200px;
 	font-size: 115%;
 }
-
-
 .celda .pagada{
 	background-color:#008040;
 }
