@@ -448,6 +448,9 @@ function saldobanco($mysqli){
 									<option value="03">Gastos de Administración</option>
 									<option value="04">Gastos Financieros</option>
 									<option value="05">Reembolso de Gastos</option>
+									<option value="06">Generales No Deduc</option>
+									<option value="07">Ventas No Deduc</option>
+									<option value="08">Admon No Deduc</option>
 									<option value="99">Otros Gastos</option>
 		         				</select>
 		         				<label>Concepto: </label><input type="text" name="concepg"  id="concepg" class="cajam" maxlength="20"/>		

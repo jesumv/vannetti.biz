@@ -103,6 +103,16 @@
 			case 5:
 				$cargo="205.06";
 			break;
+			//no deducibles
+			case 6:
+			    $cargo="601.83";
+			    break;
+			case 7:
+			    $cargo="602.83";
+			    break;
+			case 8:
+			    $cargo="603.81";
+			    break;
 			//otros gastos
 			default:
 				$cargo="703";
@@ -134,10 +144,27 @@
 	}
 	
 	function ndeduc($nfac,$narch){
-	    //esta funcion determina si un gasto es deducible
+	    //esta funcion determina si un gasto es deducible si no hay datos
 	    $ndeduc;
 	    if(empty($nfac)  && empty($narch )){$ndeduc=0;}else{$ndeduc= 1;};
 	    return $ndeduc;
+	}
+	function montos($catgasto,$st,$iva){
+	    //determina si el gasto es todo el monto o sin iva
+	    switch ($catgasto){
+	        case 6:
+	        case 7:
+	        case 8:
+	            $s=$st+$iva;
+	            $i=0;
+	            break;
+	        default:
+	            $s=$st;
+	            $i=$iva;
+	    }
+	    $arraym["st"]=$s;
+	    $arraym["iv"]=$i;
+	    return $arraym;
 	}
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
@@ -176,10 +203,14 @@
 				$cuentas=cgasto($catg,$mpago,$facturar);
 				$cargo=$cuentas['c'];
 				$abono=$cuentas['a'];
+			//definicion de montos
+			     $montos= montos($catg,$monto,$iva);
+			     $subt = $montos['st'];
+			     $ivac = $montos['iv'];
 				//cargo a gastos
-				$resul1=movdiario($mysqli,$cargo,0,$fact,$monto,$fecha,$concep,NULL,$arch);
+				$resul1=movdiario($mysqli,$cargo,0,$fact,$subt,$fecha,$concep,NULL,$arch);
 				//iva
-				$resul3=movivag($mysqli,$mpago,$fact,$iva,$fecha,$concep);
+				$resul3=movivag($mysqli,$mpago,$fact,$ivac,$fecha,$concep);
 				//abono a cuenta origen del pago
 				$resul2=movdiario($mysqli,$abono,1,$fact,$total,$fecha,$concep,$cuenta);
         	break;	
