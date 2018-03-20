@@ -71,13 +71,58 @@ function saldobanco($mysqli){
    <link rel="stylesheet" type="text/CSS" href="css/dropdown_two.css" />
    <link rel="shortcut icon" href="img/logomin.gif" />  
    <link rel="apple-touch-icon" href="img/logomin.gif">
-   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+   <script src="js/jquery3/jquery-3.0.0.min.js"></script>
+   <script src="js/fcfdi.js"></script>
    
    <script>
    	'use strict';
    	(function() {
-   		
+		//bandera que indica si se ha modificado un campo manualmente
+		var bandera = 0;
+		var app=[];
+
+		function llenaforma(fecha,subtotal="",iva="",total="",factura="",concor=""){
+			//llena los campos de la forma con datos xml
+			var nfecha = new Date(fecha).toISOString().slice(0,10)
+			var forma ={
+				nf:document.querySelector('#nfact'),
+				fg:document.querySelector('#fgas'),
+				mg:document.querySelector('#montog'),
+				iva:document.querySelector('#ivag'),
+				tg:document.querySelector('#totalg'),
+				cg:document.querySelector('#concepo'),
+				ctg:document.querySelector('#catg'),
+			}
+			var f = forma;
+			f.nf.value =factura;
+			f.nf.disabled = true;
+			f.fg.value = nfecha;
+			f.fg.disabled = true;
+			f.mg.value = subtotal;
+			f.mg.disabled = true;
+			f.iva.value = iva;
+			f.iva.disabled = true;
+			f.tg.value = total;
+			f.tg.disabled = true;
+			f.cg.value = concor;
+			f.cg.disabled = true;
+			f.ctg.focus();
+
+		}
+		function resetea(){
+			  //limpia la forma
+			document.getElementById('avisor').innerHTML="";
+ 			document.getElementById('rgasto').reset();
+ 			document.getElementById("mensaje").value = "";
+ 			var mensac = document.getElementById("mensd");
+ 			mensac.setAttribute('class', 'ocult');
+		  }
+		  
    		 $(document).ready(function() {
+
+   			var evt = document.getElementById('arch');
+			  evt.addEventListener('change', function(e){listafacturas(e,leeXML)},false);
+			  
    		 	var app = {
 			    isLoading: true,
 			    spinner: document.querySelector('.loader'),
@@ -114,7 +159,40 @@ function saldobanco($mysqli){
 							      app.isLoading = false;
 						    }
 			//metodos de los elementos de la pagina
-			
+				function listafacturas(e,callback){
+					//obtiene arreglo de elementos de caja de lista y los lee como xml
+					var files = e.target.files; // FileList object
+					var resul=[];
+						for (var i=0, f; f=files[i]; i++) {
+					          var r = new FileReader();
+				            		r.onload = (function(f) {
+				                		return function(e) {
+				                			var arch= f.name;
+				                    		var contents = e.target.result;
+				                    		var cfdireg;
+				                    		if(bandera == 0){
+				                    			var resul=leeXML(contents,arch);
+				                    			if(resul.exito ==0){
+				                    				llenaforma(resul.fecha,resul.stotal,resul.iva,resul.total,
+				                    				resul.seriefolio,resul.conceptoc)
+				                    			}else{
+				                    				var mensa = document.getElementById("mensaje");
+				                					mensa.value= resul.error;
+				                					var mensac = document.getElementById("mensd");
+				                					mensac.classList.remove("ocult");
+				                					var fecha = new Date();
+				                					llenaforma(fecha)
+				                					
+				                    				}
+				                    			
+				                    		}else{document.getElementById("catg").focus();}
+				                				};
+				           	 		})(f);
+
+				            r.readAsText(f);
+				        } 
+			      	
+					}
 			function valida(elemen){
 		   		var fecha=document.getElementById(elemen).value;
 		   	    //corregir funcion fecha
@@ -127,8 +205,7 @@ function saldobanco($mysqli){
    			}
    			function cancela(){
    				app.toggleAddDialog(false)
-   				document.getElementById('avisor').innerHTML="";
-   				document.getElementById('rgasto').reset();
+   				resetea();
    			}
    			
    			function cancelat(){
@@ -247,23 +324,26 @@ function saldobanco($mysqli){
    				}
    			}
    			
-   			function calctotal(){
-   				var base = document.getElementById("montog").value;
-   				var iva = document.getElementById("ivag").value;
-   				var total = Number(base) + Number(iva);
-   				var ctotal = document.getElementById("totalg");
-   				ctotal.value = total.toFixed(2);
-   			}
    			
-   			function calciva(){
-   				var valor=document.getElementById("montog").value;
-   				var ivac=valor*.16;
-   				var civa=document.getElementById("ivag");
-   				civa.value= ivac.toFixed(2);
-   				calctotal();
-   				civa.focus();
-   				
-   			}
+   			
+   		 function calciva(){
+				var valor=document.getElementById("montog").value;
+				var ivac=valor*.16;
+				var civa=document.getElementById("ivag");
+				civa.value= ivac.toFixed(2);
+				calctotal();
+				civa.focus();
+				bandera = 1;
+			}
+
+   		function calctotal(){
+				var base = document.getElementById("montog").value;
+				var iva = document.getElementById("ivag").value;
+				var total = Number(base) + Number(iva);
+				var ctotal = document.getElementById("totalg");
+				ctotal.value = total.toFixed(2);
+				document.getElementById("catg").focus();
+			}
    			
    			function cuentasi(){
    				//esta funcion pone el numero de cuenta default
@@ -336,22 +416,28 @@ function saldobanco($mysqli){
 				  ?>
 		 </main>
 		 <!-- caja dialogo registro pago -->
+		 
 		  <div class="dialog-container" id="dialogog">
 		    <div class="dialog">
 		    	<div class="dialog-title" id="titulod">REGISTRO DE GASTO</div>
+		    	 	<div id="mensd" class="rengn ocult">
+		    			<label>MENSAJES: </label>
+		    			<textarea name="mensaje"  id="mensaje" rows="4" cols="50"></textarea>
+		    		</div>
 			    	<div class="dialog-body">
-			    		<form id="rgasto" method ="post" action="#" onsubmit="return false;">
+			    					    		<form id="rgasto" method ="post" action="#" onsubmit="return false;">
 			    			<div class="rengn">
-			    			<label>Fecha: </label><input type="date" name="fgas"  id="fgas" class="cajam"/>
-			    			</div>
+						    	<label>Archivo XML: </label><input type="file" name="arch"  id="arch" accept=".xml"/>
+						    	<label>Factura: </label><input type="text" name="nfact"  id="nfact" class="cajamfc"/>
+						    	<label>Fecha: </label><input type="date" name="fgas"  id="fgas" class="cajacfc"/>
+					    	</div>
 			    			<div class="rengn">
 			    			<label>Subtotal:</label><input type="text" name="montog" id="montog"/>
-			    			<label>Iva:</label><input type="text" name="ivag" id="ivag" size="10"/>
+			    			<label>Iva:</label><input type="text" name="ivag" id="ivag" size="10" class="cajacfc"/>
 			    			<label>TOTAL:</label><input type="text" name="totalg" id="totalg" disabled="TRUE"/>
 			    			</div>
-			    			<div class="rengn">
-			    				<label>Factura: </label><input type="text" name="nfact"  id="nfact" class="cajam"/>	
-			    				<label>Archivo XML: </label><input type="file" name="arch"  id="arch" accept=".xml"/>
+			    			<div	 class="rengn">
+			    			<label>Concepto Orig: </label><input type="text" name="concepo"  id="concepo" class="cajalfc"/>
 			    			</div>
 			    			<div class="rengn">
 			    				<label>Categoría: </label>
@@ -433,10 +519,12 @@ function saldobanco($mysqli){
 		  </div>
 		  
 
-  <div class="loader">
-    <svg viewBox="0 0 32 32" width="32" height="32">
-      <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
-    </svg>
-  </div>
+      <div class="loader">
+        <svg viewBox="0 0 32 32" width="32" height="32">
+          <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
+        </svg>
+      </div>
+      	<footer>
+  		</footer>
 	</body>
 </html>
