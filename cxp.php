@@ -43,6 +43,8 @@ require 'include/funciones.php';
    'use strict';
    	(function() { 
    		$(document).ready(function() {
+   	   		//variable para guardar saldo del docto eleg
+   	   		var saldoi;
    			var app = {
    				    isLoading: true,
    				    spinner: document.querySelector('.loader'),
@@ -66,6 +68,7 @@ require 'include/funciones.php';
 						var texto = "REGISTRO DE PAGO OC "+pedn;
 						var fact=document.getElementById('nofact'+pedn).innerHTML;
 						var saldoa=document.getElementById('saldot'+pedn).innerHTML;
+						saldoi = saldoa;
 						document.getElementById('titulod').innerHTML= texto;
 						document.getElementById('nfact').value = fact;
 						document.getElementById('saldo').value = saldoa;
@@ -103,8 +106,8 @@ require 'include/funciones.php';
 		   	    var mpag=document.getElementById('smpago').value;
 		   	    var ctaact=document.getElementById('cuenta').value;
 		   	    var folioact=document.getElementById('folio').value;
-		   	    var montop = document.getElementById('monto').value;
-		   	    var saldo = document.getElementById('saldo').value;
+		   	    var montop = Number(document.getElementById('monto').value);
+		   	    var saldo = Number(document.getElementById('saldo').value);
 		   	    //corregir funcion fecha
 		   	    var fechac=isValidDate(fecha)
 		   		if(!fechac){return -1;}
@@ -114,7 +117,7 @@ require 'include/funciones.php';
 		   				if(mpag==0){return -4}else if(mpag>1 && ctaact==""){return -5}
 		   				else if(mpag>1 && mpag<4 && folioact==""){return-6};
 		   		}
-		   		if (montop>saldo){	return -7}; 
+		   		if (montop>saldoi){	return -7}; 
 			}
 			  
 			function epago(){
