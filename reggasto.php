@@ -430,7 +430,7 @@ function saldobanco($mysqli){
 			    			<div class="rengn">
 			    			<label>Subtotal:</label><input type="text" name="montog" id="montog"/>
 			    			<label>Iva:</label><input type="text" name="ivag" id="ivag" size="10" class="cajacfc"/>
-			    			<label>TOTAL:</label><input type="text" name="totalg" id="totalg" disabled="TRUE"/>
+			    			<label>TOTAL:</label><input type="text" name="totalg" id="totalg"/>
 			    			</div>
 			    			<div	 class="rengn">
 			    			<label>Concepto Orig: </label><input type="text" name="concepo"  id="concepo" class="cajalfc"/>
