@@ -97,13 +97,9 @@ function saldobanco($mysqli){
 			f.nf.value =factura;
 			f.nf.disabled = true;
 			f.fg.value = nfecha;
-			f.fg.disabled = true;
 			f.mg.value = subtotal;
-			f.mg.disabled = true;
 			f.iva.value = iva;
-			f.iva.disabled = true;
 			f.tg.value = total;
-			f.tg.disabled = true;
 			f.cg.value = concor;
 			f.cg.disabled = true;
 			f.ctg.focus();
