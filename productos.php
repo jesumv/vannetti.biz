@@ -188,7 +188,7 @@
 		 //esta funcion prellena los campos codigo y codigo de barras
 			$.get('php/getcodmax.php',function(data){
 			var obj1 = JSON.parse(data);
-				var maxidprod=obj1[0];
+				var maxidprod=parseInt(obj1[0])+1;
 				var cod = document.getElementById('cod');
 				cod.value = maxidprod;
 				var barr = document.getElementById('barr');
