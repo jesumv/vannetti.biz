@@ -15,7 +15,7 @@
 			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA IDPRODUCTOMAX ".mysqli_error($mysqli));
 //obtencion del dato
 			 $maxidprod=mysqli_fetch_row($query1);
-			 $result = $maxidprod;
+			 $result = $maxidprod+1;
 	/* liberar la serie de resultados */
 			  mysqli_free_result($query1);			  
 	/* cerrar la conexi�n */
