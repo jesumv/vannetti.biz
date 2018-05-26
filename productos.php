@@ -184,6 +184,17 @@
 		}
 		return true;
 	}
+	function traeidprods(){
+		 //esta funcion prellena los campos codigo y codigo de barras
+			$.get('php/getcodmax.php',function(data){
+			var obj1 = JSON.parse(data);
+				var maxidprod=obj1[0];
+				var cod = document.getElementById('cod');
+				cod.value = maxidprod;
+				var barr = document.getElementById('barr');
+				barr.value = '00'+ maxidprod;				
+		});
+		}
 	
 	function traeprovs(){
 		 //esta funcion añade opciones a la lista de proveedores
@@ -245,7 +256,7 @@
 			traeprovs();
 		});
 			opaso1.then(traegrupo());
-		 	opaso1.then(traeuds());		
+		 	opaso1.then(traeuds());	
 	   };
 	 
 	 
@@ -298,6 +309,7 @@
 						}else{
 								var prodvac = new Promise(function(resolve,reject){
 									llenaop();
+									traeidprods();
 								});
 								prodvac.then(app.toggleAddDialog(true));
 							};

@@ -115,7 +115,7 @@
 			    break;
 			//otros gastos
 			default:
-				$cargo="703";
+				$cargo="601.83";
 		}
 			switch($mpago){
 			//efectivo
@@ -146,7 +146,7 @@
 	function ndeduc($nfac,$narch){
 	    //esta funcion determina si un gasto es deducible si no hay datos
 	    $ndeduc;
-	    if(empty($nfac)  && empty($narch )){$ndeduc=0;}else{$ndeduc= 1;};
+	    if(empty($nfac)  && (empty($narch )||$narch=="factedocta.xml")){$ndeduc=0;}else{$ndeduc= 1;};
 	    return $ndeduc;
 	}
 	function montos($catgasto,$st,$iva){
