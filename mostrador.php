@@ -457,7 +457,7 @@ function multiplica(){
 			ancla.appendChild(totoc);
 			
 		//agregar funcion de escucha
-			document.getElementById(checkp.id).addEventListener('change', multiplica,false);		
+			document.getElementById(checkp.id).addEventListener('input', multiplica,false);		
 		}
 		
 		function addarts(tventam){
