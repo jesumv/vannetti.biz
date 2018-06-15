@@ -255,7 +255,7 @@
 				$("#adpago").popup("close");
 					$( ".mens" ).empty();
 					if($("#tventap :radio:checked").val()==1){$(".ocultame").show();}
-				//primero se da de alta la odc y los articulos como siempre, pero se marca como pagada
+				//primero se da de alta la odc y los articulos como siempre, pero se marca como recibida y/o pagada
 				regoc();					
 				//evaluacion de resultado
 				});
