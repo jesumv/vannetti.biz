@@ -438,7 +438,7 @@ function saldobanco($mysqli){
 		    			<textarea name="mensaje"  id="mensaje" rows="4" cols="50"></textarea>
 		    		</div>
 			    	<div class="dialog-body">
-			    					    		<form id="rgasto" method ="post" action="#" onsubmit="return false;">
+			    		<form id="rgasto" method ="post" action="#" onsubmit="return false;">
 			    			<div class="rengn">
 						    	<label>Archivo XML: </label><input type="file" name="arch"  id="arch" accept=".xml"/>
 						    	<label>Factura: </label><input type="text" name="nfact"  id="nfact" class="cajamfc"/>
