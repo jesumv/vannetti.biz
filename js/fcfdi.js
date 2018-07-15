@@ -91,6 +91,7 @@ function leeXML(text,narch) {
 		var tras1 = impini.childNodes;
 		var comprob = xmlDoc.getElementsByTagName("cfdi:Comprobante")[0].attributes;
 		var fecha= comprob.getNamedItem("Fecha").nodeValue;
+		var fpago= comprob.getNamedItem("FormaPago").nodeValue;
 		var version = getver(comprob);
 		var serie;
 		var folio;
@@ -166,6 +167,7 @@ function leeXML(text,narch) {
 		}
 		cfdi={exito:0,
 			  fecha: fecha,
+			  fpago:fpago,
 			  stotal:stotal,
 			  iva:iva,
 			  otrosi:otrosi,

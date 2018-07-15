@@ -49,10 +49,23 @@ function saldobanco($mysqli){
 	$haber4=$consulta4->fetch_row();
 	$rhaber4=$haber4[0];
 	$caja=number_format(($rdebe3-$rhaber4),2);
+	//ventas
+	$consulta5=$mysqli->query("SELECT SUM(haber)FROM diario WHERE MONTH(fecha)=MONTH(NOW())
+    AND YEAR(fecha)=YEAR(NOW()) AND CUENTA like('4%');");
+	$ventas1=$consulta5->fetch_row();
+	$ventas2 = number_format($ventas1[0],2);
 	
+	//gastos deducibles
+	$consulta6=$mysqli->query("SELECT SUM(debe) from diario WHERE MONTH(fecha)=MONTH(NOW()) AND YEAR(fecha)=YEAR(NOW())
+    AND cuenta LIKE('6%') OR cuenta LIKE('7%') AND cuenta NOT LIKE('%.8%')");
+	$gastos1=$consulta6->fetch_row();
+	$gastos2 = number_format($gastos1[0],2);
 	
 	echo "<table border='2'>
-				<tr><th>SALDO EN BANCOS:</th><th>".$bancos."</th><th>___</th><th>SALDO EN CAJA:</th><th>".$caja."</th></tr>
+<tr>
+<th>SALDO EN BANCOS:</th><th>".$bancos."</th><th>___</th><th>SALDO EN CAJA:</th><th>".$caja."</th>
+<th>___</th><th>VENTAS DEL MES:</th><th>".$ventas2."</th><th>___</th><th>GASTOS DEL MES:</th><th>".$gastos2."</th>
+</tr>
 		</table>";
 }
 	
@@ -80,8 +93,26 @@ function saldobanco($mysqli){
 		//bandera que indica si se ha modificado un campo manualmente
 		var bandera = 0;
 		var app=[];
-
-		function llenaforma(fecha,subtotal="",iva="",total="",factura="",concor=""){
+		
+		function cuentasi(){
+				//esta funcion pone el numero de cuenta default
+				var cuenta = document.getElementById("cuenta");
+				var elec = document.getElementById("smpago").value;
+				switch(elec){
+				case "02":
+				case "03":
+					cuenta.value='8145';
+				break;
+				case "04":
+					cuenta.value='8886';
+				break;
+				case "28":
+				cuenta.value='2730';
+				break;
+				}
+				cuenta.focus();
+			}
+		function llenaforma(fecha,fpago,subtotal="",iva="",total="",factura="",concor=""){
 			//llena los campos de la forma con datos xml
 			var nfecha = new Date(fecha).toISOString().slice(0,10)
 			var forma ={
@@ -92,6 +123,7 @@ function saldobanco($mysqli){
 				tg:document.querySelector('#totalg'),
 				cg:document.querySelector('#concepo'),
 				ctg:document.querySelector('#catg'),
+				fpag:document.querySelector('#smpago'),
 			}
 			var f = forma;
 			f.nf.value =factura;
@@ -102,6 +134,8 @@ function saldobanco($mysqli){
 			f.tg.value = total;
 			f.cg.value = concor;
 			f.cg.disabled = true;
+			f.fpag.value= fpago;
+			cuentasi();
 			f.ctg.focus();
 
 		}
@@ -169,7 +203,7 @@ function saldobanco($mysqli){
 				                    		if(bandera == 0){
 				                    			var resul=leeXML(contents,arch);
 				                    			if(resul.exito ==0){
-				                    				llenaforma(resul.fecha,resul.stotal,resul.iva,resul.total,
+				                    				llenaforma(resul.fecha,resul.fpago,resul.stotal,resul.iva,resul.total,
 				                    				resul.seriefolio,resul.conceptoc)
 				                    			}else{
 				                    				var mensa = document.getElementById("mensaje");
@@ -341,24 +375,7 @@ function saldobanco($mysqli){
 				document.getElementById("catg").focus();
 			}
    			
-   			function cuentasi(){
-   				//esta funcion pone el numero de cuenta default
-   				var cuenta = document.getElementById("cuenta");
-   				var elec = document.getElementById("smpago").value;
-   				switch(elec){
-   				case "02":
-   				case "03":
-   					cuenta.value='8145';
-   				break;
-   				case "04":
-   					cuenta.value='8886';
-   				break;
-   				case "28":
-   				cuenta.value='2730';
-   				break;
-   				}
-   				cuenta.focus();
-   			}
+   			
    			//escuchas
    			//boton gasto
 			document.getElementById("botonp").addEventListener('click',muestrad,false)
