@@ -1,4 +1,10 @@
 /*estilos generales*/
+
+.divicent{
+
+	position:relative; float:none;margin: 1vh 20vw 1vh ;
+	padding:3px;
+}
 #botoncent{
 	margin:auto;
 	width:30%;
@@ -82,6 +88,11 @@ cajacfc {
 	width: 80%;
 	border-style: dotted;
 	text-align: center;
+}
+
+#mensajeo {
+   font-size: 14pt;
+   font-family: Arial;
 }
 /*estilos para las tablas*/
 

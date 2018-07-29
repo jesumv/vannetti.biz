@@ -132,7 +132,38 @@ $table2 = 'clientes';
 			  			bpagar[i].addEventListener('click', function(){mpago(this.id)}, false)
 			  		}
 			}
-			
+
+			function ifact(elem){
+				//habilita no. factura y lo toma
+					var pedid = elem.id.slice(-3);
+					var entra = document.getElementById("afact"+pedid);
+				//habilitar el input
+					entra.disabled = false;
+				//agregar escucha de change
+					entra.addEventListener("change",function(){
+						var fact = entra.value;
+						var  datos = {pedido:pedid,factura:fact}
+						var xhttp = new XMLHttpRequest();
+						xhttp.onreadystatechange = function() {
+							if (this.readyState == 4 && this.status == 200) {
+								entra.disabled=true;
+							      alert("exito");
+							    }
+							}
+						xhttp.open("POST", "php/envianofact.php", true);
+						xhttp.setRequestHeader("Content-type","application/json");
+						xhttp.send(JSON.stringify(datos));
+						},false)
+					
+				}
+			function efact(){
+				//añade escuchas a td factura
+				var factur = document.getElementsByClassName("efact");	
+		      	for (var i = 0; i < factur.length; i++) {
+	    			factur[i].addEventListener('dblclick',function(){ifact(this)}, false);
+					}
+				}
+	
 			function limpia(){
 				document.getElementById('avisor').innerHTML='';
 				document.getElementById('rpago').reset();
@@ -265,8 +296,11 @@ $table2 = 'clientes';
 						break;
 					}
 				})
+							
 				//anade escuchas a botones pago
-			      	epago();		
+			      	epago();
+		      	//escuchas a input factura
+		      	efact();	
 	   		});
    		 		
 	})();
@@ -291,7 +325,9 @@ $table2 = 'clientes';
 		  ?>
 	
 	<table id"tblcte"name= "tblcte" class="db-table">
-		<tr><th>FACTURAR</th><th>CLIENTE</th><th>FECHA</th><th>PEDIDO</th><th>FACTURA</th><th>MONTO</th><th>IVA</th><th>TOTAL</th><th>ESTADO</th><th>DIAS VENC</th><th>PAGO</th></tr>
+		<tr><th>FACTURAR</th><th>CLIENTE</th><th>FECHA</th><th>PEDIDO</th>
+		<th>FACTURA</th><th>MONTO</th><th>IVA</th><th>TOTAL</th><th>ESTADO</th>
+		<th>DIAS VENC</th><th>PAGO</th></tr>
 		
 	
 	<?php
@@ -309,11 +345,14 @@ $table2 = 'clientes';
 						$idcte=$row2[10];
 						$facti=sfactura($sfact);
 					 	echo "<tr><td id=idcte".$noped." class='ocult'>$idcte</td><td id=sfact".$noped." class='ocult'>$sfact</td>
-					 	<td id=facti".$noped.">$facti</td><td>$row2[0]</td><td>$fechamod</td><td>$noped</td><td id=nofact".$noped.">$row2[3]</td>
+					 	<td id=facti".$noped.">$facti</td><td>$row2[0]</td><td>$fechamod</td><td id=ped".$noped.">$noped</td>
+                        <td class= 'efact' id=nofact".$noped."><input disabled id=afact".$noped." value=$row2[3]></td>
 					 	<td id=subt".$noped.">$row2[4]</td><td id=iva".$noped.">$row2[5]</td><td id=total".$noped.">$row2[6]</td>
 					 	<td id=stped".$noped.">$stped</td><td>".$calc."</td><td class= 'edac' id=celp".$noped."><a id=pag".$noped." class='bpag' href='javascript:void(0);'>
 					 	<img src='img/check-black.png' ALT='reg pago'></a></td></tr>";
 					 } 
+		echo "<tr><td></td><td>TOTALES</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        <td></td></tr>";
 	  }else{echo"<h1>no hay pedidos pendientes de cobro</h1>";}
 	?>
 	</table>
