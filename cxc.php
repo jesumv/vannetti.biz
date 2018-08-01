@@ -61,10 +61,11 @@ $table2 = 'clientes';
    <link rel="shortcut icon" href="img/logomin.gif" />  
    <link rel="apple-touch-icon" href="img/logomin.gif">
 	<script src="js/jquery3/jquery-3.0.0.min.js"></script>
+	<script src="js/fcfdi.js"></script>
    <script>
    'use strict';
    	(function() { 	
-	   	$(document).ready(function() {
+	   	$(document).ready(function(){
 	   	//fecha por defecto
 		  	document.getElementById("fpago").valueAsDate = new Date();
 	   		 var app = {
@@ -73,7 +74,35 @@ $table2 = 'clientes';
 			    container: document.querySelector('.main'),
 			    addDialog: document.querySelector('.dialog-container'),
 			  };
-			  
+			function procfact(e,callback){
+				//acciones al elegir un archivo de factura
+				var cnfact = document.getElementById("nfact");
+				var haynfact= cnfact.value;
+				if(haynfact ==""){
+					var files = e.target.files; // FileList object
+						for (var i=0, f; f=files[i]; i++) {
+					          var r = new FileReader();
+				            		r.onload = (function(f) {
+				                		return function(e) {
+				                			var arch= f.name;
+				                    		var contents = e.target.result;
+				                    		var cfdireg;
+				                    			var resul=leeXML(contents,arch);
+				                    			if(resul.exito ==0){
+					                    			cnfact.value=resul.seriefolio;
+				                    			}else{
+														alert("error en lectura xml");
+				                					
+				                    				}
+				                    			
+				                				};
+				           	 		})(f);
+
+				            r.readAsText(f);
+				        }
+					}	
+				document.getElementById('smpago').focus()
+				}  
 			function nped(ped){
 			//obtiene el no. pedido
 				var longi=ped.length-3;
@@ -86,6 +115,9 @@ $table2 = 'clientes';
 				var pedn= nped(indice);
 				var texto = "REGISTRO DE PAGO PEDIDO "+pedn;
 				document.getElementById('titulod').innerHTML= texto;
+				var varsnfact= 'afact'+pedn;
+				var nfact =document.getElementById(varsnfact).value;
+				document.getElementById('nfact').value= nfact;
 				document.getElementById('fpago').focus();
 		   		app.toggleAddDialog(true)
 		   	}
@@ -97,7 +129,10 @@ $table2 = 'clientes';
 				var nofact= document.getElementById('nfact').value
 				este.innerHTML="PAGADO"
 				este.style.backgroundColor = "green";
-				ese.innerHTML= nofact;
+				if(ese.innerHTML=""){
+					ese.innerHTML= nofact;
+					}
+
 				//no permite el registro de nuevo
 				var celda=document.getElementById('celp'+reng)
 				var boton= document.getElementById('pag'+reng)
@@ -146,8 +181,8 @@ $table2 = 'clientes';
 						var xhttp = new XMLHttpRequest();
 						xhttp.onreadystatechange = function() {
 							if (this.readyState == 4 && this.status == 200) {
+								entra.style.backgroundColor = "green";
 								entra.disabled=true;
-							      alert("exito");
 							    }
 							}
 						xhttp.open("POST", "php/envianofact.php", true);
@@ -245,8 +280,9 @@ $table2 = 'clientes';
 				//escuchas de elementos dialog
 				document.getElementById('fpago').addEventListener('change',function(){document.getElementById('nfact').focus()})
 				document.getElementById('nfact').addEventListener('change',function(){document.getElementById('arch').focus()})
-				document.getElementById('arch').addEventListener('change',function(){
-					document.getElementById('smpago').focus()
+				document.getElementById('arch').addEventListener('change',function(e){
+					procfact(e,leeXML),
+					false
 					})
 				document.getElementById('smpago').addEventListener('change',function(){
 						var mpago=document.getElementById('smpago').value;
