@@ -77,10 +77,6 @@ require 'include/funciones.php';
 				   		app.toggleAddDialog(true)
 				  }
 
-			function afactura(indice){
-		   		//añade el nombre del archivo de la factura
-		   		alert("EN CONSTRUCCION");
-		   	}
 		   	
 		   	function resulreg(reng){
 				//anuncia el resultado positivo del registro
@@ -168,6 +164,7 @@ require 'include/funciones.php';
 				var saldof= document.getElementById("saldo").value;
 				var factu= document.getElementById("nfact").value;
 				var arch= document.getElementById("arch").value;
+				if(arch==""){arch="factura pendiente"};
 				var metpago= document.getElementById("smpago").value;
 				var cta = document.getElementById("cuenta").value;
 				var folio=document.getElementById("folio").value;
@@ -313,10 +310,6 @@ require 'include/funciones.php';
 						aqui.innerHTML="ES NECESARIO EL NUMERO DE FACTURA";
 						document.getElementById('nfact').focus();
 						break;
-						case -3:
-						aqui.innerHTML="SEÑALE EL ARCHIVO XML";
-						document.getElementById('arch').focus();
-						break;
 						case -4:
 						aqui.innerHTML="ELIJA EL MEDIO DE PAGO";
 						document.getElementById('smpago').focus();
@@ -340,8 +333,6 @@ require 'include/funciones.php';
 					}); 
 		   //anade escuchas a botones pago
 		    epago();
-		   //añade escuchas a botones factura
-		   	efact();
 		
 //end ready    	   	   		
    	   	})	
@@ -369,7 +360,7 @@ require 'include/funciones.php';
 		  ?>
 	
 	<table id"tblcxp"name= "tblcxp" class="db-table">
-		<tr><th>PROVEEDOR</th><th>FECHA</th><th>OC</th><th>FACTURA</th><th>REMISION</th><th>MONTO</th><th>IVA</th><th>TOTAL</th><th>SALDO ACT</th><th>DIAS VENC</th><th>ANEX FACT</th><th>PAGO</th></tr>
+		<tr><th>PROVEEDOR</th><th>FECHA</th><th>OC</th><th>FACTURA</th><th>REMISION</th><th>MONTO</th><th>IVA</th><th>TOTAL</th><th>SALDO ACT</th><th>DIAS VENC</th><th>PAGO</th></tr>
 	
 	<?php
 	//-----CONSTRUCCION DE LA TABLA------------------------------------------------------------------------
@@ -393,8 +384,7 @@ require 'include/funciones.php';
 					 	echo "<tr><td class='ocult' id=noprov".$nooc.">".$idprov."</td><td class='ocult' id=sfact".$nooc.">".$facturar."</td>
 					 	<td>".$rz."</td><td>".$fechamod."</td><td>".$nooc."</td><td id=nofact".$nooc.">".$factura."</td><td>".$remi."</td>
 					 	<td id=subt".$nooc.">".$monto."</td><td id=iva".$nooc.">".$iva."</td><td id=total".$nooc.">".$total."</td><td id=saldot".$nooc.">".$saldo."</td><td>".$calc."</td>
-					 	<td class= 'edac' id=celf".$nooc."><a id=afact".$nooc." class='bfact' href='javascript:void(0);'>
-					 	<img src='img/fuploadr.jpg' ALT='anexar factura'></a></td><td class= 'edac' id=celp".$nooc."><a id=pag".$nooc." class='bpag' href='javascript:void(0);'>
+					 	<td class= 'edac' id=celp".$nooc."><a id=pag".$nooc." class='bpag' href='javascript:void(0);'>
 					 	<img src='img/check-black.png' ALT='reg pago'></a></td></tr>";
 					 } 
 	  }else{echo"<h1>no hay pedidos pendientes de cobro</h1>";}
