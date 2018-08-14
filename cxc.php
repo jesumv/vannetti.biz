@@ -21,6 +21,9 @@ require 'include/funciones.php';
 			case 30:
 				$resul="X COBRAR";
 				break;
+			case 35:
+			    $resul="PAGO PARCIAL";
+			    break;
 			default:
 				$resul="ERROR";
 				break;
@@ -38,7 +41,7 @@ require 'include/funciones.php';
 /** consulta a bd **/
 $table = 'pedidos';
 $table2 = 'clientes';
- $sql= "SELECT t2.razon_social,t1.fecha, t1.idpedidos,t1.factura,t1.monto,t1.iva,t1.total,t2.diascred,t1.status,t1.facturar,t1.idclientes FROM $table
+ $sql= "SELECT t2.razon_social,t1.fecha, t1.idpedidos,t1.factura,t1.monto,t1.iva,t1.total,t2.diascred,t1.status,t1.facturar,t1.idclientes,t1.saldo FROM $table
  AS t1 INNER JOIN $table2 AS t2 ON t1.idclientes= t2.idclientes WHERE t1.status >19 AND t1.status <40 AND t1.tipovta = 2 ORDER BY t1.fecha";
  $result2 = mysqli_query($mysqli,$sql)or die ("ERROR EN CONSULTA DE CUENTAS POR COBRAR.".mysqli_error($mysqli));; 
 
@@ -66,8 +69,6 @@ $table2 = 'clientes';
    'use strict';
    	(function() { 	
 	   	$(document).ready(function(){
-	   	//fecha por defecto
-		  	document.getElementById("fpago").valueAsDate = new Date();
 	   		 var app = {
 			    isLoading: true,
 			    spinner: document.querySelector('.loader'),
@@ -111,13 +112,19 @@ $table2 = 'clientes';
 			}
 			function mpago(indice){
 				//muestra dialogo pago
+				//fecha por defecto
+		  		document.getElementById("fpago").valueAsDate = new Date();
 				//obtener numero de pedido
 				var pedn= nped(indice);
 				var texto = "REGISTRO DE PAGO PEDIDO "+pedn;
 				document.getElementById('titulod').innerHTML= texto;
 				var varsnfact= 'afact'+pedn;
+				var saldoa=document.getElementById('saldo'+pedn).innerHTML;
+				var fact=document.getElementById('nofact'+pedn).innerHTML;
 				var nfact =document.getElementById(varsnfact).value;
 				document.getElementById('nfact').value= nfact;
+				document.getElementById('saldo').value = saldoa;
+				document.getElementById('monto').value = saldoa;
 				document.getElementById('fpago').focus();
 		   		app.toggleAddDialog(true)
 		   	}
@@ -125,12 +132,12 @@ $table2 = 'clientes';
 		   	function resulreg(reng){
 				//anuncia el resultado positivo del registro
 				var este= document.getElementById('stped'+reng)
-				var ese= document.getElementById('nofact'+reng)
+				var ese= document.getElementById('afact'+reng)
 				var nofact= document.getElementById('nfact').value
 				este.innerHTML="PAGADO"
 				este.style.backgroundColor = "green";
-				if(ese.innerHTML=""){
-					ese.innerHTML= nofact;
+				if(ese.value=""){
+					ese.value= nofact;
 					}
 
 				//no permite el registro de nuevo
@@ -147,6 +154,8 @@ $table2 = 'clientes';
 		   		var arch= document.getElementById('arch').value;
 		   	    var mpag=document.getElementById('smpago').value;
 		   	    var ctaact=document.getElementById('cuenta').value;
+		   	    var montop= document.getElementById('monto').value;
+		   	 	var saldoi= document.getElementById('monto').value;
 		   	    //corregir funcion fecha
 		   	    var fechac=isValidDate(fecha)
 		   		if(!fechac){return -1;}
@@ -157,7 +166,7 @@ $table2 = 'clientes';
 		   				}else{
 		   			if(mpag==0){return-4}else if(mpag>1 && ctaact==""){return-5};
 		   		}
-		   			
+		   		if (montop>saldoi){	return -7}; 	
 		   	}	
 		   	
 		   	function epago(){
@@ -170,7 +179,8 @@ $table2 = 'clientes';
 
 			function ifact(elem){
 				//habilita no. factura y lo toma
-					var pedid = elem.id.slice(-3);
+				var lpedid=elem.id.length-6;
+					var pedid = elem.id.slice(-lpedid);
 					var entra = document.getElementById("afact"+pedid);
 				//habilitar el input
 					entra.disabled = false;
@@ -229,11 +239,13 @@ $table2 = 'clientes';
 				var metpago= document.getElementById("smpago").value;
 				var subt= document.getElementById("subt"+reng).innerHTML;
 				var iva= document.getElementById("iva"+reng).innerHTML;
-				var totalp= document.getElementById("total"+reng).innerHTML;
+				var montop= document.getElementById("monto").value;
+				var saldoi = document.getElementById("saldo"+reng).innerHTML;
+				var saldof= document.getElementById("saldo").value;
 				var idcte= document.getElementById("idcte"+reng).innerHTML;
 				var arch= document.getElementById("arch").value;
 				//recoger si se factura o no
-				var factu=sfact;
+				var factu=document.getElementById("nfact").value;
 				//envio a bd
 				$.post( "php/enviapagop.php",
 							{	sfact:sfact,
@@ -241,7 +253,9 @@ $table2 = 'clientes';
 								fecha:fecha,
 								subt:subt,
 								iva:iva,
-								total:totalp,
+								saldoi:saldoi,
+								saldof:saldof,
+								montop:montop,
 								metpago:metpago,
 								factu:factu,	
 								idcte:idcte,
@@ -249,6 +263,8 @@ $table2 = 'clientes';
 							 }, null, "json" )
 							 	.done(function( data) {
 	    							var resul= data.resul;
+	    							var saldofr = data.saldof;
+	    							document.getElementById("saldo"+reng).innerHTML= saldofr;
 	    							var textor = evalua(resul,reng);
 	    						})
 	    						.fail(function(xhr, textStatus, errorThrown ) {		
@@ -288,6 +304,26 @@ $table2 = 'clientes';
 						var mpago=document.getElementById('smpago').value;
 						if(mpago!=1){document.getElementById('cuenta').focus()}else{document.getElementById('regpago').focus()}
 					})
+				//monto del pago
+				document.getElementById('monto').addEventListener('change',function(){
+							var pagon = Number(this.value);
+							var aviso =document.getElementById('avisor');
+							var saldom = Number(document.getElementById('saldo').value);
+							if(pagon<=saldom){
+								var saldon = saldom - pagon;
+								document.getElementById('saldo').value = saldon;
+								document.getElementById('nfact').focus();
+								aviso.innerHTML="";
+								}else{
+									document.getElementById('saldo').value = saldom;
+									var casilla = this;
+									aviso.innerHTML="MONTO DE PAGO NO PUEDE SER MAS QUE SALDO";
+									this.value = null;
+									this.focus();
+									}
+							
+
+							});
 				//escucha de boton cancela
 				document.getElementById('butAddCancel').addEventListener('click', function() {
 					// oculta el dialogo de datos de producto
@@ -337,6 +373,8 @@ $table2 = 'clientes';
 			      	epago();
 		      	//escuchas a input factura
 		      	efact();	
+		      	//escucha a monto de pago
+		      	document.getElementById('monto').addEventListener('change',function(){document.getElementById('monto').focus()})
 	   		});
    		 		
 	})();
@@ -362,7 +400,7 @@ $table2 = 'clientes';
 	
 	<table id"tblcte"name= "tblcte" class="db-table">
 		<tr><th>FACTURAR</th><th>CLIENTE</th><th>FECHA</th><th>PEDIDO</th>
-		<th>FACTURA</th><th>MONTO</th><th>IVA</th><th>TOTAL</th><th>ESTADO</th>
+		<th>FACTURA</th><th>MONTO</th><th>IVA</th><th>TOTAL</th><th>SALDO</th><th>ESTADO</th>
 		<th>DIAS VENC</th><th>PAGO</th></tr>
 		
 	
@@ -380,15 +418,17 @@ $table2 = 'clientes';
 						$sfact=$row2[9];
 						$idcte=$row2[10];
 						$facti=sfactura($sfact);
+						$saldo=$row2[11];
 					 	echo "<tr><td id=idcte".$noped." class='ocult'>$idcte</td><td id=sfact".$noped." class='ocult'>$sfact</td>
 					 	<td id=facti".$noped.">$facti</td><td>$row2[0]</td><td>$fechamod</td><td id=ped".$noped.">$noped</td>
                         <td class= 'efact' id=nofact".$noped."><input disabled id=afact".$noped." value=$row2[3]></td>
 					 	<td id=subt".$noped.">$row2[4]</td><td id=iva".$noped.">$row2[5]</td><td id=total".$noped.">$row2[6]</td>
-					 	<td id=stped".$noped.">$stped</td><td>".$calc."</td><td class= 'edac' id=celp".$noped."><a id=pag".$noped." class='bpag' href='javascript:void(0);'>
+                        <td id=saldo".$noped.">$saldo</td><td id=stped".$noped.">$stped</td><td>".$calc."</td>
+                        <td class= 'edac' id=celp".$noped."><a id=pag".$noped." class='bpag' href='javascript:void(0);'>
 					 	<img src='img/check-black.png' ALT='reg pago'></a></td></tr>";
 					 } 
-		echo "<tr><td></td><td>TOTALES</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-        <td></td></tr>";
+		echo "<tr><td></td><td>TOTALES</td><td></td><td></td><td></td><td></td><td></td><td>
+        </td><td></td><td></td><td></td></tr><td></td>";
 	  }else{echo"<h1>no hay pedidos pendientes de cobro</h1>";}
 	?>
 	</table>
@@ -403,6 +443,10 @@ $table2 = 'clientes';
 	    			<div class="rengn">
 	    			<label>Fecha: </label><input type="date" name="fpago"  id="fpago" class="cajam"/>
 	    			<label>Factura: </label><input type="text" name="nfact"  id="nfact" class="cajam"/>	
+	    			</div>
+	    			<div class="rengn">
+	    				<label>Saldo: </label><input type="text" name="saldo"  id="saldo" class="cajac" disabled/>	
+	    				<label>Monto: </label><input type="number" name="monto" min="0" step ="any" id="monto" class="cajac"/>
 	    			</div>
 	    			<div class="rengn">
 	    				<label>Archivo XML: </label><input type="file" name="arch"  id="arch" accept=".xml"/>

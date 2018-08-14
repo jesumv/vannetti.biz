@@ -63,6 +63,8 @@ require 'include/funciones.php';
 					} 
 			function mpago(indice){
 						//muestra dialogo pago
+							//fecha por defecto
+		  				document.getElementById("fpago").valueAsDate = new Date();	
 						//obtener numero de pedido
 						var pedn= noc(indice);
 						var texto = "REGISTRO DE PAGO OC "+pedn;
@@ -123,16 +125,7 @@ require 'include/funciones.php';
 			  			bpagar[i].addEventListener('click', function(){mpago(this.id)}, false)
 			  		}
 			}
-			
-			function efact(){
-			//añade escuchas a botones factura
-				var bfact= document.getElementsByClassName('bfact');
-				for (var i = 0; i < bfact.length; i++) {
-			  			bfact[i].addEventListener('click', function(){afactura(this.id)}, false)
-			  		}
-
-			}
-			
+					
 			function evalua(resul,reng){
 			/** se evalua la respuesta de enviapagoc.php**/
 				var resp;
@@ -190,7 +183,7 @@ require 'include/funciones.php';
 								folio:folio,
 								subt:subt,
 								iva:iva,
-								total:totalp	,
+								total:totalp,
 								monto: montop						
 							 }, null, "json" )
 							 	.done(function(data) {
@@ -212,8 +205,7 @@ require 'include/funciones.php';
 		   * Methods to update/refresh the UI
 		   *
 		   ****************************************************************************/  
-	//fecha por defecto
-		  	document.getElementById("fpago").valueAsDate = new Date();		  
+	  
 	// Toggles the visibility of dialog.	  	 
 			  app.toggleAddDialog = function(visible) {
 			    if (visible) {
@@ -359,7 +351,7 @@ require 'include/funciones.php';
 		  		include_once "include/menu1.php";
 		  ?>
 	
-	<table id"tblcxp"name= "tblcxp" class="db-table">
+	<table id="tblcxp" name="tblcxp" class="db-table">
 		<tr><th>PROVEEDOR</th><th>FECHA</th><th>OC</th><th>FACTURA</th><th>REMISION</th><th>MONTO</th><th>IVA</th><th>TOTAL</th><th>SALDO ACT</th><th>DIAS VENC</th><th>PAGO</th></tr>
 	
 	<?php

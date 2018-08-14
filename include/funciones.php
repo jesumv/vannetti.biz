@@ -51,8 +51,12 @@ function metpago($metpago){
 	if($metpago=="01"){$cuenta="101.01";}else{$cuenta="102.01";}
 	return $cuenta;
 }
-function epagoped($mysqli,$fecha,$ref,$monto,$iva,$total,$factu,$mpago,$sfactu,$cte,$arch=NULL){
+function epagoped($mysqli,$fecha,$ref,$monto,$iva,$total,$saldoi,$factu,$mpago,$sfactu,$cte,$saldof,$arch=NULL){
 	//registra un pago de pedido a credito
+	//define los montos de pago
+    $pagoiva =  defiva($monto,$saldoi,$monto);
+    //definicion del status de pago
+    if($monto<$saldoi){$status = 35;}else{$status = 40;};
 			try{
 				$mysqli->autocommit(false);
 			//la referencia es pedido
@@ -61,11 +65,11 @@ function epagoped($mysqli,$fecha,$ref,$monto,$iva,$total,$factu,$mpago,$sfactu,$
 				//cargo en entrada de efectivo segun metodo de pago
 					$cuenta1=metpago($mpago);
 					$tipom1=0;
-					operdiario($mysqli, $cuenta1, $tipoper, $tipom1, $ref, $total, $fecha,$sfactu);
+					operdiario($mysqli, $cuenta1, $tipoper, $tipom1, $ref, $monto, $fecha,$sfactu);
 			//abono a clientes
 					$cuenta4="105.01";
 					$tipom4=1;
-					operdiario($mysqli,$cuenta4,$tipoper,$tipom4,$ref,$total,$fecha,$sfactu,$cte);
+					operdiario($mysqli,$cuenta4,$tipoper,$tipom4,$ref,$monto,$fecha,$sfactu,$cte);
 				//cargo a iva trasladado no cobrado
 					$cuenta2="209.01";
 					$tipom2=0;
@@ -75,7 +79,7 @@ function epagoped($mysqli,$fecha,$ref,$monto,$iva,$total,$factu,$mpago,$sfactu,$
 					$tipom3=1;
 					operdiario($mysqli,$cuenta3,$tipoper,$tipom3,$ref,$iva,$fecha,$sfactu);
 			//actualizacion en pedidos
-					$mysqli->query("UPDATE pedidos SET status=40,fechapago='$fecha',factura='$factu',arch='$arch' WHERE idpedidos='$ref'");
+					$mysqli->query("UPDATE pedidos SET status=$status,fechapago='$fecha',factura='$factu',saldo=$saldof,arch='$arch' WHERE idpedidos='$ref'");
 			//efectuar la operacion
 				$mysqli->commit();
 				$resul=0;
