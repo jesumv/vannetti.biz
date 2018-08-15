@@ -75,6 +75,30 @@ $table2 = 'clientes';
 			    container: document.querySelector('.main'),
 			    addDialog: document.querySelector('.dialog-container'),
 			  };
+
+			function sumatots(){
+				//suma las columnas de cifras para el renglon de totales
+				var subts= document.getElementsByClassName("subto");
+				var tiva = document.getElementsByClassName("siva");
+				var ttot= document.getElementsByClassName("sutot");
+				var tsaldo= document.getElementsByClassName("ssaldo");
+				var lsubts= subts.length;
+				var sumas = 0;
+				var sumaiva =0;
+				var sumatot =0;
+				var sumasaldo =0;
+				for(var i=0; i< lsubts; i++){
+						sumas += parseFloat(subts[i].innerHTML);
+						sumaiva += parseFloat(tiva[i].innerHTML);
+						sumatot += parseFloat(ttot[i].innerHTML);
+						sumasaldo += parseFloat(tsaldo[i].innerHTML);
+					}
+				document.getElementById("tsubt").innerHTML = sumas.toFixed(2)
+				document.getElementById("tiva").innerHTML = sumaiva.toFixed(2)
+				document.getElementById("ttot").innerHTML = sumatot.toFixed(2)
+				document.getElementById("tsaldo").innerHTML = sumasaldo.toFixed(2)
+				
+				}
 			function procfact(e,callback){
 				//acciones al elegir un archivo de factura
 				var cnfact = document.getElementById("nfact");
@@ -133,10 +157,10 @@ $table2 = 'clientes';
 				//anuncia el resultado positivo del registro
 				var este= document.getElementById('stped'+reng)
 				var ese= document.getElementById('afact'+reng)
-				var nofact= document.getElementById('nfact').value
-				este.innerHTML="PAGADO"
+				var nofact= document.getElementById('nfact').value;
+				este.innerHTML="PAGO REGISTRADO"
 				este.style.backgroundColor = "green";
-				if(ese.value=""){
+				if(ese.value==""){
 					ese.value= nofact;
 					}
 
@@ -146,6 +170,8 @@ $table2 = 'clientes';
 				celda.removeChild(boton)
 				celda.style.backgroundColor = "#ececec";
 				limpia()
+				//actualiza totales
+				sumatots();
 			}		   	
 		   	function valida(indic){
 		   		var fecha=document.getElementById('fpago').value;
@@ -375,6 +401,8 @@ $table2 = 'clientes';
 		      	efact();	
 		      	//escucha a monto de pago
 		      	document.getElementById('monto').addEventListener('change',function(){document.getElementById('monto').focus()})
+		      	//adición de totales
+		      	sumatots();
 	   		});
    		 		
 	})();
@@ -398,7 +426,7 @@ $table2 = 'clientes';
 		  		include_once "include/menu1.php";
 		  ?>
 	
-	<table id"tblcte"name= "tblcte" class="db-table">
+	<table id="tblcte" name= "tblcte" class="db-table">
 		<tr><th>FACTURAR</th><th>CLIENTE</th><th>FECHA</th><th>PEDIDO</th>
 		<th>FACTURA</th><th>MONTO</th><th>IVA</th><th>TOTAL</th><th>SALDO</th><th>ESTADO</th>
 		<th>DIAS VENC</th><th>PAGO</th></tr>
@@ -409,8 +437,16 @@ $table2 = 'clientes';
 	  if(mysqli_num_rows($result2)) {
 	  	 //construir tabla
 	  	 while($row2=mysqli_fetch_row($result2)){
-	  	 				$fechamov=date_create($row2[1]);
+	  	     $sql= "SELECT t2.razon_social,t1.fecha, t1.idpedidos2,t1.factura,t1.monto,t1.iva,t1.total,t2.diascred,t1.status,
+            t1.facturar9,t1.idclientes10,t1.saldo FROM $table
+ AS t1 INNER JOIN $table2 AS t2 ON t1.idclientes= t2.idclientes10 WHERE t1.status >19 AND t1.status <40 AND t1.tipovta = 2 ORDER BY t1.fecha";
+	  	                $razons= $row2[0];
+	  	                $fechamov=date_create($row2[1]);
 			 			$noped=$row2[2];
+			 			$nfact=$row2[3];
+			 			$subt=$row2[4];
+			 			$iva=$row2[5];
+			 			$total=$row2[6];
 			 			$diascred=$row2[7];
 			 			$fechamod=date_format($fechamov,'Y/m/d');
 						$calc=diasvenc($row2[1], $diascred);
@@ -420,20 +456,20 @@ $table2 = 'clientes';
 						$facti=sfactura($sfact);
 						$saldo=$row2[11];
 					 	echo "<tr><td id=idcte".$noped." class='ocult'>$idcte</td><td id=sfact".$noped." class='ocult'>$sfact</td>
-					 	<td id=facti".$noped.">$facti</td><td>$row2[0]</td><td>$fechamod</td><td id=ped".$noped.">$noped</td>
-                        <td class= 'efact' id=nofact".$noped."><input disabled id=afact".$noped." value=$row2[3]></td>
-					 	<td id=subt".$noped.">$row2[4]</td><td id=iva".$noped.">$row2[5]</td><td id=total".$noped.">$row2[6]</td>
-                        <td id=saldo".$noped.">$saldo</td><td id=stped".$noped.">$stped</td><td>".$calc."</td>
-                        <td class= 'edac' id=celp".$noped."><a id=pag".$noped." class='bpag' href='javascript:void(0);'>
+					 	<td id=facti".$noped.">$facti</td><td>$razons</td><td>$fechamod</td><td id=ped".$noped.">$noped</td>
+                        <td class= 'efact' id=nofact".$noped."><input disabled id=afact".$noped." value='$nfact'></td>
+					 	<td class='subto' id=subt".$noped.">$subt</td><td class='siva' id=iva".$noped.">$iva</td>
+                        <td  class='sutot' id=total".$noped.">$total</td><td class='ssaldo' id=saldo".$noped.">$saldo</td>
+                        <td id=stped".$noped.">$stped</td><td>".$calc."</td><td class= 'edac' id=celp".$noped."><a id=pag".$noped." class='bpag' href='javascript:void(0);'>
 					 	<img src='img/check-black.png' ALT='reg pago'></a></td></tr>";
 					 } 
-		echo "<tr><td></td><td>TOTALES</td><td></td><td></td><td></td><td></td><td></td><td>
-        </td><td></td><td></td><td></td></tr><td></td>";
+		echo "<tr><td></td><td colspan='4'>TOTALES</td><td id='tsubt'></td><td id='tiva'></td>
+               <td id='ttot'></td><td id='tsaldo'></td><td></td><td></td><td></td></tr>";
+		
 	  }else{echo"<h1>no hay pedidos pendientes de cobro</h1>";}
 	?>
 	</table>
  </main>
- 
  <!-- caja dialogo registro pago -->
   <div class="dialog-container">
     <div class="dialog">
