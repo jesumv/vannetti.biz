@@ -56,7 +56,7 @@ $table2 = 'clientes';
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vanneti Cucina</title>
+  <title>CXC</title>
   <!-- Insert link to styles here -->
    <link rel="stylesheet" type="text/css" href="css/inline.css">
    <link rel="stylesheet" type="text/css" href="css/plant1.css">
@@ -463,8 +463,8 @@ $table2 = 'clientes';
                         <td id=stped".$noped.">$stped</td><td>".$calc."</td><td class= 'edac' id=celp".$noped."><a id=pag".$noped." class='bpag' href='javascript:void(0);'>
 					 	<img src='img/check-black.png' ALT='reg pago'></a></td></tr>";
 					 } 
-		echo "<tr><td></td><td colspan='4'>TOTALES</td><td id='tsubt'></td><td id='tiva'></td>
-               <td id='ttot'></td><td id='tsaldo'></td><td></td><td></td><td></td></tr>";
+		echo "<tr class='treng'><td colspan='5'>TOTALES</td><td id='tsubt'></td><td id='tiva'></td>
+               <td id='ttot'></td><td id='tsaldo'></td><td colspan='3'></td></tr>";
 		
 	  }else{echo"<h1>no hay pedidos pendientes de cobro</h1>";}
 	?>
