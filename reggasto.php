@@ -56,11 +56,10 @@ function saldobanco($mysqli){
 	$ventas2 = number_format($ventas1[0],2);
 	
 	//gastos deducibles
-	$consulta6=$mysqli->query("SELECT SUM(debe) from diario WHERE MONTH(fecha)=MONTH(NOW()) AND YEAR(fecha)=YEAR(NOW())
-    AND cuenta LIKE('6%') OR cuenta LIKE('7%') AND cuenta NOT LIKE('%.8%')");
+	$consulta6=$mysqli->query("SELECT SUM(debe) from diario WHERE (cuenta LIKE('6%') or cuenta LIKE('7%'))
+    and cuenta not like('%.8%') AND MONTH(fecha)=MONTH(NOW()) AND YEAR(fecha)=YEAR(NOW())");
 	$gastos1=$consulta6->fetch_row();
 	$gastos2 = number_format($gastos1[0],2);
-	
 	echo "<table border='2'>
 <tr>
 <th>SALDO EN BANCOS:</th><th>".$bancos."</th><th>___</th><th>SALDO EN CAJA:</th><th>".$caja."</th>
@@ -78,7 +77,7 @@ function saldobanco($mysqli){
  <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vanneti Cucina</title>
+  <title>ADMON</title>
    <link rel="stylesheet" type="text/css" href="css/inline.css">
    <link rel="stylesheet" type="text/css" href="css/plant1.css">
    <link rel="stylesheet" type="text/CSS" href="css/dropdown_two.css" />
