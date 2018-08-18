@@ -31,7 +31,7 @@ function converfecha($fechao){
 	return $fechac;
 }
 
-function operdiario($mysqli,$cuenta,$tipoper,$tipom,$ref,$monto,$fecha,$sfactu,$subcta=NULL){
+function operdiario($mysqli,$cuenta,$tipoper,$tipom,$ref,$monto,$fecha,$sfactu,$subcta=NULL,$coment=NULL){
 		//esta funcion realiza 1 movimiento contable en diario. $tipom determina
 		//si el movimiento es debe = 0 o haber = else
 		//determinacion de referencia orden de compra o pedido
@@ -42,7 +42,8 @@ function operdiario($mysqli,$cuenta,$tipoper,$tipom,$ref,$monto,$fecha,$sfactu,$
 		}else{
 			$colum="haber";
 		}
-		$mysqli->query("INSERT INTO diario(cuenta,referencia,$colum,fecha,facturar,subcuenta)VALUES($cuenta,'$refe',$monto,'$fecha',$sfactu,'$subcta')")
+		$mysqli->query("INSERT INTO diario(cuenta,referencia,$colum,fecha,facturar,subcuenta,coment)
+        VALUES($cuenta,'$refe',$monto,'$fecha',$sfactu,'$subcta','$coment')")
 		or die("Error en registro contable: ".mysqli_error($mysqli));
 }
 
@@ -106,7 +107,8 @@ function defiva($subt,$saldoi,$pago){
    return $pagoiva;
 }
 
-function epagoc($mysqli,$fecha,$ref,$monto,$iva,$total,$saldoi,$factu,$mpago,$sfactu,$prov,$folio,$montop,$saldof,$arch=NULL,$cta){
+function epagoc($mysqli,$fecha,$ref,$monto,$iva,$total,$saldoi,$factu,$mpago,$sfactu,$prov,$folio,$montop,
+    $saldof,$cta,$arch=NULL,$comi=NULL,$civa=NULL){
 	//registra pago de una orden de compra
 	//define los montos de pago
 	$pagoiva =  defiva($monto,$saldoi,$montop);
@@ -134,6 +136,17 @@ function epagoc($mysqli,$fecha,$ref,$monto,$iva,$total,$saldoi,$factu,$mpago,$sf
 					$cuenta4="118.01";
 					$tipom4=0;
 					operdiario($mysqli,$cuenta4,$tipoper,$tipom4,$ref,$pagoiva,$fecha,$sfactu);
+				//movimientos de comisiones, si las hay, siempre se factura
+					if($comi!=NULL){
+					    //cargo a bancos
+					    $cuentacomi="102.01";
+					    $tipomc=1;
+					    $comitot = $comi+$civa;
+					    operdiario($mysqli,$cuentacomi,$tipoper,$tipomc,$ref,$comitot,$fecha,1,NULL,'comisiones banc');
+					    //abono a gastos financieros e iva pagado
+					    operdiario($mysqli,"701.10",$tipoper,0,$ref,$comi,$fecha,1,NULL,'comisiones banc');
+					    operdiario($mysqli,"118.01",$tipoper,0,$ref,$civa,$fecha,1,NULL,'comisiones banc');					    
+					}
 				//actualizacion de orden de compra
 				$archm;
 				if($arch!=NULL){

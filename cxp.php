@@ -168,6 +168,8 @@ require 'include/funciones.php';
 				var saldoi= document.getElementById("saldot"+reng).innerHTML;
 				var totalp= document.getElementById("total"+reng).innerHTML;
 				var noprov= document.getElementById("noprov"+reng).innerHTML;
+				var comi = document.getElementById("comi").value;
+				var civa = document.getElementById("ivac").value;
 	
 				//envio a bd
 				$.post( "php/enviapagoc.php",
@@ -184,7 +186,10 @@ require 'include/funciones.php';
 								subt:subt,
 								iva:iva,
 								total:totalp,
-								monto: montop						
+								monto: montop,
+								comi:comi,
+								civa:civa,
+														
 							 }, null, "json" )
 							 	.done(function(data) {
 	    							var resul= data.resul;
@@ -230,13 +235,27 @@ require 'include/funciones.php';
 						//metodo de pago
 				document.getElementById('smpago').addEventListener('change',function(){
 						var mpago=document.getElementById('smpago').value;
-
+						var vcomi = document.getElementById('comi');
+			    		var viva = document.getElementById('ivac');
+			    		var rcomi = document.getElementById('rcomi'); 
+			    		vcomi.value="";
+			    		viva.value="";
+			    		if(!rcomi.classList.contains("ocult")){rcomi.classList.toggle("ocult")};
         						switch(mpago) {
-        					    case "2":
-        					    case "3":
+        					    case "02":
+        					    	document.getElementById('cuenta').value="8145";
+        					    case "03":
         					    		document.getElementById('cuenta').value="8145";
-        					    		document.getElementById('folio').focus()
+        					    		document.getElementById('folio').focus()   
+        					    		if(rcomi.classList.contains("ocult")){rcomi.classList.toggle("ocult");
+        					    		   vcomi.value = 5;
+        					    		   viva.value =.8;
+        								}
         					        break;
+        					    case "04":
+    					    		document.getElementById('cuenta').value="8886";
+    					    		document.getElementById('folio').focus()
+    					        break;
         					    case "28":
         					    	document.getElementById('cuenta').value="2730";
         					    	document.getElementById('folio').focus()
@@ -413,6 +432,11 @@ require 'include/funciones.php';
          				</select>
          				<label>Cuenta de Pago: </label><input type="text" name="cuenta"  id="cuenta" class="cajac" maxlength="4" />
          				<label>Folio Op: </label><input type="text" name="folio"  id="folio" class="cajac" />
+	    			</div>
+	    			<div id="rcomi" class="rengn ocult">
+	    				<label>Comisión: </label>
+	    				<input type="number" name="comi"  id="comi" class="cajac" maxlength="4" min=0 />
+         				<label>IVA: </label><input type="number" name="ivac"  id="ivac" class="cajac" disabled/>
 	    			</div>
 	    			<div class="rengn">
 	    				<h4 id="avisor"></h4>

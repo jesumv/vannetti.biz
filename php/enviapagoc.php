@@ -34,9 +34,11 @@
 		$iva= $_POST["iva"];
 		$total= $_POST["total"];	
 		$montop = $_POST["monto"];
+		$comi = $_POST["comi"];
+		$civa = $_POST["civa"];
 		$saldof=$saldoi-$montop;
 		//afectacion a bd
-			$resul=epagoc($mysqli,$fecha,$refer,$subt,$iva,$total,$saldoi,$factura,$metpago,$sfact,$idprov,$folio,$montop,$saldof,$arch,$cta);
+		$resul=epagoc($mysqli,$fecha,$refer,$subt,$iva,$total,$saldoi,$factura,$metpago,$sfact,$idprov,$folio,$montop,$saldof,$cta,$arch,$comi,$civa);
 			mysqli_close($mysqli);
 	}else{
 				$resul=-1;
