@@ -36,6 +36,13 @@
 	'use strict';
 	(function() {
 		var facturarped;
+		//preparacion de fecha = hoy por defecto
+		   Date.prototype.toDateInputValue = (function() {
+			    var local = new Date(this);
+			    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+			    return local.toJSON().slice(0,10);
+			});
+	
 		function llenactes(){
 	//esta funcion añade opciones a la lista de clientes
 			$.get('php/getctes.php',function(data){
@@ -758,10 +765,10 @@ function multiplica(){
 			}
 		$( document ).on( "pageinit", "#pedpag", function(event) {
 			//fecha por defecto
-	  		document.getElementById("fechav").valueAsDate = new Date();	
+	  		document.getElementById("fechav").value = new Date().toDateInputValue();	
 	  		//escucha del boton cancelar
 			$("#pcancela").click(function(){
-					document.getElementById("fechav").valueAsDate = new Date();
+					document.getElementById("fechav").value = new Date().toDateInputValue();
 					//fecha por defecto	
 			   		location.reload();
 			   		$('#pcte').selectmenu( "enable" );
