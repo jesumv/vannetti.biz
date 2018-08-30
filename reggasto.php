@@ -97,6 +97,73 @@ function saldobanco($mysqli){
 		var obj1;
 
 		//DEFINICION DE FUNCIONES VARIAS
+		function ivaaux(){
+			//calcula el iva de auxiliares
+		var iva=document.getElementById("miva");
+		var llevaiva= document.getElementById("smpago").value;
+		//solo si el met pago es transferencia
+		if(llevaiva=="03"){
+			var monto= document.getElementById("mprop").value;
+			iva.value = monto *0.16;
+			}else{iva.value=""}		
+		}
+
+		function mconcep(){
+		//se evalua el concepto que se introduce
+			aparece();
+			var metodo = document.getElementById("smpago").focus();
+			}
+	function aparece(){                              
+			//elige elementos auxiliares a presentar
+			var concep = document.getElementById("concepg").value;
+			var metodo = document.getElementById("smpago").value;
+			var etiq =document.getElementById("ladic");
+			var propi=document.getElementById("mprop");
+		var etiq2 =document.getElementById("lefec");
+		var efec =document.getElementById("efec");
+		var etiq3 =document.getElementById("liva");
+		var miva= document.getElementById("miva");
+		var estaoc=etiq.classList.contains("ocult");
+			//si se elige alim  y no es transferencia lleva propina
+		if(concep=="alim viaje" && estaoc==true){
+			etiq.innerHTML="Propina?:";
+			etiq.classList.remove("ocult");
+			propi.value="";	
+			propi.classList.toggle("ocult");
+			etiq2.classList.toggle("ocult");	
+			efec.classList.toggle("ocult");	
+		//si se elige transferencia lleva comision
+			}else if(metodo=="03"){
+				etiq.innerHTML="Comisión?:";
+				propi.value="5";
+				ivaaux();
+				if(estaoc==true){
+					etiq.classList.toggle("ocult");					
+					propi.classList.toggle("ocult");
+					etiq3.classList.toggle("ocult");
+					miva.classList.toggle("ocult");
+					}else{
+
+						}											
+			}else if(metodo!="03" && concep!="alim viaje"){
+				//sie el metodo de pago es distinto, se ocultan las casillas
+						etiq.classList.add("ocult");
+						propi.value="";					
+						propi.classList.add("ocult");
+						etiq2.classList.add("ocult");
+						efec.classList.add("ocult");
+						etiq3.classList.add("ocult");
+						miva.classList.add("ocult");
+			}				
+		}
+	
+	function modmpago(){
+		//esta funcion modifica elementos al cambiar el metodo de pago
+		//elige la cuenta a afectar segun el metodo de pago
+		cuentasi();
+		aparece();
+		}
+	
 		function llenactas(cuentas,elem){
 			//autorelleno de select cuentas
 				var options = '<option value= "0">Seleccione</option>';
@@ -201,6 +268,7 @@ function saldobanco($mysqli){
 	 			});
 
 	 			document.getElementById("fechao").value = new Date().toDateInputValue();
+	 			document.getElementById("ftras").value = new Date().toDateInputValue();
 	 			
 	 		   // Toggles the visibility of dialog.	  	 
 	 			  app.toggleAddDialog = function(visible) {
@@ -282,14 +350,42 @@ function saldobanco($mysqli){
 	 		   		if(!fechac){return -1;}else{return 0;}
 	 		   	}
 	 			function muestrad(){
+	 				 var adics=document.getElementsByClassName("adic");
+	 				    var longi=adics.length;
+	 				    for(var i=0;i<longi;i++){
+		 				    	adics[i].classList.add("ocult");
+		 				    }
 	    				app.toggleAddDialog(true)
-	    				document.getElementById('fgas').focus();
+	    				var fgas= document.getElementById('fgas');
+	    				fgas.value = new Date().toDateInputValue();
+	    				fgas.focus();
 	    			}
 	    			function cancela(){
 	    				app.toggleAddDialog(false)
 	    				resetea();
 	    			}
 
+
+   					function pdeduc(){
+   	   					//obtener el porcentaje de deduccion
+   	   					var resul;
+   							var deducheck= document.getElementsByName('factorded');
+   							var dlongi = deducheck.length;
+   							for(var i=0; i<dlongi; i++){
+									if(deducheck[i].checked = true){
+											resul= deducheck[i].value;
+											return resul;
+										}
+   	   							}
+   	   					}
+
+   					function propefec(){
+   	   					//obtiene si el check efectivo se pulso
+							var resul= document.getElementById("efec").checked;
+							return resul;
+   	   					}
+
+   						
 	    			function borrafilas(){
 	    	   				//borra las filas adicionales del dialogo
 	    				var filas = document.getElementById('tablamovtos').rows.length;
@@ -344,9 +440,14 @@ function saldobanco($mysqli){
 	    				var arch =	document.getElementById('arch').value;
 	    				var catg =	document.getElementById('catg').value;
 	    				var concepg =	document.getElementById('concepg').value;
-	    				var mpago = document.getElementById('smpago').value;
+	    				var metpago = document.getElementById('smpago').value;
 	    				var cuenta = document.getElementById('cuenta').value;
 	    				var folio = document.getElementById('folio').value;
+	    				//obtener porcentaje de deduccion
+	    				var pordeduc= pdeduc();
+	    				var mprop= document.getElementById('mprop').value;
+	    				var efec=propefec();
+	    				var ivaaux= document.getElementById('miva').value;
 	    				var tipo= "g";
 	    				//envio a bd
 	    					$.post( "php/enviaotros.php",
@@ -358,9 +459,13 @@ function saldobanco($mysqli){
 	 								arch:arch,
 	 								catg:catg,
 	 								concep:concepg,
-	 								mpago:mpago,
+	 								metpago:metpago,
 	 								cuenta:cuenta,
 	 								folio:folio,
+	 								pordeduc:pordeduc,
+	 								mprop:mprop,
+	 								efec:efec,
+	 								ivaaux:ivaaux,
 	 								orig:"",
 	 								dest:""								
 	 							 }, null, "json" )
@@ -394,9 +499,13 @@ function saldobanco($mysqli){
 	 								arch:"",
 	 								catg:"",
 	 								concep:concept,
-	 								mpago:"",
+	 								metpago:"",
 	 								cuenta:"",
 	 								folio:"",
+	 								pordeduc:"",
+	 								mprop:"",
+	 								efec:"",
+		 							ivaaux:"",
 	 								orig:origen,
 	 								dest:destino					
 	 							 }, null, "json" )
@@ -618,7 +727,20 @@ function saldobanco($mysqli){
 	 				}
 	 				return resul;
 	 				}
-	 //insercion de primera línea
+
+				function cgasto(){
+					//acciones de acuerdo a la clase de gasto
+					//si deducible mostrar check factor deduc
+					var cgasto= this.value;
+					var cfded= document.getElementById("fded")
+					if(cgasto<"06"){
+						if(cfded.classList.contains("ocult")){cfded.classList.toggle("ocult")};
+						}else{
+							if(!cfded.classList.contains("ocult")){cfded.classList.toggle("ocult")};	
+							}
+					}
+							
+	 //insercion de primera línea en dialogo otros movs
 	    		otracta();
 	 			//escuchas
 	 			//	boton mas
@@ -656,8 +778,14 @@ function saldobanco($mysqli){
 	 			document.getElementById("montog").addEventListener('change',calciva,false)
 	 			//calculo de total
 	 			document.getElementById("ivag").addEventListener('change',calctotal,false)
+	 			//clase de gasto
+	 			document.getElementById("catg").addEventListener('change',cgasto,false)
 	 			//metodo de pago
-	 			document.getElementById("smpago").addEventListener('change',cuentasi,false)
+	 			document.getElementById("smpago").addEventListener('change',modmpago,false)
+	 			//concepto
+					document.getElementById("concepg").addEventListener('change',mconcep,false)
+				//propina
+				document.getElementById("mprop").addEventListener('change',ivaaux,false)
 	 			//enfoque inicial
 	 			document.getElementById("smpago").addEventListener('change',cuentasi,false)
 	    		 });
@@ -770,17 +898,23 @@ function saldobanco($mysqli){
 			    				<label>Categoría: </label>
 			    				<select id="catg" name="catg">
 									<option value="0">Seleccione la clase de gasto</option>
-									<option value="01">Gastos Generales</option>
-									<option value="02">Gastos de Venta</option>
-									<option value="03">Gastos de Administración</option>
-									<option value="04">Gastos Financieros</option>
-									<option value="05">Reembolso de Gastos</option>
-									<option value="06">Generales No Deduc</option>
-									<option value="07">Ventas No Deduc</option>
-									<option value="08">Admon No Deduc</option>
-									<option value="99">Otros Gastos</option>
+									<option value="601">Gastos Generales</option>
+									<option value="602">Gastos de Venta</option>
+									<option value="603">Gastos de Administración</option>
+									<option value="701.01">Comisiones Bancarias</option>
+									<option value="601.83">Generales No Deduc</option>
+									<option value="602.83">Ventas No Deduc</option>
+									<option value="603.81">Admon No Deduc</option>
+									<option value="703">Otros Gastos Deducibles</option>
 		         				</select>
 		         				<label>Concepto: </label><input type="text" name="concepg"  id="concepg" class="cajam" maxlength="20"/>		
+			    				<div class="rengn">
+    		         				<span id="fded" class= "ocult" >
+    		         					<label>%deduc: </label>
+    		         					<input type="radio" name="factorded" value=1 checked > Al 100%
+        			    				<input type="radio" name="factorded"value =.08> Al 8.75%
+    		         				</span>
+		         				</div>
 			    			</div>
 			    			<label>Metodo de Pago: </label>
 			    			<div class="rengn">
@@ -789,12 +923,18 @@ function saldobanco($mysqli){
 									<option value="01">Efectivo</option>
 									<option value="02">Cheque</option>
 									<option value="03">Transferencia</option>
+									<option value="13">Cargo a cuenta</option>
 									<option value="04">Tarjetas de Credito</option>
 									<option value="28">Tarjetas de Débito</option>
 									<option value="99">Otros</option>
 		         				</select>
 		         				<label>Cuenta: </label><input type="text" name="cuenta"  id="cuenta" class="cajac" maxlength="4" />
 		         				<label>Folio Op: </label><input type="text" name="folio"  id="folio" class="cajac" />
+			    			</div>
+			    			<div>
+			    				<label id="ladic" class="adic"> </label><input type="number" name="mprop"  id="mprop" class="cajac adic" />
+			    				<label id="lefec" class="adic" >Efectivo? </label><input type="checkbox" name="efec"  id="efec" class="cajac adic" />
+			    				<label id="liva" class="adic">IVA </label><input type="number" name="miva"  id="miva" class="cajac adic" />
 			    			</div>
 			    			<div class="rengn">
 			    				<h4 id="avisor"></h4>
@@ -823,7 +963,7 @@ function saldobanco($mysqli){
 			    				<select id="origent" name="origent">
 									<option value="0">Seleccione la cuenta origen</option>
 									<option value="101.01">Caja</option>
-									<option value="102.01">Banorte</option>
+									<option value="102.01">Banco</option>
 		         				</select>
 		         				<label>A la Cuenta: </label>
 			    				<select id="destinot" name="destinot">
