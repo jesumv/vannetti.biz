@@ -901,7 +901,7 @@ function saldobanco($mysqli){
 									<option value="601">Gastos Generales</option>
 									<option value="602">Gastos de Venta</option>
 									<option value="603">Gastos de Administración</option>
-									<option value="701.01">Comisiones Bancarias</option>
+									<option value="701.10">Comisiones Bancarias</option>
 									<option value="601.83">Generales No Deduc</option>
 									<option value="602.83">Ventas No Deduc</option>
 									<option value="603.81">Admon No Deduc</option>
