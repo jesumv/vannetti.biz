@@ -30,7 +30,8 @@
 	/**obten fecha para consultas**/
 		$fechainic = fechainit($mysqli);
 		$fechafin = fechatope($fechainic);
-	   $result1=$mysqli->query("SELECT (SUM(CASE WHEN cuenta='401.01' THEN haber ELSE 0 END)+SUM(CASE WHEN cuenta='401.04' THEN haber ELSE 0 END))FROM DIARIO
+	   $result1=$mysqli->query("SELECT (SUM(CASE WHEN cuenta='401.01' THEN haber ELSE 0 END)+
+        SUM(CASE WHEN cuenta='401.04' THEN haber ELSE 0 END))FROM ventas.diario
 	    WHERE fecha >'".$fechainic."'");
 	   //$dato1=$result1->fetch_row();
 	   $dato1=mysqli_fetch_row($result1);
