@@ -32,20 +32,21 @@
 				  $p1 =$_POST['p1'];
 				  $p2 =$_POST['p2'];
 				  $p3 =$_POST['p3'];
+				  $p4 =$_POST['p4'];
 				  $usu = $_SESSION['usuario'];	
 		$result= 0;		  
 		//seleccion de tipo de operacion
 		if($idprod == 0){
 			//si es alta de producto
 			$sqlCommand= "INSERT INTO $table (codigo,cbarras,nombre,nom_corto,nom_cat,
-	   		grupo,unidad,cant,descripcion,iva,speso,costo,costov,precio1,precio2,precio3,idproveedores,usu,status,spesov)
-	    	VALUES ('$cod','$barr','$nombre','$nomcor','$nomcat',$grupo,$ud,$cant,'$desc',$iva,$speso,$cost,$costv,'$p1','$p2','$p3',$prov,'$usu',0,$spesov)";
+	   		grupo,unidad,cant,descripcion,iva,speso,costo,costov,precio1,precio2,precio3,precio4,idproveedores,usu,status,spesov)
+	    	VALUES ('$cod','$barr','$nombre','$nomcor','$nomcat',$grupo,$ud,$cant,'$desc',$iva,$speso,$cost,$costv,'$p1','$p2','$p3','$p4',$prov,'$usu',0,$spesov)";
 		}else{
 			// si es modificación al producto
 			$sqlCommand= "UPDATE productos SET codigo='$cod', cbarras = '$barr',
 			nombre= '$nombre',nom_corto='$nomcor',nom_cat ='$nomcat',grupo=$grupo,
 			unidad= $ud, cant= $cant, descripcion= '$desc',iva=$iva,speso=$speso,spesov=$spesov,costo=$cost,costov=$costv,
-			precio1='$p1',precio2='$p2',precio3='$p3',idproveedores=$prov,
+			precio1='$p1',precio2='$p2',precio3='$p3',precio4='$p4',idproveedores=$prov,
 			usu='$usu' WHERE idproductos = $idprod";
 			$result = 1;		
 		}

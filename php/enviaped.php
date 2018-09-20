@@ -114,8 +114,8 @@
 	//afectacion a bd
 	//alta de pedido
 	$table="pedidos";
-	$sqlCommand= "INSERT INTO $table(idclientes,arts,monto,iva,total,fecha,tipovta,usu,status,facturar)
-	VALUES ($cte,$totarts,$montot,$totiva,$total,'$fechaconv',$tventa,'$usu',$statusp,$facturarb)";
+	$sqlCommand= "INSERT INTO $table(idclientes,arts,monto,iva,total,saldo,fecha,tipovta,usu,status,facturar)
+	VALUES ($cte,$totarts,$montot,$totiva,$total,$total,'$fechaconv',$tventa,'$usu',$statusp,$facturarb)";
 	$query= mysqli_query($mysqli, $sqlCommand)or die("error en alta pedidos:".mysqli_error($mysqli));
 		if($query){
 			//numero de pedido

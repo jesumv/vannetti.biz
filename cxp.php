@@ -14,7 +14,7 @@ require 'include/funciones.php';
 /** consulta a bd **/
 			$table = 'oc';
 		 	$table2 = 'proveedores';
-			 $sql= "SELECT t2.razon_social,t1.fecharec, t1.idoc,t1.factura,t1.remision,t1.monto,t1.iva,t1.total,t2.diascred,t1.facturar,t1.idproveedores FROM $table
+			 $sql= "SELECT t2.razon_social,t1.fecharec, t1.idoc,t1.factura,t1.remision,t1.monto,t1.iva,t1.total,t2.diascred,t1.facturar,t1.idproveedores,t1.saldo FROM $table
 			 AS t1 INNER JOIN $table2 AS t2 ON t1.idproveedores= t2.idproveedores WHERE t1.status >10 AND t1.status <99 AND t1.credito = 1 ORDER BY fecharec,idoc";
 			 $result2 = mysqli_query($mysqli,$sql)or die ("ERROR EN CONSULTA DE CUENTAS POR PAGAR.".mysqli_error($mysqli));;
 			 	 if(mysqli_num_rows($result2)) {
@@ -41,37 +41,44 @@ require 'include/funciones.php';
 <script src="js/jquery3/jquery-3.0.0.min.js"></script>
    <script>
    'use strict';
-   	(function() { 	
-	   	$(document).ready(function() {
-	   		var app = {
-			    isLoading: true,
-			    spinner: document.querySelector('.loader'),
-			    container: document.querySelector('.main'),
-			    addDialog: document.querySelector('.dialog-container'),
-			  };
-			  
-			function noc(ped){
-			//obtiene el no. pedido
-				var longi=ped.length-3;
-				var peds=ped.slice(-longi);
-				return peds;
-			} 
+   	(function() { 
+   		$(document).ready(function() {
+   	   		//variable para guardar saldo del docto eleg
+   	   		var saldoi;
+   			var app = {
+   				    isLoading: true,
+   				    spinner: document.querySelector('.loader'),
+   				    container: document.querySelector('.main'),
+   				    addDialog: document.querySelector('.dialog-container'),
+   				  };
+
+   		 //deshabilitar campo saldo
+			  $( '#saldo' ).prop( "disabled", true );
+		//funciones principales
+			  function noc(ped){
+					//obtiene el no. pedido
+						var longi=ped.length-3;
+						var peds=ped.slice(-longi);
+						return peds;
+					} 
 			function mpago(indice){
-				//muestra dialogo pago
-				//obtener numero de pedido
-				var pedn= noc(indice);
-				var texto = "REGISTRO DE PAGO OC "+pedn;
-				var fact=document.getElementById('nofact'+pedn).innerHTML;
-				document.getElementById('titulod').innerHTML= texto;
-				document.getElementById('nfact').value = fact;
-				document.getElementById('fpago').focus();
-		   		app.toggleAddDialog(true)
-		   	}
-		   	
-		   	function afactura(indice){
-		   		//añade el nombre del archivo de la factura
-		   		alert("EN CONSTRUCCION");
-		   	}
+						//muestra dialogo pago
+							//fecha por defecto
+		  				document.getElementById("fpago").valueAsDate = new Date();	
+						//obtener numero de pedido
+						var pedn= noc(indice);
+						var texto = "REGISTRO DE PAGO OC "+pedn;
+						var fact=document.getElementById('nofact'+pedn).innerHTML;
+						var saldoa=document.getElementById('saldot'+pedn).innerHTML;
+						saldoi = saldoa;
+						document.getElementById('titulod').innerHTML= texto;
+						document.getElementById('nfact').value = fact;
+						document.getElementById('saldo').value = saldoa;
+						document.getElementById('monto').value = saldoa;
+						document.getElementById('fpago').focus();
+				   		app.toggleAddDialog(true)
+				  }
+
 		   	
 		   	function resulreg(reng){
 				//anuncia el resultado positivo del registro
@@ -85,10 +92,10 @@ require 'include/funciones.php';
 				var boton= document.getElementById('pag'+reng)
 				celda.removeChild(boton)
 				celda.style.backgroundColor = "green";
-				celda.innerHTML="PAGADA";
+				celda.innerHTML="PAGO REGIST";
 				limpia()
-			}
-		   	
+			} 
+
 			function valida(indic){
 		   		var fecha=document.getElementById('fpago').value;
 		   		var factu= document.getElementById('sfact'+indic).innerHTML;
@@ -97,6 +104,8 @@ require 'include/funciones.php';
 		   	    var mpag=document.getElementById('smpago').value;
 		   	    var ctaact=document.getElementById('cuenta').value;
 		   	    var folioact=document.getElementById('folio').value;
+		   	    var montop = Number(document.getElementById('monto').value);
+		   	    var saldo = Number(document.getElementById('saldo').value);
 		   	    //corregir funcion fecha
 		   	    var fechac=isValidDate(fecha)
 		   		if(!fechac){return -1;}
@@ -105,9 +114,10 @@ require 'include/funciones.php';
 		   				if(arch==""){return -3}
 		   				if(mpag==0){return -4}else if(mpag>1 && ctaact==""){return -5}
 		   				else if(mpag>1 && mpag<4 && folioact==""){return-6};
-		   		}	
-		   	}
-		   	  
+		   		}
+		   		if (montop>saldoi){	return -7}; 
+			}
+			  
 			function epago(){
 			 	//esta funcion añade escuchas a botones de pago
 			 	var bpagar = document.getElementsByClassName('bpag');
@@ -115,16 +125,7 @@ require 'include/funciones.php';
 			  			bpagar[i].addEventListener('click', function(){mpago(this.id)}, false)
 			  		}
 			}
-			
-			function efact(){
-			//añade escuchas a botones factura
-				var bfact= document.getElementsByClassName('bfact');
-				for (var i = 0; i < bfact.length; i++) {
-			  			bfact[i].addEventListener('click', function(){afactura(this.id)}, false)
-			  		}
-
-			}
-			
+					
 			function evalua(resul,reng){
 			/** se evalua la respuesta de enviapagoc.php**/
 				var resp;
@@ -150,11 +151,13 @@ require 'include/funciones.php';
 				document.getElementById('rpagooc').reset();
 			}
 			
-			function enviapagoc(reng){
+			function enviapagoc(reng,montop){
 				//recoleccion de variables -- de dialogo de pago
 				var fecha= document.getElementById("fpago").value;
+				var saldof= document.getElementById("saldo").value;
 				var factu= document.getElementById("nfact").value;
 				var arch= document.getElementById("arch").value;
+				if(arch==""){arch="factura pendiente"};
 				var metpago= document.getElementById("smpago").value;
 				var cta = document.getElementById("cuenta").value;
 				var folio=document.getElementById("folio").value;
@@ -162,14 +165,19 @@ require 'include/funciones.php';
 				var sfact= document.getElementById("sfact"+reng).innerHTML;
 				var subt= document.getElementById("subt"+reng).innerHTML;
 				var iva= document.getElementById("iva"+reng).innerHTML;
+				var saldoi= document.getElementById("saldot"+reng).innerHTML;
 				var totalp= document.getElementById("total"+reng).innerHTML;
 				var noprov= document.getElementById("noprov"+reng).innerHTML;
+				var comi = document.getElementById("comi").value;
+				var civa = document.getElementById("ivac").value;
+	
 				//envio a bd
 				$.post( "php/enviapagoc.php",
 							{	sfact:sfact,
 								oc:reng,
 								idprov:noprov,	
 								fecha:fecha,
+								saldoi: saldoi,
 								factu:factu,	
 								arch:arch,
 								metpago:metpago,
@@ -177,15 +185,22 @@ require 'include/funciones.php';
 								folio:folio,
 								subt:subt,
 								iva:iva,
-								total:totalp							
+								total:totalp,
+								monto: montop,
+								comi:comi,
+								civa:civa,
+														
 							 }, null, "json" )
 							 	.done(function(data) {
 	    							var resul= data.resul;
+	    							var saldofr = data.saldof;
+	    							document.getElementById("saldot"+reng).innerHTML= saldofr;
 	    							var textor = evalua(resul,reng);
 	    						})
 	    						.fail(function(xhr, textStatus, errorThrown ) {		
 	    							resulmal("error en registro pago: "+xhr.responseText);
 								});	
+				
 				//recepcion de respuesta
 				//traduccion
 				//fin
@@ -195,8 +210,7 @@ require 'include/funciones.php';
 		   * Methods to update/refresh the UI
 		   *
 		   ****************************************************************************/  
-	//fecha por defecto
-		  	document.getElementById("fpago").valueAsDate = new Date();		  
+	  
 	// Toggles the visibility of dialog.	  	 
 			  app.toggleAddDialog = function(visible) {
 			    if (visible) {
@@ -217,32 +231,65 @@ require 'include/funciones.php';
 						//factura
 				document.getElementById('nfact').addEventListener('change',function(){document.getElementById('arch').focus()})			
 						//archivo
-				document.getElementById('arch').addEventListener('change',function(){
-					document.getElementById('smpago').focus()
-					})
+				document.getElementById('arch').addEventListener('change',function(){document.getElementById('smpago').focus()})
 						//metodo de pago
 				document.getElementById('smpago').addEventListener('change',function(){
 						var mpago=document.getElementById('smpago').value;
+						var vcomi = document.getElementById('comi');
+			    		var viva = document.getElementById('ivac');
+			    		var rcomi = document.getElementById('rcomi'); 
+			    		vcomi.value="";
+			    		viva.value="";
+			    		if(!rcomi.classList.contains("ocult")){rcomi.classList.toggle("ocult")};
+        						switch(mpago) {
+        					    case "02":
+        					    	document.getElementById('cuenta').value="8145";
+        					    case "03":
+        					    		document.getElementById('cuenta').value="8145";
+        					    		document.getElementById('folio').focus()   
+        					    		if(rcomi.classList.contains("ocult")){rcomi.classList.toggle("ocult");
+        					    		   vcomi.value = 5;
+        					    		   viva.value =.8;
+        								}
+        					        break;
+        					    case "04":
+    					    		document.getElementById('cuenta').value="8886";
+    					    		document.getElementById('folio').focus()
+    					        break;
+        					    case "28":
+        					    	document.getElementById('cuenta').value="2730";
+        					    	document.getElementById('folio').focus()
+        					        break;
+        					    default:
+        					    	document.getElementById('regpago').focus()
+        					}
+				});
 
-						switch(mpago) {
-					    case "2":
-					    case "3":
-					    		document.getElementById('cuenta').value="8145";
-					    		document.getElementById('folio').focus()
-					        break;
-					    case "28":
-					    	document.getElementById('cuenta').value="2730";
-					    	document.getElementById('folio').focus()
-					        break;
-					    default:
-					    	document.getElementById('regpago').focus()
-					}
-
-						});
 						//cuenta
 						document.getElementById('cuenta').addEventListener('change',function(){
 							document.getElementById('regpago').focus()
 						});
+
+						//monto del pago
+						document.getElementById('monto').addEventListener('change',function(){
+							var pagon = Number(this.value);
+							var aviso =document.getElementById('avisor');
+							var saldom = Number(document.getElementById('saldo').value);
+							if(pagon<=saldom){
+								var saldon = saldom - pagon;
+								document.getElementById('saldo').value = saldon;
+								document.getElementById('nfact').focus();
+								aviso.innerHTML="";
+								}else{
+									document.getElementById('saldo').value = saldom;
+									var casilla = this;
+									aviso.innerHTML="MONTO DE PAGO NO PUEDE SER MAS QUE SALDO";
+									this.value = null;
+									this.focus();
+									}
+							
+
+							});
 
 	
 				//escucha de boton cancela
@@ -263,6 +310,7 @@ require 'include/funciones.php';
 					var noc=titu.slice(-titul);
 					//validaciones
 					var resulp= valida(noc);
+					var montop = document.getElementById('monto').value;
 					switch(resulp){					
 						case -1:
 							//no fecha valida
@@ -273,10 +321,6 @@ require 'include/funciones.php';
 						aqui.innerHTML="ES NECESARIO EL NUMERO DE FACTURA";
 						document.getElementById('nfact').focus();
 						break;
-						case -3:
-						aqui.innerHTML="SEÑALE EL ARCHIVO XML";
-						document.getElementById('arch').focus();
-						break;
 						case -4:
 						aqui.innerHTML="ELIJA EL MEDIO DE PAGO";
 						document.getElementById('smpago').focus();
@@ -284,22 +328,28 @@ require 'include/funciones.php';
 						case -5:
 						aqui.innerHTML="INTRODUZCA LA CUENTA DE PAGO";
 						document.getElementById('cuenta').focus();
+						break;
 						case -6:
 						aqui.innerHTML="INTRODUZCA EL FOLIO OPERACION";
 						document.getElementById('folio').focus();
 						break;
+						case -7:
+							aqui.innerHTML="MONTO DE PAGO NO PUEDE SER MAS QUE SALDO";
+							document.getElementById('monto').focus();
+						break;
 						default:
 						//enviar a registro
-						enviapagoc(noc);
+						enviapagoc(noc,montop);
 					}
 					}); 
 		   //anade escuchas a botones pago
 		    epago();
-		   //añade escuchas a botones factura
-		   	efact();
-	   		});
-   		 		
+		
+//end ready    	   	   		
+   	   	})	
+//end function	
 	})();
+
    </script>
     <script src="js/fauxcx.js"></script>
 </head>
@@ -320,8 +370,8 @@ require 'include/funciones.php';
 		  		include_once "include/menu1.php";
 		  ?>
 	
-	<table id"tblcxp"name= "tblcxp" class="db-table">
-		<tr><th>PROVEEDOR</th><th>FECHA</th><th>OC</th><th>FACTURA</th><th>REMISION</th><th>MONTO</th><th>IVA</th><th>TOTAL</th><th>DIAS VENC</th><th>ANEX FACT</th><th>PAGO</th></tr>
+	<table id="tblcxp" name="tblcxp" class="db-table">
+		<tr><th>PROVEEDOR</th><th>FECHA</th><th>OC</th><th>FACTURA</th><th>REMISION</th><th>MONTO</th><th>IVA</th><th>TOTAL</th><th>SALDO ACT</th><th>DIAS VENC</th><th>PAGO</th></tr>
 	
 	<?php
 	//-----CONSTRUCCION DE LA TABLA------------------------------------------------------------------------
@@ -336,6 +386,7 @@ require 'include/funciones.php';
 						$monto=$row2[5];
 						$iva=$row2[6];
 						$total=$row2[7];
+						$saldo=$row2[11];
 			 			$diascred=$row2[8];
 						$facturar=$row2[9];
 						$idprov=$row2[10];
@@ -343,9 +394,8 @@ require 'include/funciones.php';
 						$calc=diasvenc($row2[1], $diascred);
 					 	echo "<tr><td class='ocult' id=noprov".$nooc.">".$idprov."</td><td class='ocult' id=sfact".$nooc.">".$facturar."</td>
 					 	<td>".$rz."</td><td>".$fechamod."</td><td>".$nooc."</td><td id=nofact".$nooc.">".$factura."</td><td>".$remi."</td>
-					 	<td id=subt".$nooc.">".$monto."</td><td id=iva".$nooc.">".$iva."</td><td id=total".$nooc.">".$total."</td><td>".$calc."</td>
-					 	<td class= 'edac' id=celf".$nooc."><a id=afact".$nooc." class='bfact' href='javascript:void(0);'>
-					 	<img src='img/fuploadr.jpg' ALT='anexar factura'></a></td><td class= 'edac' id=celp".$nooc."><a id=pag".$nooc." class='bpag' href='javascript:void(0);'>
+					 	<td id=subt".$nooc.">".$monto."</td><td id=iva".$nooc.">".$iva."</td><td id=total".$nooc.">".$total."</td><td id=saldot".$nooc.">".$saldo."</td><td>".$calc."</td>
+					 	<td class= 'edac' id=celp".$nooc."><a id=pag".$nooc." class='bpag' href='javascript:void(0);'>
 					 	<img src='img/check-black.png' ALT='reg pago'></a></td></tr>";
 					 } 
 	  }else{echo"<h1>no hay pedidos pendientes de cobro</h1>";}
@@ -360,11 +410,14 @@ require 'include/funciones.php';
 	    	<div class="dialog-body">
 	    		<form id="rpagooc" method ="post" action="#" onsubmit="return false;">
 	    			<div class="rengn">
-	    			<label>Fecha: </label><input type="date" name="fpago"  id="fpago" class="cajam"/>
-	    			<label>Factura: </label><input type="text" name="nfact"  id="nfact" class="cajam"/>	
+	    			<label>Fecha: </label><input type="date" name="fpago"  id="fpago" class="cajac"/>
+	    			<label>Saldo: </label><input type="text" name="saldo"  id="saldo" class="cajac"/>	
+	    			<label>Monto: </label><input type="number" name="monto" min="0" step ="any" id="monto" class="cajac"/>	
+	    			
 	    			</div>
 	    			<div class="rengn">
-	    				<label>Archivo XML: </label><input type="file" name="arch"  id="arch" accept=".xml"/>
+	    			<label>Factura: </label><input type="text" name="nfact"  id="nfact" class="cajam"/>
+	    			<label>Archivo XML: </label><input type="file" name="arch"  id="arch" accept=".xml"/>
 	    			</div>
 	    			<label>Metodo de Pago: </label>
 	    			<div class="rengn">
@@ -377,8 +430,13 @@ require 'include/funciones.php';
 							<option value="28">Tarjetas de Débito</option>
 							<option value="99">Otros</option>
          				</select>
-         				<label>Cuenta: </label><input type="text" name="cuenta"  id="cuenta" class="cajac" maxlength="4" />
+         				<label>Cuenta de Pago: </label><input type="text" name="cuenta"  id="cuenta" class="cajac" maxlength="4" />
          				<label>Folio Op: </label><input type="text" name="folio"  id="folio" class="cajac" />
+	    			</div>
+	    			<div id="rcomi" class="rengn ocult">
+	    				<label>Comisión: </label>
+	    				<input type="number" name="comi"  id="comi" class="cajac" maxlength="4" min=0 />
+         				<label>IVA: </label><input type="number" name="ivac"  id="ivac" class="cajac" disabled/>
 	    			</div>
 	    			<div class="rengn">
 	    				<h4 id="avisor"></h4>

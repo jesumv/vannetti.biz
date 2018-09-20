@@ -140,7 +140,7 @@ if(isset($_POST['enviomod'])){
   </script>
 </head>
 
-<body
+<body>
 
 <!--LISTON DE ENCABEZADO ---------------------------------------------------------------------------------------->  
     <?php
@@ -155,7 +155,7 @@ if(isset($_POST['enviomod'])){
  <!-- la forma. ------>
   <div class="cajacentra">
 
-    <form id="modifprod" action="<?php echo $_SERVER['PHP_SELF'];?>" method = "POST">
+    <form id="modifprod" action="<?php echo $_SERVER['PHP_SELF'];?>" method = "post">
         <div class="error" style="display:none;">
             <img src="img/warning.gif" alt="Warning!" width="24" height="24" style="float:left; margin: -5px 10px 0px 0px; " />
             <span ></span><br clear="all" />

@@ -99,7 +99,7 @@ $nivel = $_POST['nivel'];
 	  		include_once "include/menu1.php";
 	  ?>
 	  
-	  <form id="altausu" action="<?php echo $_SERVER['PHP_SELF']; ?>" method = "POST">
+	  <form id="altausu" action="<?php echo $_SERVER['PHP_SELF']; ?>"method = "post">
 	        <table border = "1" class="centraelem">
 	            <tr>
 	                <td class="celdacolor">NOMBRE</td>

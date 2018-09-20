@@ -32,7 +32,8 @@
 		$fechafin = fechatope($fechainic);
 	   $result1=$mysqli->query("SELECT (SUM(CASE WHEN cuenta='401.01' THEN haber ELSE 0 END)+SUM(CASE WHEN cuenta='401.04' THEN haber ELSE 0 END))FROM DIARIO
 	    WHERE fecha >'".$fechainic."'");
-	   $dato1=$result1->fetch_row();
+	   //$dato1=$result1->fetch_row();
+	   $dato1=mysqli_fetch_row($result1);
 	   $result2=$mysqli->query("SELECT SUM(CASE WHEN cuenta='501.01' THEN debe ELSE 0 END)FROM DIARIO
 	   WHERE fecha >'".$fechainic."'");
 	   $dato2=$result2->fetch_row();

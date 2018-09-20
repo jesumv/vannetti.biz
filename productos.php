@@ -73,6 +73,7 @@
 		var p1sel = obj1[0].pr1;
 		var p2sel = obj1[0].pr2;
 		var p3sel = obj1[0].pr3;
+		var p4sel = obj1[0].pr4;
 		//lenado de datos
 		var idsel = document.getElementById('idprod');
 		idsel.value= idprod;
@@ -112,6 +113,8 @@
 		p2cas.value = p2sel;
 		var p3cas =  document.getElementById('p3');
 		p3cas.value = p3sel;
+		var p4cas =  document.getElementById('p4');
+		p4cas.value = p4sel;
 	}
 	
 	function validar(){
@@ -181,6 +184,17 @@
 		}
 		return true;
 	}
+	function traeidprods(){
+		 //esta funcion prellena los campos codigo y codigo de barras
+			$.get('php/getcodmax.php',function(data){
+			var obj1 = JSON.parse(data);
+				var maxidprod=parseInt(obj1[0])+1;
+				var cod = document.getElementById('cod');
+				cod.value = maxidprod;
+				var barr = document.getElementById('barr');
+				barr.value = '00'+ maxidprod;				
+		});
+		}
 	
 	function traeprovs(){
 		 //esta funcion añade opciones a la lista de proveedores
@@ -242,7 +256,7 @@
 			traeprovs();
 		});
 			opaso1.then(traegrupo());
-		 	opaso1.then(traeuds());		
+		 	opaso1.then(traeuds());	
 	   };
 	 
 	 
@@ -295,6 +309,7 @@
 						}else{
 								var prodvac = new Promise(function(resolve,reject){
 									llenaop();
+									traeidprods();
 								});
 								prodvac.then(app.toggleAddDialog(true));
 							};
@@ -377,7 +392,7 @@ include_once "include/menu1.php";
  $table2 = 'grupos';
  $table3='unidades';
  $sql= "SELECT t2.nombre, t1.idproductos, t1.codigo, t1.cbarras,t1.nombre,t3.nombre, t1.cant,
- t1.costo, t1.precio1, t1.precio2,t1.precio3 FROM $table AS t1 INNER JOIN $table2 AS t2 
+ t1.costo, t1.precio1, t1.precio2,t1.precio3,t1.precio4 FROM $table AS t1 INNER JOIN $table2 AS t2 
  ON t1.grupo=t2.idgrupos INNER JOIN $table3 AS t3 ON t1.unidad=t3.idunidades 
  WHERE t1.status < 2 ";
  
@@ -386,7 +401,7 @@ include_once "include/menu1.php";
     if(mysqli_num_rows($result2)) {
         echo '<table cellpadding="0" cellspacing="0" class="db-table">';
         echo '<tr><th>Editar</th><th>Eliminar</th><th>Grupo</th><th>No.</th><th>Código</th><th>CBarras</th>
-        <th>Producto</th><th>Unidad</th><th>Cantidad</th><th>Costo</th><th>Precio 1</th><th>Precio 2</th><th>Precio3</th></tr>';
+        <th>Producto</th><th>Unidad</th><th>Cantidad</th><th>Costo</th><th>Precio 1</th><th>Precio 2</th><th>Precio3</th><th>Precio4</th></tr>';
         //inicializacion de contador de renglon
         $reng = 1;
         while($row2 = mysqli_fetch_row($result2)) {
@@ -459,9 +474,10 @@ include_once "include/menu1.php";
 		            	<label>Causa Iva?</label><input type="checkbox" id="chiva" name="chiva" />
 		            </div>
 		            <div class="rengn">
-		            	<label>P1 </label><input type="text" name="p1"  id="p1" class="cajam"/>
-		            	<label>P2 </label><input type="text" name="p2"  id="p2" class="cajam"/>
-		            	<label>P3 </label><input type="text" name="p3"  id="p3" class="cajam"/>
+		            	<label>P1 </label><input type="text" name="p1"  id="p1" class="cajac"/>
+		            	<label>P2 </label><input type="text" name="p2"  id="p2" class="cajac"/>
+		            	<label>P3 </label><input type="text" name="p3"  id="p3" class="cajac"/>
+		            	<label>P4 </label><input type="text" name="p4"  id="p4" class="cajac"/>
 		            </div>        
 			   </div>
 				      <div class="dialog-buttons">

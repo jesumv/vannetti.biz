@@ -96,7 +96,7 @@ function tiposurt($mysqli,$oc){
 	}
 	
 	function traedatosoc($mysqli,$oc){
-		$datos = [];
+		$datos = array();
 		//esta funcion trae los datos utiles de la oc
 		$sql = "SELECT idproveedores,facturar, credito FROM oc WHERE idoc=".$oc;
 		$query = mysqli_query($mysqli, $sql) or die ('error en consulta no. proov: '.mysqli_error($mysqli));

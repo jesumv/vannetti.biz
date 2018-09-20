@@ -22,16 +22,20 @@
 		$factura=$_POST["factu"];
 		$subt= $_POST["subt"];
 		$iva= $_POST["iva"];
-		$total= $_POST["total"];
+		$saldoi=$_POST["saldoi"];
+		$montop= $_POST["montop"];
+		$saldof= $_POST["saldof"];
 		$metpago=$_POST["metpago"];
 		$idcte=$_POST["idcte"];
 		$arch=$_POST["arch"];
+		$saldof=$saldoi-$montop;
 		//afectacion a bd
-			$resul=epagoped($mysqli, $fechap, $refer, $subt, $iva,$total,$factura,$metpago,$sfact,$idcte,$arch);
+			$resul=epagoped($mysqli, $fechap, $refer,$montop,$iva,$subt,$saldoi,$factura,$metpago,$sfact,$idcte,$saldof,$arch);
 			mysqli_close($mysqli);
 	}else{
 				$resul=-1;
 			}
 //salida
 		$jsondata['resul'] = $resul;
+		$jsondata['saldof'] = $saldof;
    		echo json_encode($jsondata);	

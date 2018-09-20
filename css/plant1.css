@@ -1,4 +1,10 @@
 /*estilos generales*/
+
+.divicent{
+
+	position:relative; float:none;margin: 1vh 20vw 1vh ;
+	padding:3px;
+}
 #botoncent{
 	margin:auto;
 	width:30%;
@@ -29,18 +35,29 @@
 	width: 80%;
 	font-size: 115%;
 }
+.cajalfc{
+	width: 80%;
+	font-size: 75%;
+}
 .cajam {
 	width: 28%;
 	font-size: 115%;
+}
+
+cajamfc {
+	width: 28%;
+	font-size: 75%;
 }
 .cajac {
 	width: 20%;
 	font-size: 115%;
 }
-.cajalfc{
-	width: 80%;
+cajacfc {
+	width: 28%;
 	font-size: 75%;
 }
+
+
 .celda{
 	background-color:#808080;
 }
@@ -54,8 +71,6 @@
 	width:200px;
 	font-size: 115%;
 }
-
-
 .celda .pagada{
 	background-color:#008040;
 }
@@ -74,6 +89,11 @@
 	border-style: dotted;
 	text-align: center;
 }
+
+#mensajeo {
+   font-size: 14pt;
+   font-family: Arial;
+}
 /*estilos para las tablas*/
 
 table.db-table 		{ border-right:1px solid #ccc; border-bottom:1px solid #ccc; 
@@ -88,6 +108,7 @@ table.db-table td { padding:5px; border-left:1px solid #ccc; border-top:1px soli
 table.db-table2 th	{ background:#eee; padding:5px; border-left:1px solid #ccc; border-top:1px solid #ccc; }
 table.db-table2 td	{ padding:5px; border-left:1px solid #ccc; border-top:1px solid #ccc; }
 
+.treng{background:#444;color: white;}
 
 .ed,.el{text-align:center}
 

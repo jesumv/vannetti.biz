@@ -74,11 +74,7 @@ function fallo($mensaje){
                 break;
         }
     }
-      function dstatus($tipov){
-          //esta funcion determina el status de pago de una oc
-          $resul =($tipov==0? 99:2);
-          return $resul;
-      }
+
       
     $funcbase = new dbutils;
     /*** conexion a bd ***/
@@ -101,20 +97,21 @@ function fallo($mensaje){
         $factura=$_POST["factura"];
         $subcta = $_POST["ctapago"];
         $facturar=$_POST["fact"];
+        // se revisa si debe haber fecha de pago
+        if($credito==0){$fechapag=$fecha;}else {$fechapag = NULL;}
         $jsondata = array();
         //creacion de datos para oc
         $arts= array_sum($cants);
         $usu= $_SESSION['usuario'];
         $ivat=0;
-        //determinacion de status pago
-        $spago = dstatus($credito);
+
         $resultado=0; // our control variable 
         
         $mysqli->autocommit(false);
         try {
             //creacion de oc en tabla oc
-            $sqlCommand= "INSERT INTO oc (idproveedores,arts,monto,total,fecharec,fechapago,usu,status,factura,facturar,credito,tpago)
-	    	     VALUES ($prov,$arts,$total,$total,'$fecha','$fecha','$usu',$spago,'$factura',$facturar,$credito,'$tpago')" ;
+            $sqlCommand= "INSERT INTO oc (idproveedores,arts,monto,total,saldo,fecharec,fechapago,usu,status,factura,facturar,credito,tpago)
+	    	     VALUES ($prov,$arts,$total,$total,$total,'$fecha','$fechapag','$usu',11,'$factura',$facturar,$credito,'$tpago')" ;
             $mysqli->query($sqlCommand)? null: fallo('alta oc '.mysqli_error($mysqli)); 
             //obtencion de numero de orden de compra
             $noc = traeoc($mysqli);

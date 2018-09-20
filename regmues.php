@@ -32,6 +32,13 @@ require 'include/funciones.php';
    <script>
    	'use strict';
    	(function() {
+
+   	//preparacion de fecha = hoy por defecto
+		   Date.prototype.toDateInputValue = (function() {
+			    var local = new Date(this);
+			    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+			    return local.toJSON().slice(0,10);
+			});
    		
    		   	function acant(){
    		   		//recoge datos y calcula costo
@@ -108,7 +115,7 @@ require 'include/funciones.php';
 		   *
 		   ****************************************************************************/  
 		  	//fecha por defecto
-		  	document.getElementById("fmues").valueAsDate = new Date();
+		  	document.getElementById("fmues").value = new Date().toDateInputValue();
 			//enfoque inicial
 				document.getElementById("prodm").focus();  
 			//metodos de los elementos de la pagina
