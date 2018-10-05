@@ -72,8 +72,6 @@ function saldobanco($mysqli){
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-
  <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -934,7 +932,8 @@ function saldobanco($mysqli){
 			    			<div>
 			    				<label id="ladic" class="adic"> </label><input type="number" name="mprop"  id="mprop" class="cajac adic" />
 			    				<label id="lefec" class="adic" >Efectivo? </label><input type="checkbox" name="efec"  id="efec" class="cajac adic" />
-			    				<label id="liva" class="adic">IVA </label><input type="number" name="miva"  id="miva" class="cajac adic" />
+			    				<label id="liva" class="adic">IVA </label>
+			    				<input type="number" name="miva" id="miva" class="cajac adic" step="0.1"/>
 			    			</div>
 			    			<div class="rengn">
 			    				<h4 id="avisor"></h4>

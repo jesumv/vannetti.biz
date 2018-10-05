@@ -41,8 +41,10 @@ require 'include/funciones.php';
 /** consulta a bd **/
 $table = 'pedidos';
 $table2 = 'clientes';
- $sql= "SELECT t2.razon_social,t1.fecha, t1.idpedidos,t1.factura,t1.monto,t1.iva,t1.total,t2.diascred,t1.status,t1.facturar,t1.idclientes,t1.saldo FROM $table
- AS t1 INNER JOIN $table2 AS t2 ON t1.idclientes= t2.idclientes WHERE t1.status >19 AND t1.status <40 AND t1.tipovta = 2 ORDER BY t1.fecha";
+ $sql= "SELECT t2.razon_social,t1.fecha, t1.idpedidos,t1.factura,t1.monto,t1.iva,t1.total,
+t2.diascred,t1.status,t1.facturar,t1.idclientes,t1.saldo,t1.arch FROM $table AS t1 
+INNER JOIN $table2 AS t2 ON t1.idclientes= t2.idclientes WHERE t1.status >19 AND 
+t1.status <40 AND t1.tipovta = 2 ORDER BY t1.fecha";
  $result2 = mysqli_query($mysqli,$sql)or die ("ERROR EN CONSULTA DE CUENTAS POR COBRAR.".mysqli_error($mysqli));; 
 
     } else {
@@ -437,9 +439,6 @@ $table2 = 'clientes';
 	  if(mysqli_num_rows($result2)) {
 	  	 //construir tabla
 	  	 while($row2=mysqli_fetch_row($result2)){
-	  	     $sql= "SELECT t2.razon_social,t1.fecha, t1.idpedidos2,t1.factura,t1.monto,t1.iva,t1.total,t2.diascred,t1.status,
-            t1.facturar9,t1.idclientes10,t1.saldo FROM $table
- AS t1 INNER JOIN $table2 AS t2 ON t1.idclientes= t2.idclientes10 WHERE t1.status >19 AND t1.status <40 AND t1.tipovta = 2 ORDER BY t1.fecha";
 	  	                $razons= $row2[0];
 	  	                $fechamov=date_create($row2[1]);
 			 			$noped=$row2[2];
@@ -455,7 +454,9 @@ $table2 = 'clientes';
 						$idcte=$row2[10];
 						$facti=sfactura($sfact);
 						$saldo=$row2[11];
-					 	echo "<tr><td id=idcte".$noped." class='ocult'>$idcte</td><td id=sfact".$noped." class='ocult'>$sfact</td>
+						$arch= $row2[12];
+					 	echo "<tr><td id=idcte".$noped." class='ocult'>$idcte</td>
+                        <td id=sfact".$noped." class='ocult'>$sfact</td><td id=arch".$noped." class='ocult'>$arch</td>
 					 	<td id=facti".$noped.">$facti</td><td>$razons</td><td>$fechamod</td><td id=ped".$noped.">$noped</td>
                         <td class= 'efact' id=nofact".$noped."><input disabled id=afact".$noped." value='$nfact'></td>
 					 	<td class='subto' id=subt".$noped.">$subt</td><td class='siva' id=iva".$noped.">$iva</td>
