@@ -44,7 +44,7 @@ $table2 = 'clientes';
  $sql= "SELECT t2.razon_social,t1.fecha, t1.idpedidos,t1.factura,t1.monto,t1.iva,t1.total,
 t2.diascred,t1.status,t1.facturar,t1.idclientes,t1.saldo,t1.arch FROM $table AS t1 
 INNER JOIN $table2 AS t2 ON t1.idclientes= t2.idclientes WHERE t1.status >19 AND 
-t1.status <40 AND t1.tipovta = 2 ORDER BY t1.fecha";
+t1.status <40 AND (t1.tipovta = 2 OR t1.tipovta=1) ORDER BY t1.fecha";
  $result2 = mysqli_query($mysqli,$sql)or die ("ERROR EN CONSULTA DE CUENTAS POR COBRAR.".mysqli_error($mysqli));; 
 
     } else {
@@ -210,6 +210,7 @@ t1.status <40 AND t1.tipovta = 2 ORDER BY t1.fecha";
 				var lpedid=elem.id.length-6;
 					var pedid = elem.id.slice(-lpedid);
 					var entra = document.getElementById("afact"+pedid);
+					var camstat= document.getElementById("stped"+pedid);
 				//habilitar el input
 					entra.disabled = false;
 				//agregar escucha de change
@@ -221,6 +222,7 @@ t1.status <40 AND t1.tipovta = 2 ORDER BY t1.fecha";
 							if (this.readyState == 4 && this.status == 200) {
 								entra.style.backgroundColor = "green";
 								entra.disabled=true;
+								camstat.innerHTML = "X COBRAR";
 							    }
 							}
 						xhttp.open("POST", "php/envianofact.php", true);
