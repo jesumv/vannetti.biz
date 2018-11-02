@@ -80,7 +80,12 @@ function epagoped($mysqli,$fecha,$ref,$monto,$iva,$total,$saldoi,$factu,$mpago,$
 					$tipom3=1;
 					operdiario($mysqli,$cuenta3,$tipoper,$tipom3,$ref,$iva,$fecha,$sfactu);
 			//actualizacion en pedidos
-					$mysqli->query("UPDATE pedidos SET status=$status,fechapago='$fecha',factura='$factu',saldo=$saldof,arch='$arch' WHERE idpedidos='$ref'");
+					if($arch!=NULL){
+					    $mysqli->query("UPDATE pedidos SET status=$status,fechapago='$fecha',
+                        factura='$factu',saldo=$saldof,arch='$arch' WHERE idpedidos='$ref'");}else {
+                        $mysqli->query("UPDATE pedidos SET status=$status,fechapago='$fecha',
+                        factura='$factu',saldo=$saldof WHERE idpedidos='$ref'");
+					    }
 			//efectuar la operacion
 				$mysqli->commit();
 				$resul=0;

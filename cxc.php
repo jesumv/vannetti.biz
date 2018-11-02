@@ -136,6 +136,21 @@ t1.status <40 AND (t1.tipovta = 2 OR t1.tipovta=1) ORDER BY t1.fecha";
 				var peds=ped.slice(-longi);
 				return peds;
 			}
+
+			function cambiaetiq(arch){
+				var barch= document.getElementById("arch");
+				//si hay arch elegido, desabilita eleccion
+				if(arch!=''){
+					document.getElementById("etarch").innerHTML="ARCHIVO SELECCIONADO";
+					barch.disabled = true;
+					barch.style.opacity=0.2;
+						}else{
+							barch.innerHTML="Archivo XML:";
+							barch.style.opacity=1;
+							barch.disabled = false;
+							}
+				
+				}
 			function mpago(indice){
 				//muestra dialogo pago
 				//fecha por defecto
@@ -148,6 +163,8 @@ t1.status <40 AND (t1.tipovta = 2 OR t1.tipovta=1) ORDER BY t1.fecha";
 				var saldoa=document.getElementById('saldo'+pedn).innerHTML;
 				var fact=document.getElementById('nofact'+pedn).innerHTML;
 				var nfact =document.getElementById(varsnfact).value;
+				var narch= document.getElementById('arch'+pedn).innerHTML;
+				cambiaetiq(narch);
 				document.getElementById('nfact').value= nfact;
 				document.getElementById('saldo').value = saldoa;
 				document.getElementById('monto').value = saldoa;
@@ -179,6 +196,7 @@ t1.status <40 AND (t1.tipovta = 2 OR t1.tipovta=1) ORDER BY t1.fecha";
 		   		var fecha=document.getElementById('fpago').value;
 		   		var factu= document.getElementById('facti'+indic).innerHTML;
 		   		var nfactu=document.getElementById('nfact').value;
+		   		var narch= document.getElementById('arch'+indic).innerHTML;
 		   		var arch= document.getElementById('arch').value;
 		   	    var mpag=document.getElementById('smpago').value;
 		   	    var ctaact=document.getElementById('cuenta').value;
@@ -189,7 +207,7 @@ t1.status <40 AND (t1.tipovta = 2 OR t1.tipovta=1) ORDER BY t1.fecha";
 		   		if(!fechac){return -1;}
 		   		if(factu=="SI"){
 		   				if(nfactu==""){return -2}
-		   				if(arch==""){return -3}
+		   				if(arch==""&&narch==""){return -3}
 		   				if(mpag==0){return -4}else if(mpag>1 && ctaact==""){return-5}
 		   				}else{
 		   			if(mpag==0){return-4}else if(mpag>1 && ctaact==""){return-5};
@@ -499,7 +517,7 @@ t1.status <40 AND (t1.tipovta = 2 OR t1.tipovta=1) ORDER BY t1.fecha";
 	    				<label>Monto: </label><input type="number" name="monto" min="0" step ="any" id="monto" class="cajac"/>
 	    			</div>
 	    			<div class="rengn">
-	    				<label>Archivo XML: </label><input type="file" name="arch"  id="arch" accept=".xml"/>
+	    				<label id="etarch">Archivo XML: </label><input type="file" name="arch"  id="arch" accept=".xml"/>
 	    			</div>
 	    			<label>Metodo de Pago: </label>
 	    			<div class="rengn">
