@@ -332,7 +332,19 @@ t1.status <40 AND (t1.tipovta = 2 OR t1.tipovta=1) ORDER BY t1.fecha";
 					})
 				document.getElementById('smpago').addEventListener('change',function(){
 						var mpago=document.getElementById('smpago').value;
-						if(mpago!=1){document.getElementById('cuenta').focus()}else{document.getElementById('regpago').focus()}
+						switch(mpago) {
+					    case 1:
+					    	document.getElementById('regpago').focus()	
+					        break;
+					    case 2:
+					    case 3:
+					    case 13:
+					    	document.getElementById('cuenta').value= '8145';
+					    	document.getElementById('regpago').focus();
+					        break;
+					    default:
+					    	document.getElementById('regpago').focus();
+					}
 					})
 				//monto del pago
 				document.getElementById('monto').addEventListener('change',function(){
