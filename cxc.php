@@ -338,7 +338,6 @@ t1.status <40 AND (t1.tipovta = 2 OR t1.tipovta=1) ORDER BY t1.fecha";
 					        break;
 					    case 2:
 					    case 3:
-					    case 13:
 					    	document.getElementById('cuenta').value= '8145';
 					    	document.getElementById('regpago').focus();
 					        break;
