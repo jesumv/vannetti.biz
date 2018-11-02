@@ -333,11 +333,11 @@ t1.status <40 AND (t1.tipovta = 2 OR t1.tipovta=1) ORDER BY t1.fecha";
 				document.getElementById('smpago').addEventListener('change',function(){
 						var mpago=document.getElementById('smpago').value;
 						switch(mpago) {
-					    case 1:
+					    case "01":
 					    	document.getElementById('regpago').focus()	
 					        break;
-					    case 2:
-					    case 3:
+					    case "02":
+					    case "03":
 					    	document.getElementById('cuenta').value= '8145';
 					    	document.getElementById('regpago').focus();
 					        break;
