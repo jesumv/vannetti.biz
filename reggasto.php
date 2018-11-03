@@ -107,7 +107,7 @@ function saldobanco($mysqli){
 		}
 
 		function mconcep(){
-		//se evalua el concepto que se introduce
+		//se evalua el metodo de pago que se introduce
 			aparece();
 			var metodo = document.getElementById("smpago").focus();
 			}
