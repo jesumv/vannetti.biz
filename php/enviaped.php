@@ -68,7 +68,7 @@
 					break;
 				//contado
 				case 1:
-					//AL COBRO
+					//AL COBRO S FACT cuando se envia merc al cobro y se espera recibir efec
 					$pdst= 20;
 					//xsurtir
 					$arst=99;

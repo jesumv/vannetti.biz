@@ -82,7 +82,7 @@ function saldobanco($mysqli){
    <link rel="shortcut icon" href="img/logomin.gif" />  
    <link rel="apple-touch-icon" href="img/logomin.gif">
    <script src="js/jquery3/jquery-3.0.0.min.js"></script>
-   <script src="js/fcfdi.js"></script>
+   <script src="js/fcfdiv2.js"></script>
    
    <script>
    	'use strict';
@@ -234,7 +234,7 @@ function saldobanco($mysqli){
 	   		 $(document).ready(function() {
 	 			
 	    		var evt = document.getElementById('arch');
-	 			  evt.addEventListener('change', function(e){listafacturas(e,leeXML)},false);
+	 			  evt.addEventListener('change', function(e){tomafactura(e,leeXML)},false);
 	 			  
 	    		 	var app = {
 	 			    isLoading: true,
@@ -307,40 +307,41 @@ function saldobanco($mysqli){
 	 			    }
 	 			    
 	 			//metodos de los elementos de la pagina
-	 		function listafacturas(e,callback){
-	 					//obtiene arreglo de elementos de caja de lista y los lee como xml
+	 		function tomafactura(e,callback){
+	 					//obtiene el elemento seleccionado  de caja de lista y lo lee como xml
 	 					var files = e.target.files; // FileList object
 	 					var resul=[];
-	 						for (var i=0, f; f=files[i]; i++) {
-	 					          var r = new FileReader();
-	 				            		r.onload = (function(f) {
-	 				                		return function(e) {
-	 				                			var arch= f.name;
-	 				                    		var contents = e.target.result;
-	 				                    		var cfdireg;
-	 				                    		if(bandera == 0){
-	 				                    			var resul=leeXML(contents,arch);
-	 				                    			if(resul.exito ==0){
-	 				                    				llenaforma(resul.fecha,resul.fpago,resul.stotal,resul.iva,resul.total,
-	 				                    				resul.seriefolio,resul.conceptoc)
-	 				                    			}else{
-	 				                    				var mensa = document.getElementById("mensaje");
-	 				                					mensa.value= resul.error;
-	 				                					var mensac = document.getElementById("mensd");
-	 				                					mensac.classList.remove("ocult");
-	 				                					var fecha = new Date();
-	 				                					llenaforma(fecha)
-	 				                					
-	 				                    				}
-	 				                    			
-	 				                    		}else{document.getElementById("catg").focus();}
-	 				                				};
-	 				           	 		})(f);
+	 					var f=files[0];
+	 					var r = new FileReader();
+ 				        	r.onload = (function(f) {
+ 				                		return function(e) {
+ 				                			var arch= f.name;
+ 				                    		var contents = e.target.result;
+ 				                    		var cfdireg;
+ 				                    		if(bandera == 0){
+ 				                    			var resul=leeXML(contents,arch);
+ 				                    			if(resul.exito ==0){
+ 				                    				llenaforma(resul.fecha,resul.fpago,resul.stotal,resul.iva,resul.total,
+ 				                    				resul.seriefolio,resul.conceptoc)
+ 				                    			}else{
+ 				                    				var mensa = document.getElementById("mensaje");
+ 				                					mensa.value= resul.error;
+ 				                					var mensac = document.getElementById("mensd");
+ 				                					mensac.classList.remove("ocult");
+ 				                					var fecha = new Date();
+ 				                					llenaforma(fecha)
+ 				                					
+ 				                    				}
+ 				                    			
+ 				                    		}else{document.getElementById("catg").focus();}
+ 				                				};
+ 				           	 		})(f);
 
 	 				            r.readAsText(f);
-	 				        } 
+
 	 			      	
 	 					}
+				
 	 			function valida(elemen){
 	 		   		var fecha=document.getElementById(elemen).value;
 	 		   	    //corregir funcion fecha

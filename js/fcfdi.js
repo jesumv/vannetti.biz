@@ -18,54 +18,91 @@ function getver(xmlDoc){
 				return version
 			}
 
-function getconcep(conceptos){
-	//cuenta los conceptos de la factura
-	var noconcep = conceptos.length;
-	return noconcep;
-}
 
-function extraeiva(traslados2){
-	//obtiene el valor de iva y otros
-	var longi= traslados2.length;
-	var monto= 0;
-	var otros = false;
-	var impto;
-	for(var i=0; i<longi;i++){
-		impto = traslados2[i].attributes["Impuesto"].nodeValue;
-		if(impto == "002"){monto = traslados2[i].attributes["Importe"].nodeValue;}
-		if(impto == "003"){otros = true;}
-	}
-	return {monto:monto,
-			otros:otros};
-}
-
-function tieneimp(cfdiimp,tiponod){
-	//revisa si hay nodo de impuestos y regresa indicador
-	var niv1 = cfdiimp.childNodes;
-	var cfdiarr = [].slice.call(niv1);
-	var tiene1 = cfdiarr.some(function(element,index,array){return element.nodeName == "cfdi:Traslados"});
-	var tienet;
-		if(tiene1){
-			//si tiene nodo cfdi:traslados
-			var niv2 = niv1[tiponod].childNodes;
-				if(niv2){
-					//si tiene nodo cfdi:traslado
-						var niv3 = niv2[tiponod].attributes;
-					if(niv3){
-						//si tiene atributo impuestos
-						var iva = niv3.getNamedItem("Impuesto").nodeValue;
-							if(iva ="002"){tienet = true}else{tienet= false}
-					}	
-				}else{tienet = false}
-			
-		}else{tienet = false}			
-		
-	return tienet;
-}
 function concepto(cant,uni,desc){
 	//arma el concepto con unidad y cantidad
 	var descom = cant+" "+uni+" "+desc;
 	return descom;	
+}
+
+function capiva(version,xdoc){
+	var iva
+	//buscar definiciones de iva
+	var imp = xdoc.getElementsByTagName("cfdi:Impuestos");
+	var totimptr =xdoc.getElementsByTagName("totalImpuestosTrasladados");
+	if(imp.length ==0){
+		iva = 0;
+	}else{
+		var novacio = imp[0].hasChildNodes();
+		if(novacio){
+			//sí hay datos en el nodo impuestos
+			var totalimp = imp[0].attributes;
+			if(totalimp.length!=0){
+				//si existe el atributo de total impuestos
+				iva = totalimp.getNamedItem("totalImpuestosTrasladados").nodeValue;
+			}else{
+				
+				//si no hay total, se busca por nodo
+				//definicion de etiqueta a buscar
+				var etiq;
+				var etiq2;
+				var nomimp;
+				var ntasa;
+				if(version=="3.2"){
+					etiq= "impuesto";
+					etiq2="importe";
+					nomimp="IVA";
+					ntasa ="tasa";
+					}else{
+						etiq= "Impuesto";
+						etiq2="Importe";
+						nomimp = "002"
+						ntasa = "TasaOCuota"
+						}
+				var traslado = xdoc.getElementsByTagName("cfdi:Traslado");
+				for (var i=0; traslado.length; i++){
+					var atribs = traslado[i].attributes;
+					var nomtem = atribs.getNamedItem(etiq).nodeValue
+					if(nomtem == nomimp){
+						var haytasa = atribs.getNamedItem(ntasa);
+						if(haytasa){
+							var tasa = atribs.getNamedItem(ntasa).nodeValue
+							if(tasa.includes("16")){iva = atribs.getNamedItem(etiq2).nodeValue; break;}else{iva="0"; break;}
+							
+						}else{
+							iva="0"; break;
+						}
+							
+						
+						}
+				}
+			}
+			
+		}else{
+			//si no hay datos
+			iva = ""
+		}
+	}
+
+	return iva;
+}
+
+function leeserief(version,comprob){
+	//lee serie y folio dependiendo de version, si los tiene
+	var serie;
+	var folio32 = comprob.getNamedItem("folio");
+	var serie32= comprob.getNamedItem("serie");
+	var folio33 = comprob.getNamedItem("Folio");
+	var serie33= comprob.getNamedItem("Serie");
+	var resul =[];
+	if (version == "3.3"){
+		if(serie33){resul["serie"] = comprob.getNamedItem("Serie").nodeValue}else{resul["serie"] = ""};
+		if(folio33){resul["folio"] = comprob.getNamedItem("Folio").nodeValue}else{resul["folio"] = ""};
+	}else{
+		if(serie32){resul["serie"] = comprob.getNamedItem("serie").nodeValue}else{resul["serie"] = ""};
+		if(folio32){resul["folio"] = comprob.getNamedItem("folio").nodeValue}else{resul["folio"] = ""};
+	}
+	return resul;
 }
 
 
@@ -77,103 +114,66 @@ function leeXML(text,narch) {
 	
 	try{
 		xmlDoc = $.parseXML(text);
-		//cfdi:Comprobante
-		var niv1 = xmlDoc.documentElement.childNodes;
-		//cfdi:Impuestos depende del tipo de archivo
-		var impini;
-		var intras11;
-		if(niv1[0].nodeType==1){
-			impini = niv1[3];
-			intras11 = 0;
-		}else{
-			if(niv1[3].nodeType==1){impini = niv1[4]; intras11 = 0}else{impini = niv1[7]; intras11 = 1}
-			}
-		var tras1 = impini.childNodes;
 		var comprob = xmlDoc.getElementsByTagName("cfdi:Comprobante")[0].attributes;
-		var fecha= comprob.getNamedItem("Fecha").nodeValue;
-		var fpago= comprob.getNamedItem("FormaPago").nodeValue;
 		var version = getver(comprob);
-		var serie;
-		var folio;
-		var seriee = comprob.getNamedItem("Serie");
-		var serie;
-		var seriefolio = "";
-		if(seriee){
-			serie= comprob.getNamedItem("Serie").nodeValue;
-			seriefolio= seriefolio + serie +" "
-			}
-		var folioe = comprob.getNamedItem("Folio");
-		if(folioe){
-			folio = comprob.getNamedItem("Folio").nodeValue;
-			seriefolio= seriefolio + folio}
-		var tienei = tieneimp(impini,intras11);
+		var datosf = leeserief(version,comprob);
 		var emisor = xmlDoc.getElementsByTagName("cfdi:Emisor")[0].attributes;
 		var receptor = xmlDoc.getElementsByTagName("cfdi:Receptor")[0].attributes;
-		var conceptos =xmlDoc.getElementsByTagName("cfdi:Concepto");
-		var conco = conceptos[0].attributes;
-		var canti = conco.getNamedItem("Cantidad").nodeValue;
-		var uni = conco.getNamedItem("ClaveUnidad").nodeValue;
-		var desci = conco.getNamedItem("Descripcion").nodeValue;
-		var conceptoc = concepto(canti,uni,desci);
-		var traslados;
-		var iva ;
-		var otrosi;
+		var concepto =xmlDoc.getElementsByTagName("cfdi:Concepto")[0].attributes;
+		var fecha;
+		var fpago;
+		var seriefolio = datosf["folio"]+datosf["serie"];
+		var iva 
+		var concepa ;
+		var concepa1;
+		var concep;
 		var stotal;
-		var descu;
 		var total;
-		var rfc;
-		var nombre;
-		var nombrea;
-		var rfcrecep;
-		//segun version
+		var rfc
+		var nombre
+		var nombrea
+		var rfcrecep
+
 		if (version == "3.3"){					 
 			 var haydescu = comprob.getNamedItem("Descuento");
+			 //si hay descuento se modifica subtotal
 			 if(haydescu){
-				 descu = comprob.getNamedItem("Descuento").nodeValue;
+				 var descu = comprob.getNamedItem("Descuento").nodeValue;
+				 stotal = comprob.getNamedItem("SubTotal").nodeValue - descu;
 			 }else{
-				 descu = null;
-				
+				 stotal = comprob.getNamedItem("SubTotal").nodeValue	 
 			 };
-			 //definir impuestos si los hay
-			 if(tienei){
-				var tras11=tras1[intras11].getElementsByTagName("cfdi:Traslado");
-				 imptos = extraeiva(tras11);
-				 otrosi = imptos.otros;
-				 iva = imptos.monto;
-			 }else{iva = 0;
-			 otrosi = 0;
-			 }
-			 
 			 total = comprob.getNamedItem("Total").nodeValue
-			 if(otrosi==true){stotal = Number(total)-Number(iva);}else if (haydescu){
-				 stotal = parseFloat(Number(comprob.getNamedItem("SubTotal").nodeValue)-Number(descu)).toFixed(2)}else{
-				 stotal = comprob.getNamedItem("SubTotal").nodeValue;
-				 }
+			 fecha= comprob.getNamedItem("Fecha").nodeValue
+			 fpago= comprob.getNamedItem("FormaPago").nodeValue;
+			 iva = capiva(version,xmlDoc);
 			 rfc = emisor.getNamedItem("Rfc").nodeValue;
 			 nombrea=emisor.getNamedItem("Nombre");
 			 if(nombrea){nombre = nombrea.nodeValue}else{nombre="SIN NOMBRE"};
 			 rfcrecep =receptor.getNamedItem("Rfc").nodeValue;
-			//otras versiones
+			 concepa = concepto.getNamedItem("Descripcion");
+			 concep = concepa.nodeValue
 		}else {
-			//versiones anteriores a la 3.3 -completar
 			try{stotal = comprob.getNamedItem("subTotal").nodeValue;}catch(err){stotal= "ERROR STOTAL"}
 			total = comprob.getNamedItem("total").nodeValue
 			fecha= comprob.getNamedItem("fecha").nodeValue
 			rfc = emisor.getNamedItem("rfc").nodeValue;
 			 nombrea=emisor.getNamedItem("nombre")
 			 
-			 if(nombrea){nombre = nombrea.nodeValue}else{nombre="SIN NOMBRE"};
+			if(nombrea){nombre = nombrea.nodeValue}else{nombre="SIN NOMBRE"};
 			rfcrecep =receptor.getNamedItem("rfc").nodeValue;
+			concepa = concepto.getNamedItem("descripcion");
+			concep = concepa.nodeValue
 		}
+
 		cfdi={exito:0,
 			  fecha: fecha,
 			  fpago:fpago,
 			  stotal:stotal,
 			  iva:iva,
-			  otrosi:otrosi,
 			  total:total,
 			  seriefolio:seriefolio,
-			  conceptoc:conceptoc,
+			  conceptoc:concep,
 			  rfc:rfc,
 			  nombre: nombre,
 			  rfcrecep:rfcrecep
@@ -184,8 +184,6 @@ function leeXML(text,narch) {
 			  fecha:	new Date(),
 			  error: err
 				};
-
-
 	}
 	return cfdi;	
 };
