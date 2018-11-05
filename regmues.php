@@ -76,17 +76,18 @@ require 'include/funciones.php';
 	                	}
 	            	})
 	            	.then( function (response) {
-	            		var nombre;
+	            		var nombrc;
 	            		var idprod;
 	            		var costo;
 		                $.each( response, function ( i,datos) {
-			                	nombre=datos['nombre'];
+			                	nombrc=datos['nombrc'];
 			                	idprod=datos['idprod'];
 			                	costo=datos['costo'];
-		                    html += "<li><a class='bmues' id='"+idprod+"' href='#'>" +nombre+"</a><span class='ocult' id='costo"+idprod+"'>"+costo+"</span></li>";
+		                    html += "<li><a class='bmues' id='"+idprod+"' href='#'>" +nombrc+"</a><span class='ocult' id='costo"+idprod+"'>"+costo+"</span></li>";
 		                });
 		                $ul.html( html );
 		                var bmues= document.getElementsByClassName("bmues");
+		                
 		                function dmuestra(prod){
 		                	//agrega el no producto al html
 		                	var este = document.getElementById("prod");
