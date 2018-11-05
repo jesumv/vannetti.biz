@@ -82,7 +82,7 @@ function saldobanco($mysqli){
    <link rel="shortcut icon" href="img/logomin.gif" />  
    <link rel="apple-touch-icon" href="img/logomin.gif">
    <script src="js/jquery3/jquery-3.0.0.min.js"></script>
-   <script src="js/fcfdiv2.js"></script>
+   <script src="js/fcfdi.js"></script>
    
    <script>
    	'use strict';
@@ -190,7 +190,7 @@ function saldobanco($mysqli){
 			cuenta.focus();
 		}
 
-		function llenaforma(fecha,fpago,subtotal="",iva="",total="",factura="",concor=""){
+		function llenaforma(fecha,fpago,uuid,subtotal="",iva="",total="",factura="",concor=""){
 			//llena los campos de la forma con datos xml
 			var nfecha = new Date(fecha).toISOString().slice(0,10)
 			var forma ={
@@ -202,6 +202,7 @@ function saldobanco($mysqli){
 				cg:document.querySelector('#concepo'),
 				ctg:document.querySelector('#catg'),
 				fpag:document.querySelector('#smpago'),
+				uuid:document.querySelector('#uuid')
 			}
 			var f = forma;
 			f.nf.value =factura;
@@ -213,6 +214,7 @@ function saldobanco($mysqli){
 			f.cg.value = concor;
 			f.cg.disabled = true;
 			f.fpag.value= fpago;
+			f.uuid.innerHTML=uuid;
 			cuentasi();
 			f.ctg.focus();
 
@@ -321,7 +323,7 @@ function saldobanco($mysqli){
  				                    		if(bandera == 0){
  				                    			var resul=leeXML(contents,arch);
  				                    			if(resul.exito ==0){
- 				                    				llenaforma(resul.fecha,resul.fpago,resul.stotal,resul.iva,resul.total,
+ 				                    				llenaforma(resul.fecha,resul.fpago,resul.uuid,resul.stotal,resul.iva,resul.total,
  				                    				resul.seriefolio,resul.conceptoc)
  				                    			}else{
  				                    				var mensa = document.getElementById("mensaje");
@@ -448,6 +450,7 @@ function saldobanco($mysqli){
 	    				var efec=propefec();
 	    				var ivaaux= document.getElementById('miva').value;
 	    				var tipo= "g";
+	    				var uuid= document.getElementById('uuid').innerHTML;
 	    				//envio a bd
 	    					$.post( "php/enviaotros.php",
 	 							{	tipo:tipo,
@@ -465,6 +468,7 @@ function saldobanco($mysqli){
 	 								mprop:mprop,
 	 								efec:efec,
 	 								ivaaux:ivaaux,
+	 								uuid:uuid,
 	 								orig:"",
 	 								dest:""								
 	 							 }, null, "json" )
@@ -869,7 +873,7 @@ function saldobanco($mysqli){
     		 </div>
 		 
 		 </div>
-		 <!-- caja dialogo registro pago -->
+		 <!-- caja dialogo registro gasto -->
 		 
 		  <div class="dialog-container" id="dialogog">
 		    <div class="dialog">
@@ -943,6 +947,7 @@ function saldobanco($mysqli){
 			    				<button type="submit" id="reggasto" class="button a">Registrar</button>
 						      	<button type="submit" id="butAddCancel" class="button b" >Cancelar</button>
 						    </div>
+						    <span id="uuid" class="ocult"></span>
 			    		</form>
 			    	</div>
 		    </div>

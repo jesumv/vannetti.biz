@@ -120,6 +120,7 @@ function leeXML(text,narch) {
 		var emisor = xmlDoc.getElementsByTagName("cfdi:Emisor")[0].attributes;
 		var receptor = xmlDoc.getElementsByTagName("cfdi:Receptor")[0].attributes;
 		var concepto =xmlDoc.getElementsByTagName("cfdi:Concepto")[0].attributes;
+		var timbre=xmlDoc.getElementsByTagName("tfd:TimbreFiscalDigital")[0].attributes;
 		var fecha;
 		var fpago;
 		var seriefolio = datosf["folio"]+datosf["serie"];
@@ -133,6 +134,7 @@ function leeXML(text,narch) {
 		var nombre
 		var nombrea
 		var rfcrecep
+		var uuid;
 
 		if (version == "3.3"){					 
 			 var haydescu = comprob.getNamedItem("Descuento");
@@ -153,6 +155,7 @@ function leeXML(text,narch) {
 			 rfcrecep =receptor.getNamedItem("Rfc").nodeValue;
 			 concepa = concepto.getNamedItem("Descripcion");
 			 concep = concepa.nodeValue
+			 uuid = timbre.getNamedItem("UUID").nodeValue;
 		}else {
 			try{stotal = comprob.getNamedItem("subTotal").nodeValue;}catch(err){stotal= "ERROR STOTAL"}
 			total = comprob.getNamedItem("total").nodeValue
@@ -176,7 +179,8 @@ function leeXML(text,narch) {
 			  conceptoc:concep,
 			  rfc:rfc,
 			  nombre: nombre,
-			  rfcrecep:rfcrecep
+			  rfcrecep:rfcrecep,
+			  uuid:uuid
 			   };
 
 	}catch(err){

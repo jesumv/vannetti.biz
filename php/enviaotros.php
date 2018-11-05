@@ -121,6 +121,7 @@ function movtras($mysqli,$origen,$destino,$monto,$fecha,$ref){
 		$ivaaux=$_POST["ivaaux"];
 		$origen=$_POST["orig"];
 		$destino=$_POST["dest"];
+		$uuid=$_POST["uuid"];
 		$total=$monto+$iva;
 		$resul1=0;
 		$resul2=0;
