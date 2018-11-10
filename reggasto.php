@@ -518,7 +518,7 @@ function saldobanco($mysqli){
 	 									location.reload(true);
 	 	    						})
 	 	    						.fail(function(xhr, textStatus, errorThrown ) {		
-	 	    							document.write("ERROR EN REGISTRO");
+	 	    							document.write("ERROR EN REGISTRO "+ errorThrown);
 	 								});	
 	    			}
 	    			function regg(){
@@ -974,7 +974,7 @@ function saldobanco($mysqli){
 			    				<select id="destinot" name="destinot">
 									<option value="0">Seleccione la cuenta destino</option>
 									<option value="101.01">Caja</option>
-									<option value="102.01">Banorte</option>
+									<option value="102.01">Banco</option>
 		         				</select>		
 			    				
 			    			</div>

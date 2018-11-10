@@ -12,20 +12,14 @@
 function movtras($mysqli,$origen,$destino,$monto,$fecha,$ref){
     //registra movimientos de traspasos entre cuentas
     
-    try{
         $mysqli->autocommit(false);
-        $mysqli->query("INSERT INTO diario(cuenta,referencia,haber,fecha,facturar)
-			VALUES($origen,'$ref',$monto,'$fecha',1)");
-        $mysqli->query("INSERT INTO diario(cuenta,referencia,debe,fecha,facturar)
-			VALUES($destino,'$ref',$monto,'$fecha',1)");
+        if(!$mysqli->query("INSERT INTO diario(cuenta,referencia,haber,fecha,facturar)
+			VALUES($origen,'$ref',$monto,'$fecha',1)"))throw new Exception(" EN REG TRANSP HABER: $mysqli->error");
+        IF(!$mysqli->query("INSERT INTO diario(cuenta,referencia,debe,fecha,facturar)
+			VALUES($destino,'$ref',$monto,'$fecha',1)"))throw new Exception(" EN REG TRANSP DEBE: $mysqli->error");;
         //efectuar la operacion
         $mysqli->commit();
         $resul=0;
-    }catch(Exception $e){
-        //error en las operaciones de bd
-        $mysqli->rollback();
-        $resul=-3;
-    }
     return $resul;
     
 }
@@ -36,9 +30,9 @@ function movtras($mysqli,$origen,$destino,$monto,$fecha,$ref){
 			$resuli=0;
 			if (!$mysqli->query("INSERT INTO diario(cuenta,referencia,debe,fecha,facturar,coment)
 			VALUES($cuenta,'$ref',$monto,'$fecha',1,'$concep')")){
-			throw New Exception(" EN REG IVA: $mysqli->error");
-			}else{return $resuli;} 
-		
+			throw new Exception(" EN REG IVA: $mysqli->error");
+			return $resuli; 
+			}
 	}
 	
 	
@@ -121,7 +115,7 @@ function movtras($mysqli,$origen,$destino,$monto,$fecha,$ref){
 		$ivaaux=$_POST["ivaaux"];
 		$origen=$_POST["orig"];
 		$destino=$_POST["dest"];
-		$uuid=$_POST["uuid"];
+		if(empty($_POST["uuid"])){$uuid="";}else{$uuid=$_POST["uuid"];};
 		$total=$monto+$iva;
 		$resul1=0;
 		$resul2=0;
@@ -159,11 +153,16 @@ function movtras($mysqli,$origen,$destino,$monto,$fecha,$ref){
 			        $mal=$e->getMessage();
 			        $resul=-2;
 			    }
-				
+
         	break;	
 			default:
-				$resul=movtras($mysqli, $origen, $destino, $monto, $fecha, $concep);
-				
+			    try{
+			        $resul=movtras($mysqli, $origen, $destino, $monto, $fecha, $concep);
+			    }catch(Exception $e){
+			        $mal=$e->getMessage();
+			        $resul=-3;
+			    }
+			
 		}
 	}else{
 	    $mal=$mysqli->connect_error;

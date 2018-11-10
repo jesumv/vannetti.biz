@@ -25,67 +25,42 @@ function concepto(cant,uni,desc){
 	return descom;	
 }
 
+function desctraslados(nodoimp){
+	var coltrans=nodoimp.getElementsByTagName("cfdi:Traslado");
+	var longtrans=coltrans.length;
+	var importe;
+	for(var i=0; i<longtrans; i++){
+		var impto = coltrans[i].attributes.getNamedItem("Impuesto").nodeValue
+		if(impto="002"){var importe= coltrans[i].attributes.getNamedItem("Importe").nodeValue; return importe}
+	}
+	return 0;
+}
+function descimp(coleccionimp){
+	//recorre la coleccion impuestos
+	var longcol= coleccionimp.length;
+		for(var i= 0; i<longcol; i++){
+			var tieneatrib=coleccionimp[i].attributes.length;
+			if(tieneatrib>0){
+				//es el nodo correcto
+				var importe=desctraslados(coleccionimp[i]);
+				return importe;
+			}		
+		}
+}
+
 function capiva(version,xdoc){
 	var iva
 	//buscar definiciones de iva
 	var imp = xdoc.getElementsByTagName("cfdi:Impuestos");
-	var totimptr =xdoc.getElementsByTagName("totalImpuestosTrasladados");
 	if(imp.length ==0){
 		iva = 0;
 	}else{
-		var novacio = imp[0].hasChildNodes();
-		if(novacio){
-			//sí hay datos en el nodo impuestos
-			var totalimp = imp[0].attributes;
-			if(totalimp.length!=0){
-				//si existe el atributo de total impuestos
-				iva = totalimp.getNamedItem("totalImpuestosTrasladados").nodeValue;
-			}else{
-				
-				//si no hay total, se busca por nodo
-				//definicion de etiqueta a buscar
-				var etiq;
-				var etiq2;
-				var nomimp;
-				var ntasa;
-				if(version=="3.2"){
-					etiq= "impuesto";
-					etiq2="importe";
-					nomimp="IVA";
-					ntasa ="tasa";
-					}else{
-						etiq= "Impuesto";
-						etiq2="Importe";
-						nomimp = "002"
-						ntasa = "TasaOCuota"
-						}
-				var traslado = xdoc.getElementsByTagName("cfdi:Traslado");
-				for (var i=0; traslado.length; i++){
-					var atribs = traslado[i].attributes;
-					var nomtem = atribs.getNamedItem(etiq).nodeValue
-					if(nomtem == nomimp){
-						var haytasa = atribs.getNamedItem(ntasa);
-						if(haytasa){
-							var tasa = atribs.getNamedItem(ntasa).nodeValue
-							if(tasa.includes("16")){iva = atribs.getNamedItem(etiq2).nodeValue; break;}else{iva="0"; break;}
-							
-						}else{
-							iva="0"; break;
-						}
-							
-						
-						}
-				}
-			}
-			
-		}else{
-			//si no hay datos
-			iva = ""
+		iva =descimp(imp);		
 		}
+	return iva;
 	}
 
-	return iva;
-}
+
 
 function leeserief(version,comprob){
 	//lee serie y folio dependiendo de version, si los tiene
