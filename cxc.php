@@ -195,6 +195,7 @@ t1.status <40 AND (t1.tipovta = 2 OR t1.tipovta=1) ORDER BY t1.fecha";
 		   	function valida(indic){
 		   		var fecha=document.getElementById('fpago').value;
 		   		var factu= document.getElementById('facti'+indic).innerHTML;
+		   		var idcte = parseInt(document.getElementById('idcte'+indic).innerHTML);
 		   		var nfactu=document.getElementById('nfact').value;
 		   		var narch= document.getElementById('arch'+indic).innerHTML;
 		   		var arch= document.getElementById('arch').value;
@@ -202,19 +203,20 @@ t1.status <40 AND (t1.tipovta = 2 OR t1.tipovta=1) ORDER BY t1.fecha";
 		   	    var ctaact=document.getElementById('cuenta').value;
 		   	    var montop= document.getElementById('monto').value;
 		   	 	var saldoi= document.getElementById('monto').value;
+		   	 	var resul= 0;
 		   	    //corregir funcion fecha
 		   	    var fechac=isValidDate(fecha)
-		   		if(!fechac){return -1;}
-		   		if(factu=="SI"){
-		   				if(nfactu==""){return -2}
-		   				if(arch==""&&narch==""){return -3}
-		   				if(mpag==0){return -4}else if(mpag>1 && ctaact==""){return-5}
-		   				}else{
-		   			if(mpag==0){return-4}else if(mpag>1 && ctaact==""){return-5};
-		   		}
-		   		if (montop>saldoi){	return -7}; 	
-		   	}	
-		   	
+		   		if(!fechac){resul= -1}
+		   		else if(factu=="SI"){
+		   				if(nfactu==""&&idcte>4){resul= -2}
+		   				else if(arch==""&&narch==""&&idcte>4){resul= -3}
+		   				else if(mpag>1 && ctaact==""){resul=-5};
+		   		}else if(factu=="NO"){		
+		   					if(mpag>1 && ctaact==""){resul=-5}
+		   					else if(montop>saldoi){resul= -7};
+		   		}else if(mpag==0){resul=-4}else{resul=0};
+		   		return resul;	
+		   	}
 		   	function epago(){
 			 	//esta funcion añade escuchas a botones de pago
 			 	var bpagar = document.getElementsByClassName('bpag');
