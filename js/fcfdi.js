@@ -28,12 +28,23 @@ function concepto(cant,uni,desc){
 function desctraslados(nodoimp){
 	var coltrans=nodoimp.getElementsByTagName("cfdi:Traslado");
 	var longtrans=coltrans.length;
-	var importe;
+	var impiva=0;
+	var impieps=0;
+	var imps = new Array();
 	for(var i=0; i<longtrans; i++){
 		var impto = coltrans[i].attributes.getNamedItem("Impuesto").nodeValue
-		if(impto="002"){var importe= coltrans[i].attributes.getNamedItem("Importe").nodeValue; return importe}
+		if(impto=="002"){
+			var ivacant=parseFloat(coltrans[i].attributes.getNamedItem("Importe").nodeValue);
+			var impiva= impiva+ivacant;
+			}
+		if(impto=="003"){
+			var iepscant=parseFloat(coltrans[i].attributes.getNamedItem("Importe").nodeValue);
+			var impieps= impieps+iepscant;
+			}
 	}
-	return 0;
+	imps['iva'] = impiva;
+	imps['ieps'] = impieps;
+	return imps;
 }
 function descimp(coleccionimp){
 	//recorre la coleccion impuestos
@@ -99,10 +110,13 @@ function leeXML(text,narch) {
 		var fecha;
 		var fpago;
 		var seriefolio = datosf["folio"]+datosf["serie"];
-		var iva 
+		var imps;
+		var iva;
+		var ieps;
 		var concepa ;
 		var concepa1;
 		var concep;
+		var astotal;
 		var stotal;
 		var total;
 		var rfc
@@ -115,15 +129,20 @@ function leeXML(text,narch) {
 			 var haydescu = comprob.getNamedItem("Descuento");
 			 //si hay descuento se modifica subtotal
 			 if(haydescu){
-				 var descu = comprob.getNamedItem("Descuento").nodeValue;
-				 stotal = comprob.getNamedItem("SubTotal").nodeValue - descu;
+				 var descu = parseFloat(comprob.getNamedItem("Descuento").nodeValue);
+				 var astotal= parseFloat(comprob.getNamedItem("SubTotal").nodeValue);
+				 stotal = astotal - descu;
 			 }else{
-				 stotal = comprob.getNamedItem("SubTotal").nodeValue	 
+				 stotal = parseFloat(comprob.getNamedItem("SubTotal").nodeValue);	 
 			 };
 			 total = comprob.getNamedItem("Total").nodeValue
 			 fecha= comprob.getNamedItem("Fecha").nodeValue
 			 fpago= comprob.getNamedItem("FormaPago").nodeValue;
-			 iva = capiva(version,xmlDoc);
+			 imps = capiva(version,xmlDoc);
+			 iva =imps['iva'];
+			 ieps= imps['ieps'];
+			 //si hay ieps, se modifica subtotal
+			 if(ieps>0){stotal=stotal+ieps};
 			 rfc = emisor.getNamedItem("Rfc").nodeValue;
 			 nombrea=emisor.getNamedItem("Nombre");
 			 if(nombrea){nombre = nombrea.nodeValue}else{nombre="SIN NOMBRE"};
