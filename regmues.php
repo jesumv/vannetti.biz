@@ -289,7 +289,7 @@ require 'include/funciones.php';
 						<label>Fecha: </label><input type="date" name="fmues"  id="fmues" class="cajam"/>
 					</div>
 					<div class="cajacent">
-						<label>Cantidad:</label><input type="number" name="cantm" id="cantm" min="1"/>
+						<label>Cantidad:</label><input type="number" name="cantm" id="cantm" min="0.1" step="0.05"/>
 					</div>
 					<div class="cajacent">
 						<label>Costo:</label><input type="text" name="costom" id="costom" disabled="true"/>
