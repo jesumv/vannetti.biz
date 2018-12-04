@@ -9,7 +9,7 @@ function __autoload($class){
 	function movfact($mysqli,$idpedidos,$nofact){
 	    $resul;
 				$mysqli->autocommit(false);
-			try{$mysqli->query("UPDATE pedidos SET factura = '$nofact' WHERE idpedidos = $idpedidos");
+			try{$mysqli->query("UPDATE pedidos SET factura = '$nofact', status=30 WHERE idpedidos = $idpedidos");
 						//efectuar la operacion
 						$mysqli->commit();	
 						$resul=0;

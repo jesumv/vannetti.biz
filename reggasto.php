@@ -72,8 +72,6 @@ function saldobanco($mysqli){
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-
  <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -109,7 +107,7 @@ function saldobanco($mysqli){
 		}
 
 		function mconcep(){
-		//se evalua el concepto que se introduce
+		//se evalua el metodo de pago que se introduce
 			aparece();
 			var metodo = document.getElementById("smpago").focus();
 			}
@@ -192,7 +190,7 @@ function saldobanco($mysqli){
 			cuenta.focus();
 		}
 
-		function llenaforma(fecha,fpago,subtotal="",iva="",total="",factura="",concor=""){
+		function llenaforma(fecha,fpago,uuid,subtotal="",iva="",total="",factura="",concor=""){
 			//llena los campos de la forma con datos xml
 			var nfecha = new Date(fecha).toISOString().slice(0,10)
 			var forma ={
@@ -204,6 +202,7 @@ function saldobanco($mysqli){
 				cg:document.querySelector('#concepo'),
 				ctg:document.querySelector('#catg'),
 				fpag:document.querySelector('#smpago'),
+				uuid:document.querySelector('#uuid')
 			}
 			var f = forma;
 			f.nf.value =factura;
@@ -215,6 +214,7 @@ function saldobanco($mysqli){
 			f.cg.value = concor;
 			f.cg.disabled = true;
 			f.fpag.value= fpago;
+			f.uuid.innerHTML=uuid;
 			cuentasi();
 			f.ctg.focus();
 
@@ -236,7 +236,7 @@ function saldobanco($mysqli){
 	   		 $(document).ready(function() {
 	 			
 	    		var evt = document.getElementById('arch');
-	 			  evt.addEventListener('change', function(e){listafacturas(e,leeXML)},false);
+	 			  evt.addEventListener('change', function(e){tomafactura(e,leeXML)},false);
 	 			  
 	    		 	var app = {
 	 			    isLoading: true,
@@ -309,40 +309,41 @@ function saldobanco($mysqli){
 	 			    }
 	 			    
 	 			//metodos de los elementos de la pagina
-	 		function listafacturas(e,callback){
-	 					//obtiene arreglo de elementos de caja de lista y los lee como xml
+	 		function tomafactura(e,callback){
+	 					//obtiene el elemento seleccionado  de caja de lista y lo lee como xml
 	 					var files = e.target.files; // FileList object
 	 					var resul=[];
-	 						for (var i=0, f; f=files[i]; i++) {
-	 					          var r = new FileReader();
-	 				            		r.onload = (function(f) {
-	 				                		return function(e) {
-	 				                			var arch= f.name;
-	 				                    		var contents = e.target.result;
-	 				                    		var cfdireg;
-	 				                    		if(bandera == 0){
-	 				                    			var resul=leeXML(contents,arch);
-	 				                    			if(resul.exito ==0){
-	 				                    				llenaforma(resul.fecha,resul.fpago,resul.stotal,resul.iva,resul.total,
-	 				                    				resul.seriefolio,resul.conceptoc)
-	 				                    			}else{
-	 				                    				var mensa = document.getElementById("mensaje");
-	 				                					mensa.value= resul.error;
-	 				                					var mensac = document.getElementById("mensd");
-	 				                					mensac.classList.remove("ocult");
-	 				                					var fecha = new Date();
-	 				                					llenaforma(fecha)
-	 				                					
-	 				                    				}
-	 				                    			
-	 				                    		}else{document.getElementById("catg").focus();}
-	 				                				};
-	 				           	 		})(f);
+	 					var f=files[0];
+	 					var r = new FileReader();
+ 				        	r.onload = (function(f) {
+ 				                		return function(e) {
+ 				                			var arch= f.name;
+ 				                    		var contents = e.target.result;
+ 				                    		var cfdireg;
+ 				                    		if(bandera == 0){
+ 				                    			var resul=leeXML(contents,arch);
+ 				                    			if(resul.exito ==0){
+ 				                    				llenaforma(resul.fecha,resul.fpago,resul.uuid,resul.stotal,resul.iva,resul.total,
+ 				                    				resul.seriefolio,resul.conceptoc)
+ 				                    			}else{
+ 				                    				var mensa = document.getElementById("mensaje");
+ 				                					mensa.value= resul.error;
+ 				                					var mensac = document.getElementById("mensd");
+ 				                					mensac.classList.remove("ocult");
+ 				                					var fecha = new Date();
+ 				                					llenaforma(fecha)
+ 				                					
+ 				                    				}
+ 				                    			
+ 				                    		}else{document.getElementById("catg").focus();}
+ 				                				};
+ 				           	 		})(f);
 
 	 				            r.readAsText(f);
-	 				        } 
+
 	 			      	
 	 					}
+				
 	 			function valida(elemen){
 	 		   		var fecha=document.getElementById(elemen).value;
 	 		   	    //corregir funcion fecha
@@ -449,6 +450,7 @@ function saldobanco($mysqli){
 	    				var efec=propefec();
 	    				var ivaaux= document.getElementById('miva').value;
 	    				var tipo= "g";
+	    				var uuid= document.getElementById('uuid').innerHTML;
 	    				//envio a bd
 	    					$.post( "php/enviaotros.php",
 	 							{	tipo:tipo,
@@ -466,6 +468,7 @@ function saldobanco($mysqli){
 	 								mprop:mprop,
 	 								efec:efec,
 	 								ivaaux:ivaaux,
+	 								uuid:uuid,
 	 								orig:"",
 	 								dest:""								
 	 							 }, null, "json" )
@@ -515,7 +518,7 @@ function saldobanco($mysqli){
 	 									location.reload(true);
 	 	    						})
 	 	    						.fail(function(xhr, textStatus, errorThrown ) {		
-	 	    							document.write("ERROR EN REGISTRO");
+	 	    							document.write("ERROR EN REGISTRO "+ errorThrown);
 	 								});	
 	    			}
 	    			function regg(){
@@ -870,7 +873,7 @@ function saldobanco($mysqli){
     		 </div>
 		 
 		 </div>
-		 <!-- caja dialogo registro pago -->
+		 <!-- caja dialogo registro gasto -->
 		 
 		  <div class="dialog-container" id="dialogog">
 		    <div class="dialog">
@@ -934,7 +937,8 @@ function saldobanco($mysqli){
 			    			<div>
 			    				<label id="ladic" class="adic"> </label><input type="number" name="mprop"  id="mprop" class="cajac adic" />
 			    				<label id="lefec" class="adic" >Efectivo? </label><input type="checkbox" name="efec"  id="efec" class="cajac adic" />
-			    				<label id="liva" class="adic">IVA </label><input type="number" name="miva"  id="miva" class="cajac adic" />
+			    				<label id="liva" class="adic">IVA </label>
+			    				<input type="number" name="miva" id="miva" class="cajac adic" step="0.1"/>
 			    			</div>
 			    			<div class="rengn">
 			    				<h4 id="avisor"></h4>
@@ -943,6 +947,7 @@ function saldobanco($mysqli){
 			    				<button type="submit" id="reggasto" class="button a">Registrar</button>
 						      	<button type="submit" id="butAddCancel" class="button b" >Cancelar</button>
 						    </div>
+						    <span id="uuid" class="ocult"></span>
 			    		</form>
 			    	</div>
 		    </div>
@@ -969,7 +974,7 @@ function saldobanco($mysqli){
 			    				<select id="destinot" name="destinot">
 									<option value="0">Seleccione la cuenta destino</option>
 									<option value="101.01">Caja</option>
-									<option value="102.01">Banorte</option>
+									<option value="102.01">Banco</option>
 		         				</select>		
 			    				
 			    			</div>

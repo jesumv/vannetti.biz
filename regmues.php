@@ -76,17 +76,18 @@ require 'include/funciones.php';
 	                	}
 	            	})
 	            	.then( function (response) {
-	            		var nombre;
+	            		var nombrc;
 	            		var idprod;
 	            		var costo;
 		                $.each( response, function ( i,datos) {
-			                	nombre=datos['nombre'];
+			                	nombrc=datos['nombrc'];
 			                	idprod=datos['idprod'];
 			                	costo=datos['costo'];
-		                    html += "<li><a class='bmues' id='"+idprod+"' href='#'>" +nombre+"</a><span class='ocult' id='costo"+idprod+"'>"+costo+"</span></li>";
+		                    html += "<li><a class='bmues' id='"+idprod+"' href='#'>" +nombrc+"</a><span class='ocult' id='costo"+idprod+"'>"+costo+"</span></li>";
 		                });
 		                $ul.html( html );
 		                var bmues= document.getElementsByClassName("bmues");
+		                
 		                function dmuestra(prod){
 		                	//agrega el no producto al html
 		                	var este = document.getElementById("prod");
@@ -288,7 +289,7 @@ require 'include/funciones.php';
 						<label>Fecha: </label><input type="date" name="fmues"  id="fmues" class="cajam"/>
 					</div>
 					<div class="cajacent">
-						<label>Cantidad:</label><input type="number" name="cantm" id="cantm" min="1"/>
+						<label>Cantidad:</label><input type="number" name="cantm" id="cantm" min="0.1" step="0.05"/>
 					</div>
 					<div class="cajacent">
 						<label>Costo:</label><input type="text" name="costom" id="costom" disabled="true"/>

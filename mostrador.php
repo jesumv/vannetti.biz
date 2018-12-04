@@ -153,7 +153,7 @@ function getSum(total,num) {
     return total + num;
 }			
 function regpeso(reng){
-	// TODO revisar el producto salmon fresco s/p y salmon congelado segun peso
+
 	//esta funcion registra en el html el costo de los articulos por peso
 	var caspeso = document.getElementsByClassName("cajapeso");
 	var nopesos = caspeso.length;
@@ -457,7 +457,7 @@ function multiplica(){
 			ancla.appendChild(totoc);
 			
 		//agregar funcion de escucha
-			document.getElementById(checkp.id).addEventListener('input', multiplica,false);		
+			document.getElementById(checkp.id).addEventListener('change', multiplica,false);		
 		}
 		
 		function addarts(tventam){

@@ -41,8 +41,10 @@ require 'include/funciones.php';
 /** consulta a bd **/
 $table = 'pedidos';
 $table2 = 'clientes';
- $sql= "SELECT t2.razon_social,t1.fecha, t1.idpedidos,t1.factura,t1.monto,t1.iva,t1.total,t2.diascred,t1.status,t1.facturar,t1.idclientes,t1.saldo FROM $table
- AS t1 INNER JOIN $table2 AS t2 ON t1.idclientes= t2.idclientes WHERE t1.status >19 AND t1.status <40 AND t1.tipovta = 2 ORDER BY t1.fecha";
+ $sql= "SELECT t2.razon_social,t1.fecha, t1.idpedidos,t1.factura,t1.monto,t1.iva,t1.total,
+t2.diascred,t1.status,t1.facturar,t1.idclientes,t1.saldo,t1.arch FROM $table AS t1 
+INNER JOIN $table2 AS t2 ON t1.idclientes= t2.idclientes WHERE t1.status >19 AND 
+t1.status <40 AND (t1.tipovta = 2 OR t1.tipovta=1) ORDER BY t1.fecha";
  $result2 = mysqli_query($mysqli,$sql)or die ("ERROR EN CONSULTA DE CUENTAS POR COBRAR.".mysqli_error($mysqli));; 
 
     } else {
@@ -134,6 +136,21 @@ $table2 = 'clientes';
 				var peds=ped.slice(-longi);
 				return peds;
 			}
+
+			function cambiaetiq(arch){
+				var barch= document.getElementById("arch");
+				//si hay arch elegido, desabilita eleccion
+				if(arch!=''){
+					document.getElementById("etarch").innerHTML="ARCHIVO SELECCIONADO";
+					barch.disabled = true;
+					barch.style.opacity=0.2;
+						}else{
+							barch.innerHTML="Archivo XML:";
+							barch.style.opacity=1;
+							barch.disabled = false;
+							}
+				
+				}
 			function mpago(indice){
 				//muestra dialogo pago
 				//fecha por defecto
@@ -146,6 +163,8 @@ $table2 = 'clientes';
 				var saldoa=document.getElementById('saldo'+pedn).innerHTML;
 				var fact=document.getElementById('nofact'+pedn).innerHTML;
 				var nfact =document.getElementById(varsnfact).value;
+				var narch= document.getElementById('arch'+pedn).innerHTML;
+				cambiaetiq(narch);
 				document.getElementById('nfact').value= nfact;
 				document.getElementById('saldo').value = saldoa;
 				document.getElementById('monto').value = saldoa;
@@ -176,25 +195,28 @@ $table2 = 'clientes';
 		   	function valida(indic){
 		   		var fecha=document.getElementById('fpago').value;
 		   		var factu= document.getElementById('facti'+indic).innerHTML;
+		   		var idcte = parseInt(document.getElementById('idcte'+indic).innerHTML);
 		   		var nfactu=document.getElementById('nfact').value;
+		   		var narch= document.getElementById('arch'+indic).innerHTML;
 		   		var arch= document.getElementById('arch').value;
 		   	    var mpag=document.getElementById('smpago').value;
 		   	    var ctaact=document.getElementById('cuenta').value;
 		   	    var montop= document.getElementById('monto').value;
 		   	 	var saldoi= document.getElementById('monto').value;
+		   	 	var resul= 0;
 		   	    //corregir funcion fecha
 		   	    var fechac=isValidDate(fecha)
-		   		if(!fechac){return -1;}
-		   		if(factu=="SI"){
-		   				if(nfactu==""){return -2}
-		   				if(arch==""){return -3}
-		   				if(mpag==0){return -4}else if(mpag>1 && ctaact==""){return-5}
-		   				}else{
-		   			if(mpag==0){return-4}else if(mpag>1 && ctaact==""){return-5};
-		   		}
-		   		if (montop>saldoi){	return -7}; 	
-		   	}	
-		   	
+		   		if(!fechac){resul= -1}
+		   		else if(factu=="SI"){
+		   				if(nfactu==""&&idcte>4){resul= -2}
+		   				else if(arch==""&&narch==""&&idcte>4){resul= -3}
+		   				else if(mpag>1 && ctaact==""){resul=-5};
+		   		}else if(factu=="NO"){		
+		   					if(mpag>1 && ctaact==""){resul=-5}
+		   					else if(montop>saldoi){resul= -7};
+		   		}else if(mpag==0){resul=-4}else{resul=0};
+		   		return resul;	
+		   	}
 		   	function epago(){
 			 	//esta funcion añade escuchas a botones de pago
 			 	var bpagar = document.getElementsByClassName('bpag');
@@ -208,6 +230,7 @@ $table2 = 'clientes';
 				var lpedid=elem.id.length-6;
 					var pedid = elem.id.slice(-lpedid);
 					var entra = document.getElementById("afact"+pedid);
+					var camstat= document.getElementById("stped"+pedid);
 				//habilitar el input
 					entra.disabled = false;
 				//agregar escucha de change
@@ -219,6 +242,7 @@ $table2 = 'clientes';
 							if (this.readyState == 4 && this.status == 200) {
 								entra.style.backgroundColor = "green";
 								entra.disabled=true;
+								camstat.innerHTML = "X COBRAR";
 							    }
 							}
 						xhttp.open("POST", "php/envianofact.php", true);
@@ -328,7 +352,18 @@ $table2 = 'clientes';
 					})
 				document.getElementById('smpago').addEventListener('change',function(){
 						var mpago=document.getElementById('smpago').value;
-						if(mpago!=1){document.getElementById('cuenta').focus()}else{document.getElementById('regpago').focus()}
+						switch(mpago) {
+					    case "01":
+					    	document.getElementById('regpago').focus()	
+					        break;
+					    case "02":
+					    case "03":
+					    	document.getElementById('cuenta').value= '8145';
+					    	document.getElementById('regpago').focus();
+					        break;
+					    default:
+					    	document.getElementById('regpago').focus();
+					}
 					})
 				//monto del pago
 				document.getElementById('monto').addEventListener('change',function(){
@@ -437,9 +472,6 @@ $table2 = 'clientes';
 	  if(mysqli_num_rows($result2)) {
 	  	 //construir tabla
 	  	 while($row2=mysqli_fetch_row($result2)){
-	  	     $sql= "SELECT t2.razon_social,t1.fecha, t1.idpedidos2,t1.factura,t1.monto,t1.iva,t1.total,t2.diascred,t1.status,
-            t1.facturar9,t1.idclientes10,t1.saldo FROM $table
- AS t1 INNER JOIN $table2 AS t2 ON t1.idclientes= t2.idclientes10 WHERE t1.status >19 AND t1.status <40 AND t1.tipovta = 2 ORDER BY t1.fecha";
 	  	                $razons= $row2[0];
 	  	                $fechamov=date_create($row2[1]);
 			 			$noped=$row2[2];
@@ -455,7 +487,9 @@ $table2 = 'clientes';
 						$idcte=$row2[10];
 						$facti=sfactura($sfact);
 						$saldo=$row2[11];
-					 	echo "<tr><td id=idcte".$noped." class='ocult'>$idcte</td><td id=sfact".$noped." class='ocult'>$sfact</td>
+						$arch= $row2[12];
+					 	echo "<tr><td id=idcte".$noped." class='ocult'>$idcte</td>
+                        <td id=sfact".$noped." class='ocult'>$sfact</td><td id=arch".$noped." class='ocult'>$arch</td>
 					 	<td id=facti".$noped.">$facti</td><td>$razons</td><td>$fechamod</td><td id=ped".$noped.">$noped</td>
                         <td class= 'efact' id=nofact".$noped."><input disabled id=afact".$noped." value='$nfact'></td>
 					 	<td class='subto' id=subt".$noped.">$subt</td><td class='siva' id=iva".$noped.">$iva</td>
@@ -485,7 +519,7 @@ $table2 = 'clientes';
 	    				<label>Monto: </label><input type="number" name="monto" min="0" step ="any" id="monto" class="cajac"/>
 	    			</div>
 	    			<div class="rengn">
-	    				<label>Archivo XML: </label><input type="file" name="arch"  id="arch" accept=".xml"/>
+	    				<label id="etarch">Archivo XML: </label><input type="file" name="arch"  id="arch" accept=".xml"/>
 	    			</div>
 	    			<label>Metodo de Pago: </label>
 	    			<div class="rengn">

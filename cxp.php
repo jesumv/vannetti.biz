@@ -31,7 +31,7 @@ require 'include/funciones.php';
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vanneti Cucina</title>
+  <title>Cuentas por Pagar</title>
   <!-- Insert link to styles here -->
    <link rel="stylesheet" type="text/css" href="css/inline.css">
    <link rel="stylesheet" type="text/css" href="css/plant1.css">
@@ -248,8 +248,8 @@ require 'include/funciones.php';
         					    		document.getElementById('cuenta').value="8145";
         					    		document.getElementById('folio').focus()   
         					    		if(rcomi.classList.contains("ocult")){rcomi.classList.toggle("ocult");
-        					    		   vcomi.value = 5;
-        					    		   viva.value =.8;
+        					    		   vcomi.value = 5
+        					    		   viva.value=0.8;
         								}
         					        break;
         					    case "04":
@@ -258,11 +258,18 @@ require 'include/funciones.php';
     					        break;
         					    case "28":
         					    	document.getElementById('cuenta').value="2730";
-        					    	document.getElementById('folio').focus()
+        					    	document.getElementById('folio').focus();
         					        break;
         					    default:
-        					    	document.getElementById('regpago').focus()
+        					    	document.getElementById('regpago').focus();
         					}
+				});
+				document.getElementById('comi').addEventListener('change',function(){
+					var vcomi = document.getElementById('comi').value;
+					var viva;
+					if(vcomi!= ""){viva= vcomi *.16}else{viva=""} 
+					document.getElementById('ivac').value= viva;
+
 				});
 
 						//cuenta

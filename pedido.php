@@ -67,7 +67,7 @@
 				$("#aviso").html(texto);
 				$("#aviso").popup("open");
 			}
-			
+		
 		function hazvisib(visible){
 			//esta funcion presenta la tabla de productos
 		var tabla = document.getElementById('ocultable');
