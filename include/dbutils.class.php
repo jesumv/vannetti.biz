@@ -44,7 +44,7 @@
 		public function conecta() {
 	    /***esta funcion establece la conexion a sql***/
 		/***variables de conexion ***/
-		$mysql_hostname = "localhost";
+		$mysql_hostname = "127.0.0.1";
 		$mysql_user = "root";
 		$mysql_password = "";
 		$mysql_database = "ventas";
@@ -54,7 +54,8 @@
 		if($mysqli->connect_errno > 0){
 		    die('No se establecio conexion a la base de datos [' . $mysqli->connect_error . ']');
 			return -1;
-		}else{
+		}else{ 
+		    mysqli_select_db($mysqli,$mysql_database);
 				if(!$mysqli->set_charset("utf8")) {
     				die("Error cargando el conjunto de caracteres utf8: ". $mysqli->error);
 				}else{
