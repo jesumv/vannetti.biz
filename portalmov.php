@@ -34,26 +34,26 @@
         SUM(CASE WHEN cuenta='401.04' THEN haber ELSE 0 END))FROM ventas.diario
 	    WHERE fecha >'".$fechainic."'");
 	   $dato1=$result1->fetch_row();
-	   $result2=$mysqli->query("SELECT SUM(CASE WHEN cuenta='501.01' THEN debe ELSE 0 END)FROM DIARIO
+	   $result2=$mysqli->query("SELECT SUM(CASE WHEN cuenta='501.01' THEN debe ELSE 0 END)FROM ventas.diario
 	   WHERE fecha >'".$fechainic."'");
 	   $dato2=$result2->fetch_row();
-	   $result3=$mysqli->query("SELECT SUM(CASE WHEN cuenta='201.01' THEN haber ELSE 0 END)FROM DIARIO");
+	   $result3=$mysqli->query("SELECT SUM(CASE WHEN cuenta='201.01' THEN haber ELSE 0 END)FROM diario");
 	   $dato3=$result3->fetch_row();
-	   $result4=$mysqli->query("SELECT SUM(CASE WHEN cuenta='201.01' THEN debe ELSE 0 END)FROM DIARIO");
+	   $result4=$mysqli->query("SELECT SUM(CASE WHEN cuenta='201.01' THEN debe ELSE 0 END)FROM diario");
 	   $dato4=$result4->fetch_row();   
-	   $result5=$mysqli->query("SELECT SUM(CASE WHEN cuenta='105.01' THEN debe ELSE 0 END)FROM DIARIO");
+	   $result5=$mysqli->query("SELECT SUM(CASE WHEN cuenta='105.01' THEN debe ELSE 0 END)FROM diario");
 	   $dato5=$result5->fetch_row();
-	   $result6=$mysqli->query("SELECT SUM(CASE WHEN cuenta='105.01' THEN haber ELSE 0 END)FROM DIARIO");
+	   $result6=$mysqli->query("SELECT SUM(CASE WHEN cuenta='105.01' THEN haber ELSE 0 END)FROM diario");
 	   $dato6=$result6->fetch_row();
-	   $result7=$mysqli->query("SELECT SUM(CASE WHEN cuenta='101.01' THEN debe ELSE 0 END)FROM DIARIO");
+	   $result7=$mysqli->query("SELECT SUM(CASE WHEN cuenta='101.01' THEN debe ELSE 0 END)FROM diario");
 	   $dato7=$result7->fetch_row();
-	   $result8=$mysqli->query("SELECT SUM(CASE WHEN cuenta='101.01' THEN haber ELSE 0 END)FROM DIARIO");
+	   $result8=$mysqli->query("SELECT SUM(CASE WHEN cuenta='101.01' THEN haber ELSE 0 END)FROM diario");
 	   $dato8=$result8->fetch_row();
-	   $result9=$mysqli->query("SELECT SUM(CASE WHEN cuenta='102.01' THEN debe ELSE 0 END)FROM DIARIO");
+	   $result9=$mysqli->query("SELECT SUM(CASE WHEN cuenta='102.01' THEN debe ELSE 0 END)FROM diario");
 	   $dato9=$result9->fetch_row();
-	   $result10=$mysqli->query("SELECT SUM(CASE WHEN cuenta='102.01' THEN haber ELSE 0 END)FROM DIARIO");
+	   $result10=$mysqli->query("SELECT SUM(CASE WHEN cuenta='102.01' THEN haber ELSE 0 END)FROM diario");
 	   $dato10=$result10->fetch_row();
-	   $result11=$mysqli->query("SELECT SUM(CASE WHEN cuenta LIKE'6%' THEN debe ELSE 0 END)+SUM(CASE WHEN cuenta LIKE'7%' THEN debe ELSE 0 END)FROM DIARIO
+	   $result11=$mysqli->query("SELECT SUM(CASE WHEN cuenta LIKE'6%' THEN debe ELSE 0 END)+SUM(CASE WHEN cuenta LIKE'7%' THEN debe ELSE 0 END)FROM diario
 	   WHERE fecha>'".$fechainic."'");
 	   $dato11=$result11->fetch_row();
 	   $vta=number_format($dato1[0],2);
