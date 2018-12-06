@@ -34,18 +34,18 @@ $query= mysqli_query($mysqli, $consulta) or die ("ERROR EN CONSULTA ULTIMOS MOVT
 
 function saldobanco($mysqli){
 	//esta funcion presenta el saldo de bancos
-	$consulta1=$mysqli->query("SELECT SUM(CASE WHEN cuenta='102.01' THEN debe ELSE 0 END)FROM DIARIO");
+	$consulta1=$mysqli->query("SELECT SUM(CASE WHEN cuenta='102.01' THEN debe ELSE 0 END)FROM ventas.diario");
 	$debe=$consulta1->fetch_row();
 	$rdebe=$debe[0];
-	$consulta2=$mysqli->query("SELECT SUM(CASE WHEN cuenta='102.01' THEN haber ELSE 0 END)FROM DIARIO");
+	$consulta2=$mysqli->query("SELECT SUM(CASE WHEN cuenta='102.01' THEN haber ELSE 0 END)FROM ventas.diario");
 	$haber=$consulta2->fetch_row();
 	$rhaber=$haber[0];
 	$bancos=number_format(($rdebe-$rhaber),2);
 	//caja
-	$consulta3=$mysqli->query("SELECT SUM(CASE WHEN cuenta='101.01' THEN debe ELSE 0 END)FROM DIARIO");
+	$consulta3=$mysqli->query("SELECT SUM(CASE WHEN cuenta='101.01' THEN debe ELSE 0 END)FROM ventas.diario");
 	$debe3=$consulta3->fetch_row();
 	$rdebe3=$debe3[0];
-	$consulta4=$mysqli->query("SELECT SUM(CASE WHEN cuenta='101.01' THEN haber ELSE 0 END)FROM DIARIO");
+	$consulta4=$mysqli->query("SELECT SUM(CASE WHEN cuenta='101.01' THEN haber ELSE 0 END)FROM ventas.diario");
 	$haber4=$consulta4->fetch_row();
 	$rhaber4=$haber4[0];
 	$caja=number_format(($rdebe3-$rhaber4),2);
