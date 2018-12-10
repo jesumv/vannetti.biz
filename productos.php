@@ -394,7 +394,7 @@ include_once "include/menu1.php";
  $sql= "SELECT t2.nombre, t1.idproductos, t1.codigo, t1.cbarras,t1.nombre,t3.nombre, t1.cant,
  t1.costo, t1.precio1, t1.precio2,t1.precio3,t1.precio4 FROM $table AS t1 INNER JOIN $table2 AS t2 
  ON t1.grupo=t2.idgrupos INNER JOIN $table3 AS t3 ON t1.unidad=t3.idunidades 
- WHERE t1.status < 2 ";
+ WHERE t1.status < 2 ORDER BY t1.idproductos";
  
  $result2 = mysqli_query($mysqli,$sql);
 
