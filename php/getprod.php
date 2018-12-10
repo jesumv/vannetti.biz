@@ -8,13 +8,14 @@
     $funcbase = new dbutils;
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
-/*** obtiene proveedor si lo hay ***/
+/*** obtiene producto seleccionado si lo hay ***/
 $idprod = $_GET['idprod'];
 $cad = "idproductos=".$idprod;
-/**trae datos del producto solicitado**/
+/**trae datos del/los producto(s) solicitado**/
     if (is_object($mysqli)) {
     	$sqlCommand = "SELECT idproveedores,grupo,nombre,nom_corto,nom_cat,codigo,unidad,cant,cbarras,
-    	costo,costov,descripcion,iva,speso,precio1,precio2,precio3,precio4,spesov FROM productos WHERE ".$cad;		
+    	costo,costov,descripcion,iva,speso,precio1,precio2,precio3,precio4,spesov FROM productos WHERE ".$cad.
+    	" ORDER BY idproductos";		
 	 // Execute the query here now
 			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE PRODUCTO ".mysqli_error($mysqli));
 //inicializacion de arreglo
