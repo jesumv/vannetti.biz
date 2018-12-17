@@ -29,6 +29,8 @@
 	        $cargo;
 	        $ivac;
 	        $concepaux;
+	        //normalizacion de monto propina
+	        if(!is_numeric($montop)){$montop=0;};
 	        if($ivaaux==""){$ivac =0;}else{$ivac=$ivaaux;}
 	        if($mpago=="03"){$concepaux="comision";}else{$concepaux="propina";}
 	        $total = $montop+$ivac;
@@ -37,6 +39,7 @@
 	        $resula;
 	        try{
 	            //debe depende de si el gasto es alimentacion = propina no deducibles ventas
+	            //en otro caso, es comision por transpaso = gasto financiero
 	            if($concep=="alim viaje"){$abono=602.83;}else{$abono=701.10;}
 	            $resula=movdiario($mysqli,$abono,$ref,0,$montop,$fecha,$concepaux);
 	            //o traspaso= gastos financieros + iva
