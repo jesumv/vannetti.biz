@@ -34,7 +34,7 @@
 	        $total = $montop+$ivac;
 	        $cargo;
 	        $abono;
-	        $resula;
+	        $resula=0;
 	        try{
 	            //debe depende de si el gasto es alimentacion = propina no deducibles ventas
 	            //en otro caso, es comision por transpaso = gasto financiero
