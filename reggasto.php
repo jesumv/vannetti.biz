@@ -178,6 +178,7 @@ function saldobanco($mysqli){
 			switch(elec){
 			case "02":
 			case "03":
+			case "13":
 				cuenta.value='8145';
 			break;
 			case "04":
