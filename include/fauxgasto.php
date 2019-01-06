@@ -31,7 +31,8 @@
 	        $concepaux;
 	        if($ivaaux==""){$ivac =0;}else{$ivac=$ivaaux;}
 	        if($mpago=="03"){$concepaux="comision";}else{$concepaux="propina";}
-	        $total = $montop+$ivac;
+	        //si hay monto de propina, se suma a iva para el total
+	        if(is_numeric($montop)){$total = $montop+$ivac;}
 	        $cargo;
 	        $abono;
 	        $resula=0;

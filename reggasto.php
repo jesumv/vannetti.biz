@@ -185,7 +185,7 @@ function saldobanco($mysqli){
 				cuenta.value='8886';
 			break;
 			case "28":
-			cuenta.value='2730';
+			cuenta.value='5782';
 			break;
 			}
 			cuenta.focus();
@@ -452,6 +452,8 @@ function saldobanco($mysqli){
 	    				var ivaaux= document.getElementById('miva').value;
 	    				var tipo= "g";
 	    				var uuid= document.getElementById('uuid').innerHTML;
+	    				//revisar que no este la factura en bd del mes
+	    				
 	    				//envio a bd
 	    					$.post( "php/enviaotros.php",
 	 							{	tipo:tipo,
