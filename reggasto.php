@@ -87,6 +87,7 @@ function saldobanco($mysqli){
    <script>
    	'use strict';
    	(function() {
+
 		//bandera que indica si se ha modificado un campo manualmente
 		var bandera = 0;
 		var app=[];
@@ -94,7 +95,9 @@ function saldobanco($mysqli){
 		var ctas=[];
 		var obj1;
 
+
 		//DEFINICION DE FUNCIONES VARIAS
+				
 		function ivaaux(){
 			//calcula el iva de auxiliares
 		var iva=document.getElementById("miva");
@@ -553,8 +556,27 @@ function saldobanco($mysqli){
 	    					enviatras();
 	    				}
 	    			}
-
+					function cambiabt(){
+						//cambia el diseño del boton
+						var bt = document.getElementById("cancelo");
+						var bt2 = document.getElementById("regotra");
+							if (bt.className.match("button b")) {
+								bt.setAttribute("class","button c");
+								bt2.setAttribute("class","button b");
+								bt.innerHTML="SALIR";
+								bt2.disabled= true;
+						    }
+						    else {
+						    	bt.setAttribute("class","button b");
+						    	bt2.setAttribute("class","button a");
+						    	bt.innerHTML="Cancela";
+						    	bt2.disabled= false;
+						    	
+						    }
+						}
+	    			
 	    			function rego(){
+
 	 				//al accionar el boton de envio otros
 	 				var diferencia = document.getElementById("sumdif").value;
 	 				var sumaa = document.getElementById("sumabono").value;
@@ -568,6 +590,7 @@ function saldobanco($mysqli){
 	 		   				var fecha =	document.getElementById('fechao').value;
 	 						var datos= document.getElementsByClassName("dato");
 	 		   				var ndatos= datos.length;
+	 		   				var scta = document.getElementById('scta').value;
 	 		   				var ref = document.getElementById('ref').value;
 	 		   				var coment =document.getElementById('coment').value;
 
@@ -579,7 +602,8 @@ function saldobanco($mysqli){
 	 		   				
 	 		   				$.post( "php/enviapaciol.php",
 	 									{	
-	 										fecha:fecha	,
+	 										fecha:fecha,
+	 										scta:scta,
 	 										ref:ref,
 	 										coment:coment,
 	 										cuentas:datos1			
@@ -587,7 +611,8 @@ function saldobanco($mysqli){
 	 									 .done(function(data) {
 	 			    							var resul= data.resul;
 	 			    							bandera = 4;
-	 											escribemens("CUENTAS AFECTADAS OK. OPRIMA CANCELAR PARA SALIR");
+	 			    							cambiabt()
+	 											escribemens("CUENTAS AFECTADAS OK. OPRIMA SALIR");
 	 			    						})
 	 			    						.fail(function(xhr, textStatus, errorThrown ) {
 	 				    						console.log( textStatus, errorThrown );	
@@ -863,7 +888,8 @@ function saldobanco($mysqli){
 		    				<td><input type ="number" disabled id="sumdif" name = "sumdif" value =0></td></tr>
 		    			</table>
 		    		<div class ="rengn">
-		    		<label for="ref">REFERENCIA</label><input type="text" id="ref" name ="ref" class="cajam">
+		    		<label for="ref">SUBCUENTA</label><input type="text" id="scta" name ="scta" class="cajac">
+		    		<label for="ref">REFERENCIA</label><input type="text" id="ref" name ="ref" class="cajac">
 		    		<label for="coment">COMENTARIOS</label><input type="text" id="coment" name ="coment" class="cajam">
 		    		</div>
 		    			<div class="dialog-buttons">

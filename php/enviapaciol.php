@@ -6,7 +6,7 @@
     }
     
     /*** funciones con bd ***/ 
-    function movdiario($mysqli,$tipom,$cuenta,$monto,$fecha,$ref=NULL,$concep=NULL,$subcta=NULL){
+    function movdiario($mysqli,$tipom,$cuenta,$monto,$fecha,$scta=NULL,$ref=NULL,$coment=NULL){
         //esta funcion realiza 1 movimiento contable en diario. $tipom determina 
         if($tipom==0){
             $colum="debe";
@@ -16,7 +16,7 @@
         try{
             $mysqli->autocommit(false);
             $mysqli->query("INSERT INTO diario(cuenta,$colum,fecha,facturar,subcuenta,referencia,coment)
-			VALUES($cuenta,$monto,'$fecha',1,'$subcta','$ref','$concep')");
+			VALUES($cuenta,$monto,'$fecha',1,'$scta','$ref','$coment')");
             //efectuar la operacion
             $mysqli->commit();
             $resul=0;
@@ -42,6 +42,7 @@
         $jsondata = array();
         //recolección de variables;
         $fecha=$_POST["fecha"];
+        $scta=$_POST["scta"];
         $ref=$_POST["ref"];
         $coment=$_POST["coment"];
         $datos = $_POST["cuentas"];
@@ -61,7 +62,7 @@
                 $column=$escribe/2;
                 if(is_int($column)){$columna=0;}else{$columna=1;};
                 if($cuenta!=0){
-                $resul1=movdiario($mysqli,$columna,$cuenta,$monto,$fecha,$ref,$coment);
+                $resul1=movdiario($mysqli,$columna,$cuenta,$monto,$fecha,$scta,$ref,$coment);
                 $resul=$resul+$resul1;
                 }
                 $escribe++;
