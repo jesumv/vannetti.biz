@@ -44,9 +44,9 @@
 		public function conecta() {
 	    /***esta funcion establece la conexion a sql***/
 		/***variables de conexion ***/
-		$mysql_hostname = "127.0.0.1";
-		$mysql_user = "root";
-		$mysql_password = "";
+		$mysql_hostname = "localhost";
+		$mysql_user = "usuarioa";
+		$mysql_password = "Vannetti2019";
 		$mysql_database = "ventas";
 
 
