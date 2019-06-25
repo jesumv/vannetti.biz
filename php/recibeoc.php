@@ -169,7 +169,7 @@ function tiposurt($mysqli,$oc){
 			$tsurt = tiposurt($mysqli,$oc);
 		//actualizacion de oc	
 			$grant=$montot+$ivat;
-			$sqlCommand3 = "UPDATE oc SET status =".$tsurt." ,iva = $ivat, monto=$montot, total = $grant, factura= '$fact', 
+			$sqlCommand3 = "UPDATE oc SET status =".$tsurt." ,iva = $ivat, monto=$montot, total = $grant, saldo=$grant,factura= '$fact', 
 			remision='$remi',fecharec='$fechaconv' WHERE idoc = $oc";
 			$query3 = mysqli_query($mysqli, $sqlCommand3) or die ('error en marcado de oc rec '.mysqli_error($mysqli));  
 		/*complementar el array de resultados*/ 
