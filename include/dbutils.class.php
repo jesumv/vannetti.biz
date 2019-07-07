@@ -69,7 +69,6 @@
          //***checa si el cliente esta registrado ***/
          //obtiene el path absoluto
             session_start();
-    
             $user_check=$_SESSION['usuario'];
             
             $ses_sql=mysqli_query($mysqli,"select username from usuarios where username='$user_check'");      

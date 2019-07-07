@@ -116,6 +116,10 @@ table.db-table2 td	{ padding:5px; border-left:1px solid #ccc; border-top:1px sol
 text-align:center;
 background-color:#80ff80;
 }
+.revc{
+text-align:center;
+background-color:#f9ff85;
+}
 
 .ocult{display:none;}
 

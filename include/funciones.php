@@ -211,7 +211,7 @@ function venta($mysqli,$fecha,$ref,$monto16,$monto0,$iva,$tipo,$factu,$cte){
 							case 1:
 								//contado x ahora igual a anterior, luego se manda al cobro
 								//mostrador- cargo a caja y efectivo 101.01
-								$cargo="101.01";
+								$cargo="102.01";
 								operdiario($mysqli,$cargo,1,0,$ref,$montof,$fecha,$factu);
 								//iva trasladado cobrado 208.01
 								$abono="208.01";

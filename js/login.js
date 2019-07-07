@@ -1,7 +1,7 @@
 /**
  * @author jmv
  */
-$(document).on("submit", "#board_login", function(){
+$(document).on("submit","#board_login", function(){
   if(validate("login")){
 		$.post('php/ajax_login.php', $(this).serialize(), function(data){
 			if(data == 0){
