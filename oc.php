@@ -353,9 +353,6 @@
 			    		<label>
 			    			<input type="radio" id="rtpago-c" name="rtpago" value= "28"/>Tarjeta de débito
 			    		</label>
-			    		<label>
-			    			<input type="radio" id="rtpago-d" name="rtpago" value= "4"/>Tarjeta de Crédito
-			    		</label>
 	    			</fieldset>
 	    			<fieldset>
 	    				<div data-role="fieldcontain">

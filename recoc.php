@@ -506,8 +506,8 @@
 									window.location.href = "listoc.php";
 								} );
     						})
-    						.fail(function(xhr, textStatus, errorThrown) {
-    							var err1 = data.success;
+    						.fail(function(xhr, textStatus,errorThrown) {
+    							var err1 = errorThrown;
     							aviso("error alta de rec oc: "+xhr.responseText);
 							});	
 		 			}

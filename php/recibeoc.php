@@ -9,7 +9,7 @@
 	//funciones auxiliares
 	require '../include/funciones.php';
 	
-	function compra($mysqli,$monto,$refe,$tipo,$prov,$iva,$fact,$fechaconv ){
+	function compra($mysqli,$monto,$refe,$tipo,$prov,$iva,$fact,$fechaconv,$tipop ){
 		//esta funcion registra en el diario una compra a credito
 		//normalizacion de iva a 0  si no se provee
 		if(!$iva){$iva =0;};
@@ -19,7 +19,7 @@
 			//contado
 			case 0:
 				    $cargo2="118.01";
-					$cabono="101.01";
+					$cabono = ($tipop == 1 ? "101.01" : "102.01");
 				//cargo
 					$sqlmov ="INSERT INTO diario(cuenta,referencia,debe,fecha,facturar)VALUES($cargo,'$refe',$monto,'$fechaconv',$fact )";
 					$querydiac = mysqli_query($mysqli, $sqlmov) or die ('error en cargo1: '.mysqli_error($mysqli));
@@ -98,12 +98,13 @@ function tiposurt($mysqli,$oc){
 	function traedatosoc($mysqli,$oc){
 		$datos = array();
 		//esta funcion trae los datos utiles de la oc
-		$sql = "SELECT idproveedores,facturar, credito FROM oc WHERE idoc=".$oc;
+		$sql = "SELECT idproveedores,facturar,credito,tpago FROM oc WHERE idoc=".$oc;
 		$query = mysqli_query($mysqli, $sql) or die ('error en consulta no. proov: '.mysqli_error($mysqli));
 		$row=mysqli_fetch_array($query);
 		$datos[0] = $row[0];
 		$datos[1] = $row[1];
 		$datos[2] = $row[2];
+		$datos[3] = $row[3];
 		return $datos;
 	}
 		
@@ -136,11 +137,12 @@ function tiposurt($mysqli,$oc){
 				$prov= $datos[0][0];
 				$facturar = $datos[0][1];
 				$credito=$datos[0][2];
+				$tipop=$datos[0][3];
 				$refe="oc".$oc;
 				
 //ciclo de afectacion a bd
 		//registro en diario
-			compra($mysqli,$montot,$refe,$credito,$prov,$ivat,$facturar,$fechaconv);
+			compra($mysqli,$montot,$refe,$credito,$prov,$ivat,$facturar,$fechaconv,$tipop);
 			$cantarts = count($arts);
 			$jsondata['resul'] = 0;
 			for($i=0;$i<$cantarts;$i++) {
@@ -164,13 +166,25 @@ function tiposurt($mysqli,$oc){
 						}else{$jsondata['resul'] = -1;}
 					
 			}
-		
-		//determinar si se surte total o parcial
+			//determinar si se surte total o parcial
 			$tsurt = tiposurt($mysqli,$oc);
-		//actualizacion de oc	
 			$grant=$montot+$ivat;
-			$sqlCommand3 = "UPDATE oc SET status =".$tsurt." ,iva = $ivat, monto=$montot, total = $grant, saldo=$grant,factura= '$fact', 
-			remision='$remi',fecharec='$fechaconv' WHERE idoc = $oc";
+		//determinacion de saldo y fecha de pago
+		$saldo;
+		$fechapago;
+		$statusp;
+			if($credito==0){
+			    $saldo=0;
+			    $fechapago=$fechaconv;
+			    $statusp= 99;
+			}else{
+			    $saldo=$grant;
+			    $fechapago=NULL;
+			    $statusp=$tsurt;
+			}
+		//actualizacion de oc
+			$sqlCommand3 = "UPDATE oc SET status = $statusp,iva = $ivat,monto=$montot,total = $grant,saldo=$saldo,factura='$fact', 
+			remision='$remi',fecharec='$fechaconv',fechapago='$fechapago' WHERE idoc = $oc";
 			$query3 = mysqli_query($mysqli, $sqlCommand3) or die ('error en marcado de oc rec '.mysqli_error($mysqli));  
 		/*complementar el array de resultados*/ 
 			$jsondata['noc']= $oc; 
