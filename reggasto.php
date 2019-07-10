@@ -82,7 +82,7 @@ function saldobanco($mysqli){
    <link rel="shortcut icon" href="img/logomin.gif" />  
    <link rel="apple-touch-icon" href="img/logomin.gif">
    <script src="js/jquery3/jquery-3.0.0.min.js"></script>
-   <script src="js/fcfdi.js"></script>
+   <script src="js/fcfdiv3.js"></script>
    
    <script>
    	'use strict';
@@ -325,7 +325,7 @@ function saldobanco($mysqli){
  				                    		var contents = e.target.result;
  				                    		var cfdireg;
  				                    		if(bandera == 0){
- 				                    			var resul=leeXML(contents,arch);
+ 				                    			var resul=leeXMLing(contents,arch);
  				                    			if(resul.exito ==0){
  				                    				llenaforma(resul.fecha,resul.fpago,resul.uuid,resul.stotal,resul.iva,resul.total,
  				                    				resul.seriefolio,resul.conceptoc)
