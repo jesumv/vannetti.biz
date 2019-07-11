@@ -166,7 +166,6 @@ function leeXMLing(texto){
 		var concepa ;
 		var concepa1;
 		var concep;
-		var astotal;
 		var stotal;
 		var total;
 		var rfc
@@ -176,13 +175,14 @@ function leeXMLing(texto){
 		var nombrerecep
 		var uuid;					 
 		var haydescu = atribcomp.getNamedItem("Descuento");
+		var astotal= atribcomp.getNamedItem("SubTotal").nodeValue;
+		
 			 //si hay descuento se modifica subtotal
 			 if(haydescu){
-				 var descu = parseFloat(atribcomp.getNamedItem("Descuento").nodeValue).toFixed(2);
-				 var astotal= parseFloat(atribcomp.getNamedItem("SubTotal").nodeValue).toFixed(2);
-				 stotal = astotal - descu;
+				 var descu = atribcomp.getNamedItem("Descuento").nodeValue;
+				 stotal = parseFloat(astotal) - parseFloat(descu);
 			 }else{
-				 stotal = parseFloat(atribcomp.getNamedItem("SubTotal").nodeValue).toFixed(2);	 
+				 stotal = parseFloat(astotal);	 
 			 };
 			 total = atribcomp.getNamedItem("Total").nodeValue
 			 fecha= atribcomp.getNamedItem("Fecha").nodeValue
@@ -201,7 +201,8 @@ function leeXMLing(texto){
 			 		ieps="";
 			 	}
 			 //si hay ieps, se modifica subtotal
-			 if(ieps>0){stotal=stotal+ieps};
+			 	var stotal= ieps > 0 ? parseFloat(stotal)+parseFloat(ieps) : parseFloat(stotal);
+			 //if(ieps>0){stotal=parseFloat(stotal)+parseFloat(ieps)};
 			 rfc = emisor.getNamedItem("Rfc").nodeValue;
 			 nombrea=emisor.getNamedItem("Nombre");
 			 //si no hay nombre, se agrega generico
