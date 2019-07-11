@@ -89,6 +89,9 @@ function descimp(colecconcep){
 function calcimptos(nodoimpuestos){
 	//extrae los datos del nodo cfdi:impuestos global
 	var imptos =[];
+	imptos['iva']=0;
+	imptos['ieps']=0;
+	
 	//buscar definiciones de iva
 	var traslados = nodoimpuestos.getElementsByTagName("cfdi:Traslados");
 	var trasladocol=traslados[0].children;
@@ -98,13 +101,13 @@ function calcimptos(nodoimpuestos){
 			var traslado=trasladocol[i].attributes
 			//examina el tipo de impuesto
 			var tipo=traslado.getNamedItem("Impuesto").nodeValue;
-			var importe=traslado.getNamedItem("Importe").nodeValue;
+			var importe=parseFloat(traslado.getNamedItem("Importe").nodeValue);
 			switch(tipo){
 			case "002":
-				imptos['iva']=importe;
+				imptos['iva']=imptos['iva']+importe;
 			break;
 			case "003":
-				imptos['ieps']=importe;
+				imptos['ieps']=imptos['ieps']+importe;
 			break;	
 			default:
 				imptos['iva']="";
@@ -186,7 +189,9 @@ function leeXMLing(texto){
 			 };
 			 total = atribcomp.getNamedItem("Total").nodeValue
 			 fecha= atribcomp.getNamedItem("Fecha").nodeValue
-			 fpago= atribcomp.getNamedItem("FormaPago").nodeValue;
+			 if(comprob.hasAttribute("FormaPago")){fpago= atribcomp.getNamedItem("FormaPago").nodeValue;}else{
+				 fpago="";
+			 }
 			 metpago= atribcomp.getNamedItem("MetodoPago").nodeValue;
 			 //definicion de impuestos
 			 //Verificar si hay nodo impuestos
