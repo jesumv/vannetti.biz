@@ -98,7 +98,7 @@ function fallo($mensaje){
         $subcta = $_POST["ctapago"];
         $facturar=$_POST["fact"];
         // se revisa si debe haber fecha de pago
-        if($credito==0){$fechapag=$fecha;}else {$fechapag = NULL;}
+        if($credito==0){$fechapag=$fecha;$saldoact=0;}else {$fechapag = NULL; $saldoact=$total;}
         $jsondata = array();
         //creacion de datos para oc
         $arts= array_sum($cants);
@@ -111,7 +111,7 @@ function fallo($mensaje){
         try {
             //creacion de oc en tabla oc
             $sqlCommand= "INSERT INTO oc (idproveedores,arts,monto,total,saldo,fecharec,fechapago,usu,status,factura,facturar,credito,tpago)
-	    	     VALUES ($prov,$arts,$total,$total,$total,'$fecha','$fechapag','$usu',11,'$factura',$facturar,$credito,'$tpago')" ;
+	    	     VALUES ($prov,$arts,$total,$total,$saldoact,'$fecha','$fechapag','$usu',11,'$factura',$facturar,$credito,'$tpago')" ;
             $mysqli->query($sqlCommand)? null: fallo('alta oc '.mysqli_error($mysqli)); 
             //obtencion de numero de orden de compra
             $noc = traeoc($mysqli);
