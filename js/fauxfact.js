@@ -26,10 +26,10 @@ function deleteChild() {
 			var prprod=prods[i].getAttribute("ValorUnitario");
 			var montop=prods[i].getAttribute("Importe");
 			//se revisa si el concepto trae impuesto
-			if(prods[0].children[0]){	
-				var impuesto= prods[0].children[0].children[0].children[0].getAttribute("Impuesto");
+			if(prods[i].children[0]){	
+				var impuesto= prods[i].children[0].children[0].children[0].getAttribute("Impuesto");
 				if(impuesto==="002"){
-					 ivap = prods[0].children[0].children[0].children[0].getAttribute("Importe");	
+					 ivap = prods[i].children[0].children[0].children[0].getAttribute("Importe");	
 				}else{ivap="0"};
 			}else{ivap="0"}
 
