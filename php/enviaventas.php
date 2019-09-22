@@ -1,6 +1,4 @@
 <?php
-
-
 if(isset($_POST['dat'])){
     $posted_data = $_POST['dat'];
     $data = json_decode($posted_data);
