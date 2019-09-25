@@ -13,7 +13,8 @@ if(isset($_GET['idprov'])){$cad = "idproveedores=".$_GET['idprov']; }else{$cad =
 
 /**trae id y nom corto de productos no cancelados**/
     if (is_object($mysqli)) {
-    	$sqlCommand = "SELECT idproductos,nom_corto,costo,cant FROM productos WHERE ".$cad." ORDER BY nom_corto";		
+    	$sqlCommand = "SELECT idproductos,nom_corto,costo,cant FROM productos WHERE ".$cad."
+         AND status = 0 ORDER BY nom_corto";		
 	 // Execute the query here now
 			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE SELEC PROD. ".mysqli_error($mysqli));
 //inicializacion de arreglo
