@@ -1,23 +1,28 @@
 /**
  * @author jmv
  */
-$(document)
-.on("submit", "#altaprov", function(){
-  if(validate()){
-		$.post('php/altaprov.php', $(this).serialize(), function(data){
-			if(data == -1){
-				alert("error en el alta de proveedor");
-			} else if (data == 0){
-				alert("alta de proveedor OK");
-				location.reload(); 	
-			}
-		});
-	}
-})
 ;
+function alta(){
+	var formData =$("#altaprov").serialize();
+	var dcred = document.getElementById('dcred').value;
+	  if(validate()){
+			$.post('php/altaprov.php',formData,null,"json")
+			.done(function(data) {
+	 	    	var resul= data.resul;
+	 	    	var dialogo= document.getElementById('altaprov');
+	 	    	dialogo.reset();
+	 			dialogo.classList.remove('dialog-container--visible');
+	 			location.reload(true);
+	 			alert("registro exitoso");
+	 	    						})
+	 	    	.fail(function(xhr, textStatus, errorThrown ) {		
+	 	    	document.write("ERROR EN REGISTRO:"+errorThrown);
+	 			});
+		}	
+}
 
 function validate(){
-		if($("#razon").val() === ''){
+		if(razon===''){
 			alert("Debe proporcionar una razon social");
 			$("#razon").focus();
 			return false;
@@ -30,6 +35,11 @@ function validate(){
 		if($("#nomcor").val() === ''){
 			alert("Debe Proporcionar un nombre corto");
 			$("#nomcor").focus();
+			return false;
+		}
+		if($("#dcred").val() === ''){
+			alert("Debe Proporcionar los días de crédito");
+			$("#dcred").focus();
 			return false;
 		}
 		return true;

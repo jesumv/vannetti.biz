@@ -382,11 +382,12 @@
   <main class="main">
  	<br />
  <h2>CATALOGO DE PRODUCTOS</h2>
-   <button type="button" id="altaprodb">ALTA PRODUCTO</button>
-  	<?php
+<?php
 /*menu de navegación*/
 include_once "include/menu1.php";   	
-
+?>
+ <button type="button" id="altaprodb" class="button c">ALTA PRODUCTO</button>
+<?php 
 //-----CONSTRUCCION DE LA TABLA------------------------------------------------------------------------
  $table = 'productos';
  $table2 = 'grupos';

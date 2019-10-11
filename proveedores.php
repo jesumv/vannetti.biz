@@ -30,16 +30,22 @@
   <link rel="stylesheet" type="text/css" href="css/plant1.css">
   <link rel="shortcut icon" href="img/logomin.gif" />  
   <link rel="apple-touch-icon" href="img/logomin.gif">
-  <link rel="stylesheet" href="css/jquery-ui.min.css">
-  <script src="js/jquery.js"></script>
-  <script src="js/jquery-ui.min.js"></script>
+  <script src="js/jquery3/jquery-3.0.0.min.js"></script>
+  <script src="js/altaprov.js"></script>
    <script>
- 
-  $(document).ready(function() {
-  		$.getScript( "js/app.js");
-  		$.getScript( "js/altaprov.js");
-        });
+   'use strict';
+	(function() {
+		$(document).ready(function() {
+			//traer funciones auxiliares
+			 $.getScript( "js/app.js");
+			  document.getElementById('butenvia').addEventListener('click', function() {
+				    // muestra el dialogo  de alta
+				    alta();
+				  }); 
+			});
+			
  //rutinas de edicion y eliminacion de productos
+	})();
   </script>
 </head>
 <body>
@@ -49,6 +55,7 @@
     	<h1 class="header__title">Bienvenido(a), <?php echo $_SESSION['nombre']; ?></h1> 
     </div>
   </header>
+
   <main class="main">
   	<br />
  <h2>PROVEEDORES</h2>
@@ -56,8 +63,10 @@
 /*menu de navegación*/
 include_once "include/menu1.php";   	
   	?>
-  <button id="primero">ALTA PROVEEDOR</button>
-  
+  	<div>
+  	 	<button id="primero" class="button c">ALTA PROVEEDOR</button> 
+  	</div>
+
    <?php
 //-----CONSTRUCCION DE LA TABLA------------------------------------------------------------------------
  $table = 'proveedores';
@@ -92,12 +101,13 @@ include_once "include/menu1.php";
   
   ?> 
   </main>
+  
   <div class="dialog-container">
       <div class="dialog">
       <div class="dialog-title">Datos del Proveedor</div>
       <div class="dialog-body">
         <!-- la caja para registro de proveedor -->
-        <form id="altaprov" name="altaprov" method ="post" action="#" onsubmit="return false;">
+        <form id="altaprov" name="altaprov" method ="post" action="#" onsubmit="return false;" >
         	<div >
 			  <label>Razón Social:</label><input type="text" name="razon" id="razon" class="cajal" />
 			</div>
@@ -109,18 +119,29 @@ include_once "include/menu1.php";
             	<label>Direccion</label><input type="text" name="dir"  id="dir" class="cajal"/>
             </div>
            <div>
-           	 <label>Teléfono:</label><input type="tel" name="telef"  id="telef" class="cajam" />
-            <label>Contacto:</label><input type="text" name="cont"  id="cont" class="cajam" />
-           </div>       
+               	<label>Teléfono:</label><input type="tel" name="telef"  id="telef" class="cajam" />
+                <label>Contacto:</label><input type="text" name="cont"  id="cont" class="cajam" />
+           </div>
+            <div>
+             	<label>Correo:</label><input type="email" name="correo"  id="correo" class="cajal" />
+            </div>
+            <div>
+                <label>Factura:</label><input type="checkbox" name="factura"  id="factura" class="cajam" value="true"/>
+                <input type="hidden" name="factura" value="false"/>
+                <label>Días Credito:</label><input type="number" name="dcred"  id="dcred" class="cajam" />
+            </div>
+             
+       
       </div>
       <div class="dialog-buttons">
-      </div>
-      <input type="submit" value=" Enviar "/><br />    
+      		<button id="butenvia" class="button a">Enviar</button> 
+           <button id="butAddCancel" class="button b">Cancelar</button>        
+      </div>  
       </form>
-        <button id="butAddCancel" class="button">Cancelar</button>
+
     </div>
-    
   </div> 
 </body>
 <footer></footer>
+
 </html>

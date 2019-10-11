@@ -13,12 +13,12 @@
    * Event listeners for UI elements
    *
    ****************************************************************************/
-
-  document.getElementById('primero').addEventListener('click', function() {
-    // Open/show the add new city dialog
-    app.toggleAddDialog(true);
-  });
-
+	 document.getElementById('primero').addEventListener('click', function() {
+		    //muestra dialogo de alta
+			// Open/show the add new city dialog
+		    app.toggleAddDialog(true);			   
+		  }); 
+  
   document.getElementById('butAddCancel').addEventListener('click', function() {
 	    // Open/show the add new city dialog
 	    app.toggleAddDialog(false);
