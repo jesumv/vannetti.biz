@@ -81,7 +81,7 @@ function hazvisib2(visible){
 function addtot(){
 	
 	//se añade la fila de totales
-	for( var z=0; z<4; z++) {
+	for( var z=0; z<5; z++) {
 		//seleccionar la clase adecuada
 			var claset;
 			var clase2;
@@ -93,12 +93,19 @@ function addtot(){
 		        textot = "TOTALES";
 		        idt = "tsubt";
 		        break;
+		     
 		     case 1:
 		        claset = "ui-block-b";
-		        textot = "0";
-		        idt = "tcant";
+		        textot = "";
+		        idt = "tno1";
 		    	 break;
-		     case 3:
+		    	 
+		     case 2:
+			        claset = "ui-block-c";
+			        textot = "0";
+			        idt = "tcant";
+			    	 break;
+		     case 4:
 			        claset = "ocult";
 			        textot = "0.00";
 			        idt = "subtotalo";
@@ -253,13 +260,13 @@ function addprod(id,nombre,costo,reng,presen){
 		switch(z) {
 	    case 0:
 	    	idt = "id"+reng;
-	        clase = "ocult"
+	        clase = "ui-block-a"
 	        texto = id	
 	        break;
 	    case 1:
 	    	elem = "DIV"
 	    	idt = "nom" + reng;
-	    	clase = "ui-block-a"
+	    	clase = "ui-block-b"
 	    	clase2 = ""
 	    	texto = nombre
 	        break;
@@ -271,7 +278,7 @@ function addprod(id,nombre,costo,reng,presen){
 	    case 3:
 	    	elem = "INPUT"
 	    	idt = "cant" + reng
-	    	clase = "ui-block-b cant"
+	    	clase = "ui-block-c cant"
 	    	clase2 = "icant"
 	    	texto = ""
 	        break;
@@ -288,7 +295,7 @@ function addprod(id,nombre,costo,reng,presen){
 	    default:
 	    	elem = "DIV"
 	    	idt = "subt" + reng
-	    	clase = "ui-block-c prec"
+	    	clase = "ui-block-d prec"
 	    	clase2 = ""
 	    	texto = "0.00"
 	}
