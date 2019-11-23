@@ -96,7 +96,7 @@ function addtot(){
 		     
 		     case 1:
 		        claset = "ui-block-b";
-		        textot = "";
+		        textot = "–";
 		        idt = "tno1";
 		    	 break;
 		    	 
