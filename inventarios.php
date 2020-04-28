@@ -54,7 +54,7 @@
 //-----CONSTRUCCION DE LA TABLA------------------------------------------------------------------------
  $table = 'productos';
  $table2 = 'inventario';
- $sql= "SELECT t2.idproductos,T2.codigo, t2.nombre, (SUM(CASE WHEN t1.tipomov=1 THEN t1.cant ELSE 0 END)-SUM(CASE WHEN t1.tipomov=2 THEN t1.cant ELSE 0 END))
+ $sql= "SELECT t2.idproductos,t2.codigo, t2.nombre, (SUM(CASE WHEN t1.tipomov=1 THEN t1.cant ELSE 0 END)-SUM(CASE WHEN t1.tipomov=2 THEN t1.cant ELSE 0 END))
  AS total FROM inventario AS t1 RIGHT JOIN productos AS t2 ON t1.idproductos = t2.idproductos WHERE t2.status <2 GROUP BY t2.idproductos ORDER BY t2.nombre ";
  
  $result2 = mysqli_query($mysqli,$sql)or die ("ERROR EN CONSULTA DE INVENTARIOS.".mysqli_error($mysqli));;
