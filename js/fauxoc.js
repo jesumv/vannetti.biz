@@ -174,12 +174,12 @@ function ponsubt(){
 	 var checa = checaval(this.value);
 	 var cad = this.name
 	 if(checa == true) {
-			//se toma el precio oculto, se multiplica x cantidad y ppor present y se 
+			//se toma el precio, se multiplica x cantidad y por present y se 
 			//agrega el resultado a la tabla
 			var longi = this.name.length;
 			var pos = cad.indexOf("t");
 			var rengl = cad.slice(pos+1);
-			var precio = document.getElementById("costo"+ rengl).innerHTML;
+			var precio = document.getElementById("cost"+ rengl).value;
 			var valor = document.getElementById("cant"+ rengl).value;
 			var presen = document.getElementById("presen"+ rengl).innerHTML;
 			var preciot = precio*valor*presen;
@@ -221,13 +221,14 @@ function haztabla(){
 		 //extraccion de datos del array
 		 				var id = obj1[z].id;
 		 				var nombre = obj1[z].nombre;
-		 				var costo = obj1[z].costo;
+		 				var costo = redondea(obj1[z].costo,2);
 		 				var presen= obj1[z].presen;
 		 				var reng = z;
 		 //adicion de renglones de producto
 		 				addprod(id,nombre,costo,reng,presen);
 		 //adicion de escuchas en cajas input
 		 				document.getElementById('cant'+z).addEventListener('input',ponsubt,false);
+		 				document.getElementById('cost'+z).addEventListener('change',ponsubt,false);
 		 		};
 	//adicion de fila de totales
 				addtot();
@@ -271,14 +272,15 @@ function addprod(id,nombre,costo,reng,presen){
 	    	texto = nombre
 	        break;
 	    case 2:
-	    	idt = "costo" + reng
-	    	clase = "ocult"
+	    	elem= "INPUT";
+	    	idt = "cost" + reng
+	    	clase = "ui-block-c cant"
 	    	texto = costo
 	        break;
 	    case 3:
 	    	elem = "INPUT"
 	    	idt = "cant" + reng
-	    	clase = "ui-block-c cant"
+	    	clase = "ui-block-d cant"
 	    	clase2 = "icant"
 	    	texto = ""
 	        break;
@@ -295,14 +297,13 @@ function addprod(id,nombre,costo,reng,presen){
 	    default:
 	    	elem = "DIV"
 	    	idt = "subt" + reng
-	    	clase = "ui-block-d prec"
+	    	clase = "ui-block-e prec"
 	    	clase2 = ""
 	    	texto = "0.00"
 	}
 //definicion de elementos de acuerdo con la celda
 		switch(z){
 			case 0:
-			case 2:
 			case 4:
 			case 5:
 				var nombre1 = document.createElement("DIV");
@@ -311,6 +312,23 @@ function addprod(id,nombre,costo,reng,presen){
 				nombre1.name = idt;
 				var node = document.createTextNode(texto);
 				nombre1.appendChild(node);
+				var origen = document.getElementById("octabla");
+				origen.appendChild(nombre1);
+				break;
+			case 2:
+				var nombre1 = document.createElement("DIV");
+				var nombre2 = document.createElement(elem);
+				nombre1.className = clase;
+				nombre2.className = clase2;
+				nombre2.type = "text";
+				nombre2.size= "10";
+				nombre2.maxlength="10";
+				nombre2.name = idt;
+				nombre2.id = idt;
+				nombre2.value= texto.toFixed(2);
+				var node = document.createTextNode(texto);
+				nombre1.appendChild(nombre2);
+				nombre2.appendChild(node);
 				var origen = document.getElementById("octabla");
 				origen.appendChild(nombre1);
 				break;

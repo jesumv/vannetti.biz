@@ -1,3 +1,4 @@
+
 <?php
   function __autoload($class){
 	  require('include/' . strtolower($class) . '.class.php');
@@ -32,8 +33,10 @@
 	<script src="js/jquery.js"></script>
 	<script src="js/jquery.mobile-1.4.5.min.js"></script>
 	<script src="js/jquery.number.js"></script>
-
+	<script src="js/fauxnum.js"></script>
+	
 	<script>
+
 	'use strict';
 	(function() {
 		//tipo para fecha default hoy
@@ -48,7 +51,6 @@
 			$('#fecha').val(new Date().toDateInputValue());
 			//inicializacion de metodo de pago
 			//traer funciones auxiliares
-			 $.getScript("js/fauxoc.js");
 			//modificacion de titulos del flip 
 			$( "#factp" ).flipswitch({
 	  				onText: "Si",
@@ -362,15 +364,15 @@
 	    				</div>	    				
 	    			</fieldset>
 	    		</div>
-	    		<fieldset class="ui-grid-c" id="octabla">
+	    		<fieldset class="ui-grid-d" id="octabla">
 	    			<div class="ocult">reng</div>
 					<div class="ocult">id</div>
 					<div class="ui-block-a"><div class="ui-bar ui-bar-b">NoId</div></div>
 				    <div class="ui-block-b"><div class="ui-bar ui-bar-b">Producto</div></div>
-				 	<div class="ocult">Costo</div>
-				    <div class="ui-block-c"><div class="ui-bar ui-bar-b">Cantidad</div></div>
+				 	<div class="ui-block-c"><div class="ui-bar ui-bar-b">Costo</div></div>
+				    <div class="ui-block-d"><div class="ui-bar ui-bar-b">Cantidad</div></div>
 				    <div class="ocult">Presen</div>
-				    <div class="ui-block-d"><div class="ui-bar ui-bar-b">Subtotal</div></div>
+				    <div class="ui-block-e"><div class="ui-bar ui-bar-b">Subtotal</div></div>
 				    <div class="ocult">subtotalo</div>
 				</fieldset>		
 				<input data-theme="b" data-icon="check" data-iconshadow="true" value="Enviar a Proveedor" type="button" 
@@ -432,4 +434,5 @@
 	 </div>
   </div>
 </body>
+<script src="js/fauxoc.js"></script>
 </html>
