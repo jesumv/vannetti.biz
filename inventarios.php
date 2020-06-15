@@ -46,7 +46,7 @@
 	  		include_once "include/menu1.php";
 	  ?>
 
-<table id"tblinv"name= "tblinv" class="db-table">
+<table id = "tblinv" name = "tblinv" class="db-table">
 	<tr><th>PRODUCTO</th><th>CODIGO</th><th>EXISTENCIA</th><th>MINIMO</th><th>FALTAN</th></tr>
 	
 

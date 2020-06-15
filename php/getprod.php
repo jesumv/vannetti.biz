@@ -14,7 +14,7 @@ $cad = "idproductos=".$idprod;
 /**trae datos del/los producto(s) solicitado**/
     if (is_object($mysqli)) {
     	$sqlCommand = "SELECT idproveedores,grupo,nombre,nom_corto,nom_cat,codigo,unidad,cant,cbarras,
-    	costo,costov,descripcion,iva,speso,precio1,precio2,precio3,precio4,spesov FROM productos WHERE ".$cad.
+    	costo,costov,descripcion,iva,speso,precio1,precio2,precio3,precio4,spesov,ieps FROM productos WHERE ".$cad.
     	" ORDER BY idproductos";		
 	 // Execute the query here now
 			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE PRODUCTO ".mysqli_error($mysqli));

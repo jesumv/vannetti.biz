@@ -32,13 +32,6 @@
 	<script src="js/jquery-2.2.4.min.js"></script>
 	<script src="js/jquery.mobile-1.4.5.min.js"></script>
 	<script src="js/jquery.number.js"></script>
-
-	<script>
-			$(document).ready(function() {
-			//traer funciones auxiliares
-		  		$.getScript( "js/fauxlistoc.js");		
-		 });
-	</script>
 </head>
 
 <body>
@@ -51,7 +44,7 @@
 	<div class="ui-content">
 		<a href="#navpanel" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-bars">Navegaci&oacute;n</a>
 		<form id="listoc">
-			<label for"locprov" class="select">Proveedor</label>
+			<label for="locprov" class="select">Proveedor</label>
 			<select id="locprov" name="locprov">
 				<option value="0">Seleccione al proveedor</option>
 			</select>	
@@ -80,4 +73,5 @@
 		   </svg>
 	</div>
 </body>
+<script src="js/fauxlistoc.js"></script>
 </html>

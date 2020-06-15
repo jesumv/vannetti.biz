@@ -2,6 +2,7 @@
  * @author jmv
  */
 //instanciar arreglo para ordenes de compra
+'use strict';
 var noc =[];
 (function() {
 //llena la lista de proveedores

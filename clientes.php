@@ -236,7 +236,7 @@ $table = 'clientes';
 		  ?>
 	<br />
 	<button id="nvocte" name="nvocte" class="button cent">NUEVO CLIENTE</button>
-	<table id"tblcte"name= "tblcte" class="db-table2">
+	<table id="tblcte" name="tblcte" class="db-table2">
 		<tr><th>CLIENTE NO.</th><th>RAZON SOCIAL</th><th>RFC</th><th>NOMBRE CORTO</th><th>CONTACTO</th>
 			<th>TELEFONO</th><th>CORREO</th><th>EDITAR</th></tr>
 		

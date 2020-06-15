@@ -41,6 +41,8 @@
 			}
 			
 		}
+		
+			
 		public function conecta() {
 	    /***esta funcion establece la conexion a sql***/
 		/***variables de conexion ***/
@@ -48,9 +50,7 @@
 		$mysql_user = "usuarioa";
 		$mysql_password = "Vannetti2019";
 		$mysql_database = "ventas";
-
-
-		$mysqli = new mysqli($mysql_hostname, $mysql_user, $mysql_password, $mysql_database);
+		$mysqli = new mysqli($mysql_hostname, $mysql_user, $mysql_password, $mysql_database);		
 		if($mysqli->connect_errno > 0){
 		    die('No se establecio conexion a la base de datos [' . $mysqli->connect_error . ']');
 			return -1;
@@ -70,7 +70,6 @@
          //obtiene el path absoluto
             session_start();
             $user_check=$_SESSION['usuario'];
-            
             $ses_sql=mysqli_query($mysqli,"select username from usuarios where username='$user_check'");      
             $row=mysqli_fetch_array($ses_sql);
             

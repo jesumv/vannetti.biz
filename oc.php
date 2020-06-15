@@ -1,3 +1,4 @@
+
 <?php
   function __autoload($class){
 	  require('include/' . strtolower($class) . '.class.php');
@@ -10,7 +11,7 @@
 /*** checa login***/
        $funcbase->checalogin($mysqli);
     } else {
-        //die ("<h1>'No se establecio la conexion a bd'</h1>");
+        die ("<h1>'No se establecio la conexion a bd'</h1>");
     }
     
 ?>
@@ -32,10 +33,14 @@
 	<script src="js/jquery.js"></script>
 	<script src="js/jquery.mobile-1.4.5.min.js"></script>
 	<script src="js/jquery.number.js"></script>
-
+	<script src="js/fauxnum.js"></script>
+	
 	<script>
+
 	'use strict';
 	(function() {
+		//variables globales
+		var actprecio=0;
 		//tipo para fecha default hoy
 		Date.prototype.toDateInputValue = (function() {
     			var local = new Date(this);
@@ -43,54 +48,82 @@
     			return local.toJSON().slice(0,10);
 		});
 		
-		$( document ).on( "pageinit", "#ocpag", function( event ) {
+		$(document).on( "pageinit", "#ocpag", function( event ) {
 			//fecha por default
 			$('#fecha').val(new Date().toDateInputValue());
-			//inicializacion de metodo de pago
+			//llena la lista de proveedores
+			llenaop();	
 			//traer funciones auxiliares
-			 $.getScript("js/fauxoc.js");
-			//modificacion de titulos del flip 
-			$( "#factp" ).flipswitch({
-	  				onText: "Si",
-	  				offText:"No"
-				});
-                function responde(){
+          function responde(){
                 	//mensajes de texto en respuesta a validacion
                 	aviso("No ha solicitado ningun articulo");
                 	$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
                 			if($("#cant0")){$("#cant0").focus();}
                 		} );
                 }
+
+            function valorradio(elem){
+                //obtiene el valor de un boton radio
+                //recibe el nombre del elemento como string
+                var radios = document.getElementsByName(elem);
+
+                        for (let i = 0, length = radios.length; i < length; i++) {
+                          if (radios[i].checked) {
+                            // do whatever you want with the checked radio
+                            return radios[i].value;      
+                            // only one radio can be logically checked, don't check the rest
+                            break;
+                          }
+                        }
+                }
+
+            
 			function regoc(){
-				//funcion para registrar una orden de compra
+				//funcion para registrar una orden de compra al recibirla
+				// y afectar inventarios y cuenta de abono diario
 				//evaluacion de tipo de venta
-					var cred = $("#tventap :radio:checked").val();
+					let cred= valorradio("rpcredcon");
 					//recoleccion de variables
-					var fecha = $("#fecha").val();
-					var prov = $("#ocprov").val();
-					var total =$("#subtotalo").text();
+					let fecha = document.getElementById("fecha").value;
+					let prov = document.getElementById("ocprov").value;
+					let stotal = document.getElementById("subtotalo").innerHTML;
+					let imps= document.getElementById("timp").innerHTML;
+					let total = document.getElementById("ttotal").innerHTML;
 					//definicion de tipo de pago dependiendo si es credito o no-credito no se sabe forma
-					var tpago
-					if(cred==1){tpago = 99}else{tpago= $("#tpago :radio:checked").val()} ;
-					var fact = $("#factp").prop("checked") ? "1" : "0";
-					var factura = $("#factura").val();
-					var ctapago = $("#ctapago").val();
-					var longi = $(".cant").length;
-					var prods=[];
-					var cant=[];
-					var preciou=[];
-					var preciot=[];
-					var longcants = 0;
-					for(var z=0; z <longi; z++){
-						if($("#cant".concat(z)).val()!==""){
-							prods[longcants] = $("#id".concat(z)).text();
-							cant[longcants] = $("#cant".concat(z)).val();
-							preciou[longcants]= $("#costo".concat(z)).text();
-							preciot[longcants]= $("#subtoc".concat(z)).text();
+					let tpago2=valorradio("rtpago");
+					let tpago;
+					if(cred==1){tpago = 99}else{tpago= tpago2} ;				
+					let fact = document.getElementById("factp").checked?1:0;
+					let cambiatp=document.getElementById("cambiap").checked?1:0;
+					let factura = document.getElementById("factura").value;
+					let ctapago = document.getElementById("ctapago").value;
+					let longi = document.getElementsByClassName("cost").length;
+					let prods=[];
+					let cant=[];
+					let preciou=[];
+					let preciot=[];
+					let civai=[];
+					let ciepsi=[];
+					let cambiapi=[];
+					let longcants = 0;
+					let canta;
+					for(let z=0; z <longi; z++){
+						canta=document.getElementById('cant'+z).value;
+						if( canta!==""){
+							prods[longcants] = document.getElementById('id'+z).innerHTML;
+							cant[longcants] = canta;
+							preciou[longcants]= document.getElementById('cost'+z).value;
+							preciot[longcants]= document.getElementById('subtoc'+z).innerHTML;
+							civai[longcants]= document.getElementById('civa'+z).innerHTML;
+							ciepsi[longcants]= document.getElementById('cieps'+z).innerHTML;
+							cambiapi[longcants]= document.getElementById('cambio'+z).innerHTML;
 							longcants++;
 						}
 					}
 					longcants--;
+					//suma de impuestos
+					let totiva= civai.reduce(sumaarr, 0);
+					let totieps= ciepsi.reduce(sumaarr, 0);
 					//si todo ok, se envian los datos de recepcion de la oc, y pago en su caso
 					$.post( "php/enviarecoc.php",
 					{	fecha:fecha,
@@ -98,98 +131,143 @@
 						cred:cred,
 						tpago:tpago,
 						fact:fact,
+						cambiatp:cambiatp,
 						factura:factura,
 						ctapago:ctapago,
+						imps:imps,
+						stotal:stotal,
+						total:total,
 						prods:prods,
 						cants:cant,
 						preciou:preciou,
 						preciot:preciot,
-						total:total
+						totiva:totiva,
+						totieps:totieps,
+						cambiapi:cambiapi
 					 }, null, "json" )
 						.done(function(data) {
-							var noc= data.noc;
-							var arts =data.arts;
-							var total = $.number(data.total,2);
-							var cad = "Numero: "+ noc + "<br>"+"Arts: "+arts+"<br>"+"total: "+total;
-							confirma(cad,noc);
-							$( "#confirma" ).on( "popupafterclose", function( event, ui ) {
-								location.reload();
-								$('#ocprov').selectmenu( "enable" );
-							} );
+							//se revisa si el codigo de regreso es 0
+							if(data.resultado==0){
+								let noc= data.noc;
+								let arts =data.arts;
+								let total = $.number(data.total,2);
+								let cad = "Numero: "+ noc + "<br>"+"Arts: "+arts+"<br>"+"total: "+total
+								+"<br>";
+								let cambiop=data.cambiop;
+								cambiop==0?cad=cad+"COSTOS ACTUALIZADOS":"";
+								// si se cambiaron precios, se envia mensaje
+								confirma(cad,noc);
+								$( "#confirma" ).on( "popupafterclose", function( event, ui ) {
+									location.reload();
+									$('#ocprov').selectmenu( "enable" );
+								} );
+								
+								}else{
+									//proceso no ok
+            						let guion="Error:"+data.mensaje+" codigo:"+data.resultado;
+                    				aviso(guion);
+
+									}
+							
+							
+
 						})
 						.fail( function(xhr, textStatus, errorThrown) {
 							aviso(xhr.responseText);
 						});
 				}
-			//eventos para los botones de accion			
-				$("#envia").click(function(){
-					//alta de oc sin afectacion a inventarios ni diario
-					//validaciones previas al registro
-					var resul1 = validaelem("tcant","0");
-			//si no hay datos que enviar
-					if(resul1== 0){
-							responde();
-						}else{
-							//recoleccion de variables
-							var prov = $("#ocprov").val();
-							var total =$("#subtotalo").text();
-							var cred = $("#tventap :radio:checked").val();
-							var tpago= $("#tpago :radio:checked").val();
-							var fact = $("#factp").prop("checked") ? "1" : "0";
-							var longi = $(".cant").length;
-							var prods=[];
-							var cant=[];
-							var preciou=[];
-							var preciot=[];
-							var present=[];
-							var longcants = 0;
-							for(var z=0; z <longi; z++){
-								if($("#cant".concat(z)).val()!==""){
-									prods[longcants] = $("#id".concat(z)).text();
-									cant[longcants] = $("#cant".concat(z)).val();
-									preciou[longcants]= $("#costo".concat(z)).text();
-									preciot[longcants]= $("#subtoc".concat(z)).text();
-									present[longcants]
-									longcants++;
-								}
+
+
+//eventos para los botones de accion
+			function enviaoc(){
+				//alta de oc sin afectacion a inventarios ni diario boton enviar
+				//validaciones previas al registro
+				let resul1 = validaelem("tcant","0");
+				//si no hay datos que enviar
+				if(resul1== 0){
+						responde();
+					}else{
+						//recoleccion de variables
+						let prov = document.getElementById("ocprov").value;
+						let stotal = document.getElementById("subtotalo").innerHTML;
+						let total = document.getElementById("ttotal").innerHTML;
+						let imps = document.getElementById("timp").innerHTML;
+						let cred = valorradio("rpcredcon");
+						let tpago2=valorradio("rtpago");
+						let tpago;
+						if(cred==1){tpago = 99}else{tpago= tpago2};			
+						let fact = document.getElementById("factp").checked?1:0;;
+						let cambiatp=document.getElementById("cambiap").checked?1:0;
+						let longi=document.getElementsByClassName("cost").length;
+						let prods=[];
+						let cant=[];
+						let preciou=[];
+						let preciot=[];
+						let cambiapi = [];
+						let longcants = 0;
+						let canta;
+						for(let z=0; z <longi; z++){
+							canta= document.getElementById('cant'+z).value;
+							if(canta!==""){
+								prods[longcants] = document.getElementById('id'+z).innerHTML;
+								cant[longcants] = canta;
+								preciou[longcants]= document.getElementById('cost'+z).value;
+								preciot[longcants]= document.getElementById('subtoc'+z).innerHTML;
+								cambiapi[longcants]= document.getElementById('cambio'+z).innerHTML;
+								longcants++;
 							}
-							longcants--;
-							//si todo ok, se envian los datos
-							$.post( "php/enviaoc.php",
-							{	prov:prov,
-								cred:cred,
-								tpago:tpago,
-								fact:fact,
-								longi:longcants,
-								prods:prods,
-								cants:cant,
-								preciou:preciou,
-								preciot:preciot,
-								total:total
-							 }, null, "json" )
-	    						.done(function( data) {
-	    							var noc= data.noc;
-	    							var arts =data.arts;
-	    							var total = $.number(data.total,2);
-	    							var cad = "Numero: "+ noc + "<br>"+"Arts: "+arts+"<br>"+"total: "+total;
-									confirma(cad,noc);
-									$( "#confirma" ).on( "popupafterclose", function( event, ui ) {
-										location.reload();
-										$('#ocprov').selectmenu( "enable" );
-									} );
-	    						})
-								.fail(function(xhr,textStatus,errorThrown) {
-        								//aviso(xhr.responseText);
-									$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
-										location.reload();
-										$('#ocprov').selectmenu( "enable" );
-									} );
-
-    							});
 						}
-			  		
-			   });
 
+						//si todo ok, se envian los datos
+						$.post( "php/enviaoc.php",
+						{	prov:prov,
+							cred:cred,
+							tpago:tpago,
+							fact:fact,
+							cambiatp:cambiatp,
+							imps:imps,
+							stotal:stotal,
+							total:total,
+							prods:prods,
+							cants:cant,
+							preciou:preciou,
+							preciot:preciot,
+							cambiapi:cambiapi
+							
+						 }, null, "json" )
+    						.done(function( data) {
+        						//proceso ok
+        						if(data.resultado==0){
+        							var noc= data.noc;
+        							var arts =data.arts;
+        							var total = $.number(data.total,2);
+        							let cad = "Numero: "+ noc + "<br>"+"Arts: "+arts+"<br>"+"total: "+total
+        							+"<br>";
+        							let cambiop=data.cambiop;
+        							cambiop==0?cad=cad+"COSTOS ACTUALIZADOS":"";
+    								confirma(cad,noc);
+    								$( "#confirma" ).on( "popupafterclose", function( event, ui ) {
+    									location.reload();
+    									$('#ocprov').selectmenu( "enable" );
+    								} );
+            						}else{
+                				//proceso no ok
+                						let guion="Error:"+data.mensaje+" codigo:"+data.resultado;
+                        				aviso(guion);
+                						}
+    						})
+							.fail(function(xhr,textStatus,errorThrown) {
+    								aviso(xhr.responseText+ ""+ errorThrown);
+								$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
+									//location.reload();
+									//$('#ocprov').selectmenu( "enable" );
+								} );
+
+							});
+					}
+				
+				}
+	
 				function metodopc(metodo){
 					var respuesta
 					//esta funcion convierte el numero de metodo de pago en 
@@ -224,7 +302,19 @@
 				
 				return respu;
 				}
-				
+
+//adicion de escucha a botones.	
+	//escucha de seleccion de proveedor
+		document.getElementById('ocprov').addEventListener('change', function() {
+			//se muestra tabla
+			hazvisib(true);
+			haztabla();
+		 	var facturando= document.getElementById('factp');	
+			//desenchufar select
+			$( "#ocprov" ).selectmenu( "disable" );
+	  });
+		  //escucha de boton enviar orden recibida
+			document.getElementById('envia').addEventListener('click',enviaoc);
 			$("#recibe").click(function(){
 				//escucha del boton de recibir la orden
 				//validaciones previas al registro
@@ -253,7 +343,7 @@
 				//escucha del boton "ok procesar"
 				//cerrar el popup
 				$("#adpago").popup("close");
-					$( ".mens" ).empty();
+					$(".mens").empty();
 					if($("#tventap :radio:checked").val()==1){$(".ocultame").show();}
 				//primero se da de alta la odc y los articulos como siempre, pero se marca como recibida y/o pagada
 				regoc();					
@@ -293,24 +383,25 @@
 			   		location.reload();
 			   		$('#ocprov').selectmenu( "enable" );
 			   });
-			 //escucha de decision facturar
-			 document.getElementById('factp').addEventListener('click',function(){
-			 	var facturaroc = $("#factp").prop("checked");
-				var titulotot;
-				if(facturaroc== true){
-					//si facturar, se añaden renglones de iva y total
-						var titulot =document.getElementById('tsubt');
-						titulot.innerHTML="SUBTOTALES";		 	
-			 }else{var titulot =document.getElementById('tsubt');
-						titulot.innerHTML="TOTALES";};
-		});
+
 				//escucha de decision tipo de pago
 				$('#tventap').find('[type="radio"]').on('click', function( event ){    
-        				if ($(this).attr("id") == "rcredcon-a") { hazvisib2(true);} else { hazvisib2(false);}				
-    });
+      				if ($(this).attr("id") == "rcredcon-a") { hazvisib2(true);} else { hazvisib2(false);}				
+  			});	
+	  			
+			 //escucha de decision facturar
+			$('#factp').on('change', function( event ){  
+				var titulot;  
+				if($('#factp').prop('checked')== true){
+					//si facturar, se añaden renglones de iva y total
+						titulot =document.getElementById('tsubt');
+						titulot.innerHTML="SUBTOTALES";		 	
+			 }else{titulot =document.getElementById('tsubt');
+						titulot.innerHTML="TOTALES";};		
+  			});			
 
+	});
 		
-	});			
 	})();	
 	</script>
 </head>
@@ -331,8 +422,7 @@
 			    <option value="0">Seleccione al proveedor</option>
 			</select>
 			<div id="ococult" class="tablaoculta">
-			<div id="adiva" style="color:red">EN OPCION "RECIBIR", NO INCLUIR ARTICULOS CON IVA O IEPS</div>
-				<div id="opcionesp" data-role= "controlgroup" >
+				<div id="opcionesp" >
 					<fieldset id="tventap" name="tventap" data-role="controlgroup" data-type="horizontal">
 			    		<legend>Tipo de Venta</legend>
 			    		<label>
@@ -356,22 +446,34 @@
 	    			</fieldset>
 	    			<fieldset>
 	    				<div data-role="fieldcontain">
-		    				<label >
-			    				<input type="checkbox" data-role="flipswitch" id="factp" name="factp" checked/>Facturada?
-			    			</label>
+		    				<label for="facturarp">Facturada?</label>
+			    			<input type="checkbox" data-role="flipswitch" id="factp" name="factp" 
+			    			data-on-text="Si" data-off-text="No" 
+			    			data-wrapper-class="custom-label-flipswitch"
+			    			checked
+			    			/>
+	    				</div>	    				
+	    			</fieldset>
+	    			<fieldset>
+	    				<div data-role="fieldcontain">
+		    				<label for="cambiap">Actualizar precios?</label>
+			    				<input type="checkbox" data-role="flipswitch" id="cambiap" name="cambiap"
+			    				data-on-text="Si" data-off-text="No" data-wrapper-class="custom-label-flipswitch"/>
 	    				</div>	    				
 	    			</fieldset>
 	    		</div>
-	    		<fieldset class="ui-grid-c" id="octabla">
+	    		<fieldset class="ui-grid-d" id="octabla">
 	    			<div class="ocult">reng</div>
-					<div class="ocult">id</div>
 					<div class="ui-block-a"><div class="ui-bar ui-bar-b">NoId</div></div>
 				    <div class="ui-block-b"><div class="ui-bar ui-bar-b">Producto</div></div>
-				 	<div class="ocult">Costo</div>
-				    <div class="ui-block-c"><div class="ui-bar ui-bar-b">Cantidad</div></div>
-				    <div class="ocult">Presen</div>
-				    <div class="ui-block-d"><div class="ui-bar ui-bar-b">Subtotal</div></div>
+				 	<div class="ui-block-c"><div class="ui-bar ui-bar-b">Costo</div></div>
+				    <div class="ui-block-d"><div class="ui-bar ui-bar-b">Cantidad</div></div>
 				    <div class="ocult">subtotalo</div>
+				    <div class="ui-block-e"><div class="ui-bar ui-bar-b">Subtotal</div></div>
+				    <div class="ocult">iva</div>
+				    <div class="ocult">ieps</div>
+				    <div class="ocult">civa</div>
+				    <div class="ocult">cieps</div>
 				</fieldset>		
 				<input data-theme="b" data-icon="check" data-iconshadow="true" value="Enviar a Proveedor" type="button" 
 		    	name="envia"id="envia">
@@ -432,4 +534,5 @@
 	 </div>
   </div>
 </body>
+<script src="js/fauxoc.js"></script>
 </html>
