@@ -187,6 +187,7 @@ function cambiaprecios($mysqli,$idprods,$cambios,$preciosc){
                 //creacion de datos para oc
                 $arts= array_sum($cants);
                 $usu= $_SESSION['usuario'];
+                
             //creacion de oc en tabla oc
             $sqlCommand= "INSERT INTO oc (idproveedores,arts,monto,imps,total,saldo,fecharec,fechapago,usu,status,factura,facturar,credito,tpago)
     	     VALUES ($prov,$arts,$stotal,$imps,$total,$saldoact,'$fecha','$fechapag','$usu',$status,'$factura',$facturar,$credito,$tpago)" ;
@@ -200,6 +201,9 @@ function cambiaprecios($mysqli,$idprods,$cambios,$preciosc){
                 //insercion de productos en tabla artsoc
                 $indi = 0;
                 //3
+                //registro en diario
+                $resul2=compra($mysqli,$stotal,$imps,$total,$refe,$credito,$tpago,$prov,$totiva,$totieps,$facturar,$fecha,$subcta);
+                if($resul2!=0){throw new Exception("error en movs diario",5);};
                 foreach($prods as $id){
                     //insercion de productos en tabla artsoc
                     $sqlCommand2= "INSERT INTO artsoc (idoc,idproductos,cant,preciou,preciot,status)
@@ -210,11 +214,7 @@ function cambiaprecios($mysqli,$idprods,$cambios,$preciosc){
                         $sqlCommand3 = "INSERT INTO inventario (idproductos,tipomov,cant,usu,idoc,debe,factu,fechamov)
 			    		VALUES ($prods[$indi],1,$cants[$indi],'$usu',$noc,$preciot[$indi],$facturar,'$fecha')";
                         $query3=$mysqli->query($sqlCommand3) ;
-                        if($query3){
-                            //**recepcion de oc y arts *************************/
-                            //registro en diario
-                            $resul2=compra($mysqli,$stotal,$imps,$total,$refe,$credito,$tpago,$prov,$totiva,$totieps,$facturar,$fecha,$subcta); 
-                            if($resul2!=0){throw new Exception("error en movs diario",5);};
+                        if($query3){            
                             //se actualizan precios si así lo indica la bandera
                             if($cambiatp==1){
                                 $cambiop=cambiaprecios($mysqli,$prods,$cambiapi,$preciou);
@@ -236,22 +236,22 @@ function cambiaprecios($mysqli,$idprods,$cambios,$preciosc){
                 $jsondata['resultado']=0;
                 $jsondata['noc'] = $noc;
                 $jsondata['arts'] = $arts;
-                $jsondata['total'] =$total;
-            }else{throw new Exception("error en alta oc",2);}
-        
+                $jsondata['total'] =$total;              
+            }else{throw new Exception("error en alta oc",2);}       
     }catch(Exception $ex){
         $jsondata['resultado']=$ex->getCode();
         $jsondata['mensaje']=$ex->getMessage();
         $jsondata['errorsql']= mysqli_error($mysqli);
         $mysqli->rollback();
     }finally{
-        //salida de respuesta
         $mysqli->close(); 
-        //fin de las transacciones//
-        echo json_encode($jsondata);
+        //fin de las transacciones//      
     }
     
-        }else{throw new Exception("error de conexion 2",1);}
-        
-    
+        }else{$jsondata['resultado'] = 11;
+        $jsondata ['errort']= "error en conexion";
+        $jsondata['errorsql'] =mysqli_connect_error();
+        }
+        //salida de respuesta
+        echo json_encode($jsondata);
 

@@ -77,7 +77,6 @@
     	$query=mysqli_query($mysqli,$sqlCommand);
     	if($query){
     	    //obtencion de numero de orden de compra
-    	    try{
     	        $noc = traeoc($mysqli);
     	        $jsondata['resultado'] = 0;
     	        $jsondata['noc'] = $noc;
@@ -107,14 +106,7 @@
     	        }
     	     //se compromete la transacción.
     	        mysqli_commit($mysqli);
-    	    }catch (Exception  $e){
-    	        mysqli_rollback($mysqli);
-    	        $jsondata['resultado']=$e->getCode();
-    	        $jsondata['mensaje']=$e->getMessage();
-    	    }
-    	    
-    	    
-    	   }else{ 
+    	}else{ 
     	       $jsondata['errorsql']= mysqli_error($mysqli);
     	       throw new Exception("error en alta oc",2);
     	   }
@@ -123,6 +115,9 @@
         $jsondata['resultado']=$ex->getCode();
         $jsondata['mensaje']=$ex->getMessage(); 
         $jsondata['errorsql']= mysqli_error($mysqli);
+    }finally{
+        $mysqli->close();
+        //fin de las transacciones//
     }
     }else{
         $jsondata['resultado'] = 11;
