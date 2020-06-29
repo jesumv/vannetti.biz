@@ -62,7 +62,7 @@ function desctraslados(concepto){
 			}
 		}else{
 			impiva="";
-			imipes="";
+			impieps="";
 		}
 
 	}
@@ -137,6 +137,15 @@ function leeserief(version,comprob){
 	return resul;
 }
 
+function calcsubt(subt,desc,ieps){
+	//modifica el subtotal si hay descuento o ieps
+	var stotal=parseFloat(subt);
+	if(ieps>0){stotal=stotal+parseFloat(ieps)};
+	if(desc!==""){stotal=stotal-parseFloat(desc)};
+	return stotal;
+}
+
+
 function leeXMLing(texto){
 	//lee el archivo cfdi de ingresos xml y obtiene sus datos
 	var xmlDoc;
@@ -177,19 +186,15 @@ function leeXMLing(texto){
 		var rfcrecep;
 		var nombrer;
 		var nombrerecep;
-		var uuid;					 
-		var haydescu = atribcomp.getNamedItem("Descuento");
-		var astotal= atribcomp.getNamedItem("SubTotal").nodeValue;
-		
-			 //si hay descuento se modifica subtotal
-			 if(haydescu){
-				 var descu = atribcomp.getNamedItem("Descuento").nodeValue;
-				 stotal = parseFloat(astotal) - parseFloat(descu);
-			 }else{
-				 stotal = parseFloat(astotal);	 
-			 };
-			 total = atribcomp.getNamedItem("Total").nodeValue
-			 fecha= atribcomp.getNamedItem("Fecha").nodeValue
+		var uuid;
+		var haydescu;
+		var descu;
+		haydescu=atribcomp.getNamedItem("Descuento");
+		if(haydescu){descu=atribcomp.getNamedItem("Descuento").nodeValue}
+		else{descu=""};
+		stotal= atribcomp.getNamedItem("SubTotal").nodeValue;	 
+		total = atribcomp.getNamedItem("Total").nodeValue;
+		fecha= atribcomp.getNamedItem("Fecha").nodeValue;
 			 if(comprob.hasAttribute("FormaPago")){fpago= atribcomp.getNamedItem("FormaPago").nodeValue;}else{
 				 fpago="";
 			 }
@@ -206,9 +211,7 @@ function leeXMLing(texto){
 			 		iva="";
 			 		ieps="";
 			 	}
-			 //si hay ieps, se modifica subtotal
-			 	var stotal= ieps > 0 ? parseFloat(stotal)+parseFloat(ieps) : parseFloat(stotal);
-			 //if(ieps>0){stotal=parseFloat(stotal)+parseFloat(ieps)};
+			 	
 			 rfc = emisor.getNamedItem("Rfc").nodeValue;
 			 nombrea=emisor.getNamedItem("Nombre");
 			 //si no hay nombre, se agrega generico
@@ -225,6 +228,7 @@ function leeXMLing(texto){
 						  metpago:metpago,
 						  tipoc:tipoc,
 						  stotal:stotal,
+						  descu:descu,
 						  iva:iva,
 						  ieps:ieps,
 						  total:total,

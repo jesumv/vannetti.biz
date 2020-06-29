@@ -9,22 +9,28 @@
 	//funciones auxiliares
 	require '../include/funciones.php';
 	
-	function compra($mysqli,$monto,$refe,$tipo,$prov,$iva,$fact,$fechaconv,$tipop ){
+	function compra($mysqli,$monto,$refe,$tipo,$prov,$iva,$ieps,$fact,$fechaconv,$tipop ){
 		//esta funcion registra en el diario una compra a credito
 		//normalizacion de iva a 0  si no se provee
 		if(!$iva){$iva =0;};
 			$cargo="115.01";
-			$total = $monto+$iva;
+			$total = $monto+$iva+$ieps;
 		switch($tipo){
 			//contado
-			case 0:
-				    $cargo2="118.01";
+			case 0:				    
+			    $cargo2="118.01";
+			    $cargo3="118.03";
 					$cabono = ($tipop == 1 ? "101.01" : "102.01");
 				//cargo
 					$sqlmov ="INSERT INTO diario(cuenta,referencia,debe,fecha,facturar)VALUES($cargo,'$refe',$monto,'$fechaconv',$fact )";
 					$querydiac = mysqli_query($mysqli, $sqlmov) or die ('error en cargo1: '.mysqli_error($mysqli));
 					$sqlmov ="INSERT INTO diario(cuenta,referencia,debe,fecha,facturar)VALUES($cargo2,'$refe',$iva,'$fechaconv',$fact)";
 					$querydiac = mysqli_query($mysqli, $sqlmov) or die ('error en cargo2: '.mysqli_error($mysqli));			
+				//si hay ieps, se inserta el  cargo
+					if($ieps>0){
+					    $sqlmov ="INSERT INTO diario(cuenta,referencia,debe,fecha,facturar)VALUES($cargo3,'$refe',$ieps,'$fechaconv',$fact)";
+					    $querydiac = mysqli_query($mysqli, $sqlmov) or die ('error en cargo3: '.mysqli_error($mysqli));	
+					}
 				//abono
 					$sqlmov ="INSERT INTO diario(cuenta,referencia,haber,fecha,facturar)VALUES($cabono,'$refe',$total,'$fechaconv',$fact )";
 					$querydiac = mysqli_query($mysqli, $sqlmov) or die ('error en abono: '.mysqli_error($mysqli));			
@@ -32,6 +38,7 @@
 			//credito
 			default:
 					$cargo2="119.01";
+					$cargo3="119.03";
 					$cabono="201.01";
 				//cargo
 					$sqlmov ="INSERT INTO diario(cuenta,referencia,debe,fecha,facturar)
@@ -40,6 +47,10 @@
 					$sqlmov ="INSERT INTO diario(cuenta,referencia,debe,fecha,facturar)
                     VALUES($cargo2,'$refe',$iva,'$fechaconv',$fact)";
 					$querydiac = mysqli_query($mysqli, $sqlmov) or die ('error en cargo2: '.mysqli_error($mysqli));	
+					if($ieps>0){
+					    $sqlmov ="INSERT INTO diario(cuenta,referencia,debe,fecha,facturar)VALUES($cargo3,'$refe',$ieps,'$fechaconv',$fact)";
+					    $querydiac = mysqli_query($mysqli, $sqlmov) or die ('error en cargo3: '.mysqli_error($mysqli));
+					}
 				//abono
 					$sqlmov ="INSERT INTO diario(cuenta,subcuenta,referencia,haber,fecha,facturar)VALUES($cabono,$prov,'$refe',$total,'$fechaconv',$fact )";
 					$querydiac = mysqli_query($mysqli, $sqlmov) or die ('error en abono: '.mysqli_error($mysqli));
@@ -107,7 +118,7 @@ function tiposurt($mysqli,$oc){
 		$datos[3] = $row[3];
 		return $datos;
 	}
-		
+			
     $funcbase = new dbutils;
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
@@ -123,11 +134,12 @@ function tiposurt($mysqli,$oc){
 	//numero de factura
 	$fact =$_POST["fact"];
 	$montot = $_POST["monto"];
-	$ivat = $_POST["ivat"];
 	$fechar= $_POST["fechar"];
 	$usu= $_SESSION['usuario'];
 	$tipomov = 1;
 	$fechaconv = converfecha($fechar);
+	$iva;
+	$ieps;
 	//revisar que la oc no esté ya ingresada
 		$revisa = revisastoc($oc, $mysqli);
 		if($revisa==0){
@@ -139,11 +151,14 @@ function tiposurt($mysqli,$oc){
 				$credito=$datos[0][2];
 				$tipop=$datos[0][3];
 				$refe="oc".$oc;
-				
+//cantidad de articulos
+				$cantarts = count($arts);
+                $ivat=0;
+                $ivaact=0;
+                $iepst=0;
+                $iepsact=0;
+                $imps=0;
 //ciclo de afectacion a bd
-		//registro en diario
-			compra($mysqli,$montot,$refe,$credito,$prov,$ivat,$facturar,$fechaconv,$tipop);
-			$cantarts = count($arts);
 			$jsondata['resul'] = 0;
 			for($i=0;$i<$cantarts;$i++) {
 				$id= $arts[$i][0];
@@ -151,7 +166,12 @@ function tiposurt($mysqli,$oc){
 				$costo= $arts[$i][2];
 				$speso= $arts[$i][3];
 				$pesoact=$arts[$i][4];
-				
+				$civa= $arts[$i][5];
+				$ivaact= $costo*0.16;
+				$iepsact= $costo*0.08;
+				if($civa==1)$ivat=$ivat+$ivaact;
+				$cieps=$arts[$i][6];
+				if($cieps==1)$iepst=$iepst+$iepsact;
 				//decision de unidad a insertar
 				if($speso==0){$umulti=$cant;}else{$umulti=$pesoact;}
 				//cargo a inventario
@@ -166,9 +186,13 @@ function tiposurt($mysqli,$oc){
 						}else{$jsondata['resul'] = -1;}
 					
 			}
+			//impuestos totales
+			$imps=$imps+$ivat+$iepst;
+			//registro en diario
+			compra($mysqli,$montot,$refe,$credito,$prov,$ivat,$iepst,$facturar,$fechaconv,$tipop);
 			//determinar si se surte total o parcial
 			$tsurt = tiposurt($mysqli,$oc);
-			$grant=$montot+$ivat;
+			$grant=$montot+$imps;
 		//determinacion de saldo y fecha de pago
 		$saldo;
 		$fechapago;
@@ -183,7 +207,7 @@ function tiposurt($mysqli,$oc){
 			    $statusp=$tsurt;
 			}
 		//actualizacion de oc
-			$sqlCommand3 = "UPDATE oc SET status = $statusp,iva = $ivat,monto=$montot,total = $grant,saldo=$saldo,factura='$fact', 
+			$sqlCommand3 = "UPDATE oc SET status = $statusp,iva = $imps,monto=$montot,total = $grant,saldo=$saldo,factura='$fact', 
 			remision='$remi',fecharec='$fechaconv',fechapago='$fechapago' WHERE idoc = $oc";
 			$query3 = mysqli_query($mysqli, $sqlCommand3) or die ('error en marcado de oc rec '.mysqli_error($mysqli));  
 		/*complementar el array de resultados*/ 

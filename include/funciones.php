@@ -1,5 +1,39 @@
 <?php
 
+function datosppago($total,$tipopago,$fechamov){
+    //define variables segun tipo de pago.
+    $resulp=array();
+    switch ($tipopago){
+        case 0:
+            //efectivo
+            $resulp['fpago']=$fechamov;
+            $resulp['tipovta']=0;
+            $resulp['status']=40;
+            $resulp['saldo']=0;
+            $resulp['tpago']=0;
+            break;
+        case 1:
+            //t credito
+        case 2:
+            //transferencia
+            $resulp['fpago']=$fechamov;;
+            $resulp['tipovta']=1;
+            $resulp['status']=40;
+            $resulp['saldo']= 0;
+            $resulp['tpago']=1;
+            break;
+        case 3:
+            //x cobrar
+            //tipo de pago todavia no conocido
+            $resulp['fpago']=null;
+            $resulp['tipovta']=2;
+            $resulp['status']=20;
+            $resulp['saldo']=$total;
+            $resulp['tpago']=99;
+    }
+    return $resulp;
+}
+
 function diasvenc($fechamov,$diascred){
 		//esta funcion calcula los dias vencidos de una factura
 		$a=ceil((time() - (strtotime($fechamov)))/(60* 60*24))-$diascred;
@@ -169,22 +203,32 @@ function epagoc($mysqli,$fecha,$ref,$monto,$iva,$total,$saldoi,$factu,$mpago,$sf
 	return $resul;
 }	
 
-function venta($mysqli,$fecha,$ref,$monto16,$monto0,$iva,$tipo,$factu,$cte){
+function vtdc($venta){
+    //define montos para asientos contables venta tdc
+    $resulv=array();
+    $resulv['comis']=$venta*0.035;
+    $resulv['ivaxpag']=$resulv['comis']*0.16;
+    return $resulv;
+}
+
+function venta($mysqli,$fecha,$ref,$monto16,$monto0,$iva,$tipo,$factu,$cte,$ieps=0){
 		//esta funcion inserta en el diario los movimientos de una venta
 		//en todos los casos
-		$table='diario';
 		$tmonto=$monto16+$monto0;
-		$montof=$tmonto+$iva;
+		$montof=$tmonto+$iva+$ieps;
 		//inicializa variable resultados
 			//calculo del costo de ventas
-		    $costoc=$mysqli->query("SELECT SUM(haber)FROM inventario WHERE tipomov = 2 AND idoc= $ref");
+		    $costoc=$mysqli->query("SELECT SUM(haber)FROM 
+            inventario WHERE tipomov = 2 AND idoc= $ref");
+		    if(!$costoc){$jsondata['errorsql']= mysqli_error($mysqli);
+		    $costoc->close();
+		    throw new Exception("error en consulta costov",11);
+		    }
 			$row=mysqli_fetch_row($costoc);
 			$costo=$row[0];
-			$costoc->close();	
+			$costoc->close();
 			//si existe el costo de ventas?
 			if($costo!=''){
-				try {
-					$mysqli->autocommit(false);
 					//abono a inventario 115.01
 					$abono="115.01";
 					operdiario($mysqli,$abono,1,1,$ref,$costo,$fecha,$factu);
@@ -193,11 +237,15 @@ function venta($mysqli,$fecha,$ref,$monto16,$monto0,$iva,$tipo,$factu,$cte){
 					operdiario($mysqli,$cargo,1,0,$ref,$costo,$fecha,$factu);
 					//abono a ventas segun tasa
 					//ventas tasa general 
-						$abono="401.01";
-						operdiario($mysqli,$abono,1,1,$ref,$monto16,$fecha,$factu,$cte);
-					//ventas tasa 0 
-						$abono="401.04";
-						operdiario($mysqli,$abono,1,1,$ref,$monto0,$fecha,$factu,$cte);
+					if($monto16>0){
+					    $abono="401.01";
+					    operdiario($mysqli,$abono,1,1,$ref,$monto16,$fecha,$factu,$cte);
+					}					
+					//ventas tasa 0
+					if($monto0>0){
+					    $abono="401.04";
+					    operdiario($mysqli,$abono,1,1,$ref,$monto0,$fecha,$factu,$cte);
+					}
 					//movimientos por tipo de venta
 						switch($tipo){
 							case 0:
@@ -207,39 +255,62 @@ function venta($mysqli,$fecha,$ref,$monto16,$monto0,$iva,$tipo,$factu,$cte){
 								//iva trasladado cobrado 208.01
 								$abono="208.01";
 								operdiario($mysqli,$abono,1,1,$ref,$iva,$fecha,$factu);
+								//ieps trasladado cobrado si lo hay
+								if($ieps>0){
+								    $abono="208.02";
+								    operdiario($mysqli,$abono,1,1,$ref,$ieps,$fecha,$factu);
+								}
+								
 								break;
 							case 1:
-								//contado x ahora igual a anterior, luego se manda al cobro
-								//mostrador- cargo a caja y efectivo 101.01
-								$cargo="102.01";
-								operdiario($mysqli,$cargo,1,0,$ref,$montof,$fecha,$factu);
+							    $ctdc=vtdc($montof);
+								//tdc –– cargo a cxc corto
+								$cargo="106.01";
+								operdiario($mysqli,$cargo,1,0,$ref,$montof,$fecha,1,1);								
 								//iva trasladado cobrado 208.01
 								$abono="208.01";
 								operdiario($mysqli,$abono,1,1,$ref,$iva,$fecha,$factu);
+								//ieps trasladado cobrado
+								if($ieps>0){
+								    $abono="208.02";
+								    operdiario($mysqli,$abono,1,1,$ref,$ieps,$fecha,$factu);
+								}
 								break;
 							case 2:
-								//credito cargo a clientes
-								$cargo="105.01";
-								operdiario($mysqli,$cargo,1,0,$ref,$montof,$fecha,$factu,$cte);
-								//iva trasladado no cobrado 209.01
-								$abono="209.01";
-								operdiario($mysqli,$abono,1,1,$ref,$iva,$fecha,$factu);	
+								//transferencia
+								$cargo="102.01";
+								operdiario($mysqli,$cargo,1,0,$ref,$montof,$fecha,$factu);
+								//iva trasladado cobrado 
+								$abono="208.01";
+								operdiario($mysqli,$abono,1,1,$ref,$iva,$fecha,$factu);
+								//ieps trasladado cobrado
+								if($ieps>0){
+								    $abono="208.02";
+								    operdiario($mysqli,$abono,1,1,$ref,$ieps,$fecha,$factu);
+								}
 								break;
-								
+							case 3:
+							    //x cobrar
+							    $cargo="105.01";
+							    operdiario($mysqli,$cargo,1,0,$ref,$montof,$fecha,$factu,$cte);
+							    //iva trasladado no cobrado 209.01
+							    $abono="209.01";
+							    operdiario($mysqli,$abono,1,1,$ref,$iva,$fecha,$factu);
+							    //ieps trasladado no cobrado
+							    if($ieps>0){
+							        $abono="209.02";
+							        operdiario($mysqli,$abono,1,1,$ref,$ieps,$fecha,$factu);
+							    }
+							    break;
+							default:
+							    throw new Exception("error: mov no definido",44);
 						}
 					
-					//efectuar la operacion
-					$mysqli->commit();
 				    $resul=0;
-				} catch (Exception $e) {
-					//error en las operaciones de bd
-				    $mysqli->rollback();
-				   	$resul=-2;
-				}
 				
 			}else{
 				//no hay costo de ventas
-				$resul=-1;
+			    throw new Exception("error: no hay costo de ventas",33);
 			}
 		
 		 return $resul;

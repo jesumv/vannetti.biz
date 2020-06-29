@@ -2,6 +2,7 @@
 if(isset($_POST['dat'])){
     $posted_data = $_POST['dat'];
     $data = json_decode($posted_data);
+    //extrae variables del arreglo enviado
     extract((array)$data);
     /*** Autoload class files ***/
     function __autoload($class){
@@ -42,13 +43,13 @@ if(isset($_POST['dat'])){
     	                $arst=99;
     	                break;
     	                //contado
-    	            case 1:
+    	            case 2:
     	                //X FACTURAR
     	                $pdst= 40;
     	                //xsurtir OJO
     	                $arst=99;
     	                break;
-    	            case 2:
+    	            case 3:
     	                //credito
     	                //CXC
     	                $pdst= 30;
@@ -96,12 +97,15 @@ if(isset($_POST['dat'])){
         //se decide si hay fecha pago
         $fpago;
         $saldo;
-        //determinacion de saldo
-        if($tventa!=2){$fpago=$fecha;$saldo=0;}else{$fpago=NULL;$saldo=$total;}
         $facturar=$facturarp;
         $facturarb=cambiafact($facturar);
         $usu=$_SESSION['usuario'];
         $status= cstatus($tventa,$facturarb);
+        $resulp=datosppago($total,$tventa,$fechaconv);
+        $fpago=$resulp['fpago'];
+        $tventa= $resulp['tipovta'];
+        $status2= $resulp['status'];
+        $saldo= $resulp['saldo'];
         $statusp=$status[0];
         $statusa=$status[1];
         $pedido;
@@ -109,8 +113,10 @@ if(isset($_POST['dat'])){
         $arts=$prods;
         //afectacion a bd
         //alta de pedido
-        $sqlCommand= "INSERT INTO pedidos(idclientes,arts,monto,iva,total,saldo,fecha,tipovta,usu,status,facturar,fechapago,factura,arch)
-	   VALUES ($cte,$totarts,$montot,$totiva,$total,$saldo,'$fechaconv',$tventa,'$usu',$statusp,$facturarb,'$fpago','$sefo','$arch')";
+        $sqlCommand= "INSERT INTO pedidos(idclientes,arts,monto,iva,ieps,total,saldo,fecha,
+        tipovta,usu,status,facturar,fechapago,factura,arch)
+	    VALUES ($cte,$totarts,$montot,$totiva,$totieps,$total,$saldo,'$fechaconv'
+        ,$tventa,'$usu',$status2,$facturarb,'$fpago','$sefo','$arch')";
         $query= mysqli_query($mysqli, $sqlCommand)or die("error en alta pedidos:".mysqli_error($mysqli));
         if($query){
             //numero de pedido
@@ -123,7 +129,6 @@ if(isset($_POST['dat'])){
                 $pract=$arts[$i][2];
                 $moact=$arts[$i][3];
                 $ivact=$arts[$i][4];
-                
                 if($ivact==0){
                     //suma de ventas tasa0
                     array_push($vtas0,$moact);
@@ -135,7 +140,6 @@ if(isset($_POST['dat'])){
                 //alta de articulos del pedido
                 $sqlCommand2= "INSERT INTO artsped (idpedido,idproductos,cant,preciou,preciot,status)
 					VALUES ($pedido,$idact,$caact,$pract,$moact,$statusa)";
-                //calculo del costo. si el peso es 1,no se calcula segun peso
                 $query2=mysqli_query($mysqli, $sqlCommand2)or die("error en alta artsped:".mysqli_error($mysqli));
                 if($query2) {
                     //afectacion a inventario de acuerdo a tipo de articulo
@@ -155,7 +159,7 @@ if(isset($_POST['dat'])){
             $sventas0=array_sum($vtas0);
             $sventas16=array_sum($vtas16);
             //afectacion a diario
-            $resul2=venta($mysqli,$fechaconv,$pedido,$sventas16,$sventas0,$totiva,$tventa,$facturarb,$cte);
+            $resul2=venta($mysqli,$fechaconv,$pedido,$sventas16,$sventas0,$totiva,$tventa,$facturarb,$cte,$totieps);
             if($resul2!=0){$result2=-3;};
             
         }else {$result2=-1;}

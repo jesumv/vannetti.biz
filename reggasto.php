@@ -102,7 +102,7 @@ function saldobanco($mysqli){
 			//calcula el iva de auxiliares
 		var iva=document.getElementById("miva");
 		var llevaiva= document.getElementById("smpago").value;
-		//solo si el met pago es transferencia
+		//solo si el el producto lleva iva
 		if(llevaiva=="03"){
 			var monto= document.getElementById("mprop").value;
 			iva.value = monto *0.16;
@@ -188,7 +188,7 @@ function saldobanco($mysqli){
 				cuenta.value='8886';
 			break;
 			case "28":
-			cuenta.value='5782';
+			cuenta.value='8145';
 			break;
 			}
 			cuenta.focus();
@@ -324,10 +324,12 @@ function saldobanco($mysqli){
  				                			var arch= f.name;
  				                    		var contents = e.target.result;
  				                    		var cfdireg;
+ 				                    		var stotal;
  				                    		if(bandera == 0){
  				                    			var resul=leeXMLing(contents,arch);
  				                    			if(resul.exito ==0){
- 				                    				llenaforma(resul.fecha,resul.fpago,resul.uuid,resul.stotal,resul.iva,resul.total,
+ 				                    				stotal=calcsubt(resul.stotal,resul.descu,resul.ieps)
+ 				                    				llenaforma(resul.fecha,resul.fpago,resul.uuid,stotal,resul.iva,resul.total,
  				                    				resul.seriefolio,resul.conceptoc)
  				                    			}else{
  				                    				var mensa = document.getElementById("mensaje");

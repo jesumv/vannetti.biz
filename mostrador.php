@@ -27,7 +27,7 @@
 	<link rel="apple-touch-icon" href="img/logomin.gif">
 	<link rel="stylesheet" href= "css/jquery.mobile-1.4.5.min.css" />
 	<link rel="stylesheet" href= "css/movil.css" />
-	<script src="js/jquery.js"></script>
+	<script src="js/jquery-1.12.4.min.js"></script>
 	<script src="js/jquery.mobile-1.4.5.min.js"></script>
 	<script src="js/jquery.number.js"></script>
 	
@@ -35,6 +35,7 @@
 	<script>
 	'use strict';
 	(function() {
+		// inicializacion de la variable tipo de venta
 		var tventam;
 		function aviso(texto){
 				//esta funcion enciende el aviso de la pagina con el aviso
@@ -460,7 +461,7 @@ function multiplica(){
 			document.getElementById(checkp.id).addEventListener('change', multiplica,false);		
 		}
 		
-		function addarts(tventam){
+		function addarts(){
 			//esta funcion añade todos los artículos por categoría
 			$.get('php/getlprodped.php',{idcte:1},function(data){
 					var objarts = JSON.parse(data);
@@ -478,7 +479,7 @@ function multiplica(){
 						idprod = objarts[i].idprod;
 						grupo = objarts[i].gpo;
 						nombre = objarts[i].nombre;
-						if(tventam==1){precio = $.number(objarts[i].precio*1.04,0)}else{precio=objarts[i].precio}
+						precio=objarts[i].precio;
 						iva = objarts[i].iva;
 						spesov = objarts[i].spesov;
 						ud= objarts[i].ud;
@@ -507,11 +508,11 @@ function multiplica(){
 					break;
 					case 2:
 						atr="ui-block-c";
-						texto="Costo";
+						texto="Precio";
 					break;
 					case 3:
 						atr="ui-block-d";
-						texto="iva";
+						texto="Impuestos";
 					break;
 					case 4:
 						atr="ui-block-e";
@@ -620,7 +621,7 @@ function multiplica(){
 					agregacab(id);
 				};
 	//lista de articulos
-					addarts(tventam);
+					addarts();
 	//renglon de totales
 					agregatots();
 					$("#ptablam").enhanceWithin();
@@ -666,17 +667,17 @@ function multiplica(){
 		function evalua(resul,ped){
 			/** se evalua la respuesta del servidor**/
 			switch (resul){
-				case -99:
+				case 1:
 					var resp = "ERROR EN CONEXION A BD";
 					break;
 					
-				case -1:
+				case 2:
 					resp = "ERROR EN REGISTRO PEDIDO";
 					break;
-				case -2:
+				case 3:
 					resp = "ERROR EN ALTA ARTS PEDIDO";
 					break;
-				case -3:
+				case 4:
 				resp = "ERROR EN INSERCIONES A DIARIO";
 				break;
 				default:
@@ -697,7 +698,6 @@ function multiplica(){
 				var cants=document.getElementsByClassName("cantp");
 				var ids=document.getElementsByClassName("idp");
 				var pus=document.getElementsByClassName("prp");
-				var pres=document.getElementsByClassName("pres");
 				var monts=document.getElementsByClassName("stmos");
 				var civas=document.getElementsByClassName("ivaoc");
 				var pesos=document.getElementsByClassName("peso");
@@ -708,19 +708,17 @@ function multiplica(){
 					var rengpr=pus[i];
 					var rengmon=monts[i];
 					var rengiva=civas[i];
-					var rengpres=pres[i];
 					var rengpes=pesos[i];
 					var idprod=rengid.innerHTML;
 					var cantprod=rengcant.value;
 					var prprod=rengpr.innerHTML;
 					var montop=rengmon.innerHTML;
 					var ivap=rengiva.innerHTML;
-					var presp=rengpres.innerHTML;
 					var pesop=rengpes.innerHTML;
 					var checact= checadato(cantprod);
 					if(checact==true){
 					//si hay cantidad, se registra el dato
-						prods.push([idprod,cantprod,prprod,montop,ivap,presp,pesop]);
+						prods.push([idprod,cantprod,prprod,montop,ivap,pesop]);
 					}
 				}
 				return prods;
@@ -736,15 +734,17 @@ function multiplica(){
 			   });
 //escucha del elemento flip
 					$( document ).on( 'change', '#tventam', function( e ) {
+					//si es la primera vez agregar las categorías de productos
+					if (typeof tventam === 'undefined') {
 						//obtener el valor del tipo de venta
-					tventam = $("#tventam :radio:checked").val();
-					//agregar las categorías de productos	
-	    			//agregar categorias
-	    			llenacats();
-					//se muestra tabla
-					hazvisib(true);
-					//agregar estilo mobile
-					$("#mostpag").enhanceWithin();
+						 tventam = $("#tventam :radio:checked").val();
+						//agregar categorias
+		    			llenacats();
+						//se muestra tabla
+						hazvisib(true);
+						//agregar estilo mobile
+						$("#mostpag").enhanceWithin();
+					}	    			
 				    //enfoque en primer elemento
 	  				document.getElementById("fechamos").focus();	
 
@@ -775,16 +775,19 @@ function multiplica(){
 		  				//recolección de variables
 		  					var cte = 1;
 		  					var fecha = document.getElementById("fechamos").value;
+		  					var cte = document.getElementById("sumtotoc").value;
 		  					var totarts =document.getElementById("sumcantp").innerHTML;
 		  					var montot=document.getElementById("sumstmos").innerHTML;
 		  					var ivat=document.getElementById("sumivaoc").innerHTML;
 		  					var total =document.getElementById("sumtotoc").innerHTML;
+		  					var tventaf = $("#tventam :radio:checked").val();
+		  					var cte = document.getElementById("cte").value;
 					//envio a bd
 							$.post( "php/enviamos.php",
 							{	prods:prods,
-								cte:cte,
 								fecha:fecha,
-								tipoventa:tventam,
+								cte:cte,
+								tipopago:tventaf,
 								totarts:totarts,
 								montot:montot,
 								totiva:ivat,
@@ -792,12 +795,18 @@ function multiplica(){
 							 }, null, "json" )
 	    						.done(function( data) {
 	    							var resul=data.resul;
-	    							var ped= data.ped;
-	    							var cad = evalua(resul,ped);
-									aviso(cad);
-									$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
-										location.reload();
-									} );
+	    							if(resul==0){
+	    								var ped= data.ped;
+		    							var cad = evalua(resul,ped);
+										aviso(cad);	
+										$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
+											location.reload();
+										} );    							
+		    							}else{
+		    								//proceso no ok
+		            						let guion="Error:"+data.mensaje+" codigo:"+data.resultado;
+		                    				aviso(guion);
+		    							}
 	    						})
 	    						.fail(function(xhr, textStatus, errorThrown ) {		
 	    							document.write("ERROR EN REGISTRO:"+errorThrown);
@@ -828,24 +837,34 @@ function multiplica(){
 		<form  method="post"
 		enctype="application/x-www-form-urlencoded" name="mforma" id="mforma">
 		<fieldset id="tventam" name="tventam" data-role="controlgroup" data-type="horizontal">
-		    		<legend>Elija el Tipo de Venta</legend>
+		    		<legend>Elija el Tipo de Pago</legend>
 		    		<label>
-		    			<input type="radio" id="recredmos-a" name="recredmos" value= "0" />Efectivo
+		    			<input type="radio" id="recredmos-a" name="recredmos" value= "0" checked="checked"/>Efectivo
 		    		</label>
 		    		<label>
 		    			<input type="radio" id="recredmos-b" name="recredmos" value= "1" />T.Crédito
 		    		</label>
+		    		<label>
+		    			<input type="radio" id="recredmos-c" name="recredmos" value= "2" />Transferencia
+		    		</label>
+		    		<label>
+		    			<input type="radio" id="recredmos-d" name="recredmos" value= "3" />Por cobrar
+		    		</label>
     	</fieldset>	
 			<div id="ocultablem" class="tablaoculta">
 				<div class="cajacent">
-					<label for ="fecha">Fecha:</label>
+					<label for ="fechamos">Fecha:</label>
 				<input type="date" name="fechamos" id="fechamos">
+				</div>
+				<div class="cajacent">
+					<label for ="cte">Cliente:</label>
+				<input type="text" name="cte" id="cte">
 				</div>
 				<div id="ptablam">
 				</div>	
 			     	<input data-theme="b" data-icon="check" data-iconshadow="true" value="Enviar" type="button" 
 				    name="menvia"id="menvia">
-				    <div class="ui-input-btn ui-btn ui-btn-b ui-icon-delete ui-btn-icon-left ui-shadow-icon" name="mcancela"id="mcancela">
+				    <div class="ui-input-btn ui-btn ui-btn-b ui-icon-delete ui-btn-icon-left ui-shadow-icon" name="mcancela" id="mcancela">
 				        Cancelar
 				    	<input data-enhanced="true" value="Enhanced" type="button">
 			    	</div>

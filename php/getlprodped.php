@@ -21,7 +21,7 @@
 			$nivel = $row['nivel'];
 			//adecuacion de campo de precio, para el caso de clientes al costo.
 			if($nivel == 0){$nivelcor ='costo';}else{$nivelcor ='precio'.$nivel;}
-			$sqlCommand = "SELECT t1.grupo,t1.nom_corto,t1.idproductos,$nivelcor,t1.iva,t1.spesov,t1.cant,t2.nombre AS unidad FROM productos AS t1 
+			$sqlCommand = "SELECT t1.grupo,t1.nom_corto,t1.idproductos,$nivelcor,t1.iva,t1.ieps,t1.spesov,t1.cant,t2.nombre AS unidad FROM productos AS t1 
 			INNER JOIN unidades AS t2 ON t1.unidad= t2.idunidades WHERE t1.status = 0 ORDER BY grupo, nom_corto";		
 	 // Execute the query here now
 			 $query1=mysqli_query($mysqli, $sqlCommand) or die ("ERROR EN CONSULTA DE PRODS PEDL. ".mysqli_error($mysqli));
@@ -30,7 +30,7 @@
 			if($filas > 0){
 				while($tempo=mysqli_fetch_array($query1, MYSQLI_ASSOC)){
 			 		$result[] = array('gpo'=>$tempo['grupo'],'idprod' => $tempo['idproductos'],'nombre' => $tempo['nom_corto'],
-			 		'precio'=>$tempo[$nivelcor],'iva'=>$tempo['iva'],'spesov'=>$tempo['spesov'],'presen'=>$tempo['cant'],'ud'=>$tempo['unidad']);
+			 		    'precio'=>$tempo[$nivelcor],'iva'=>$tempo['iva'],'ieps'=>$tempo['ieps'],'spesov'=>$tempo['spesov'],'presen'=>$tempo['cant'],'ud'=>$tempo['unidad']);
 			 	}
 			}else{$result= 1;}
 			 

@@ -27,11 +27,9 @@
 	<link rel="apple-touch-icon" href="img/logomin.gif">
 	<link rel="stylesheet" href= "css/jquery.mobile-1.4.5.min.css" />
 	<link rel="stylesheet" href= "css/movil.css" />
-	<script src="js/jquery.js"></script>
+	<script src="js/jquery-1.12.4.min.js"></script>
 	<script src="js/jquery.mobile-1.4.5.min.js"></script>
 	<script src="js/jquery.number.js"></script>
-	
-
 	<script>
 	'use strict';
 	(function() {
@@ -121,7 +119,7 @@ function sumaprecio(){
 }
 
 function sumaiva(){
-	//esta funcion suma los ivas
+	//esta funcion suma los impuestos.Inicialmente solo se contemplaba iva
 	var ivat=0;
 	var arre = document.getElementsByClassName("ivaoc") ;
 	var longit = arre.length;
@@ -276,27 +274,35 @@ function calculareng(rengl){
 	var subt= document.getElementById("stotoc"+ rengl).innerHTML;
 	//si se va a facturar se busca iva por articulo
 	 		if(facturarped==true){
-	 			//si el articulo causa iva, se agrega a la columna
+	 			//si el articulo causa iva o ieps, se agrega a la columna
 	 			var civa2 = document.getElementById("iva"+rengl).innerHTML;
+	 			var cieps2= document.getElementById("ieps"+rengl).innerHTML;
 	 			var iva1;
-	 			var ivacalc;
+	 			var ieps1;
+	 			var iepscalc;
+	 			var impcalc;
 	 				if(civa2==1){
 			 			//si causa iva, se calcula
 			 			var iva1= subt*.16;
-						ivacalc=$.number((iva1),2);
-	 				}else{
-	 					ivacalc=$.number((0),2);
+						impcalc=$.number((iva1),2);
+	 				}else if(cieps2==1){
+	 					//si causa ieps, se calcula
+			 			var ieps1= subt*0.08;
+			 			impcalc=$.number((ieps1),2);
+		 				}else{
+	 					impcalc=$.number((0),2);
 	 					iva1=0;
+	 					ieps1=0;
 	 					}
 	 		}else{
-	 			ivacalc=$.number((0),2);
+	 			impcalc=$.number((0),2);
 	 			iva1=0;
 	 			}
-	//se añade el iva
-		document.getElementById("ivaoc"+rengl).innerHTML= iva1;
-		document.getElementById("piva"+rengl).innerHTML= ivacalc;
+	//se añaden los impuestos
+		document.getElementById("ivaoc"+rengl).innerHTML= impcalc;
+		document.getElementById("piva"+rengl).innerHTML= impcalc;
 	//se modifica el total del renglon
-	 			var total=	parseFloat(subt)+parseFloat(ivacalc);
+	 			var total=	parseFloat(subt)+parseFloat(impcalc);
 	 			document.getElementById("ptot"+rengl).innerHTML= $.number(total,2);	
 	 			document.getElementById("totoc"+rengl).innerHTML= total;			
 }
@@ -354,7 +360,7 @@ function multiplica(){
 
 		}
 		
-		function addrengart(id,categ,nombre,precio,linea,iva,spesov,ud,presen){
+		function addrengart(id,categ,nombre,precio,linea,iva,ieps,spesov,ud,presen){
 			//esta funcion agrega los renglones de articulos para una categoría.
 			var ancla = document.getElementById("cat"+categ);
 		//celdas ocultas
@@ -382,7 +388,14 @@ function multiplica(){
 			var node = document.createTextNode(iva);
 			ivar.appendChild(node);
 			ancla.appendChild(ivar);
-		
+		//causa ieps
+			var iepsr = document.createElement("DIV");
+			iepsr.className = "ocult iepsp";
+			iepsr.id = "ieps"+linea;
+			iepsr.name = "ieps"+linea;
+			var node = document.createTextNode(ieps);
+			iepsr.appendChild(node);
+			ancla.appendChild(iepsr);		
 		//venta por peso
 			var spesor = document.createElement("DIV");
 			spesor.className = "ocult spesov";
@@ -414,9 +427,7 @@ function multiplica(){
 			pesor.name = "pesor"+linea;
 			var node = document.createTextNode("1");
 			pesor.appendChild(node);
-			ancla.appendChild(pesor);
-			
-			
+			ancla.appendChild(pesor);						
 		//columna 1
 			var rengpa = document.createElement("DIV");
 			rengpa.className = "ui-block-a";
@@ -463,7 +474,7 @@ function multiplica(){
 			var nodestot = document.createTextNode("0.00");
 			stotoc.appendChild(nodestot);
 			ancla.appendChild(stotoc);
-		//iva sin formato
+		//iva/ieps sin formato(inicialmente solo iva)
 			var ivaoc = document.createElement("DIV");
 			ivaoc.className = "ocult ivaoc";
 			ivaoc.id = "ivaoc"+linea;
@@ -471,6 +482,7 @@ function multiplica(){
 			var nodeivao = document.createTextNode("0.00");
 			ivaoc.appendChild(nodeivao);
 			ancla.appendChild(ivaoc);
+		
 		//total oculto sin formato
 			var totoc = document.createElement("DIV");
 			totoc.className = "ocult totoc";
@@ -496,10 +508,11 @@ function multiplica(){
 						var nombre = objarts[i].nombre;
 						var precio =  objarts[i].precio;
 						var iva = objarts[i].iva;
+						var ieps = objarts[i].ieps;
 						var spesov = objarts[i].spesov;
 						var ud= objarts[i].ud;
 						var presen=objarts[i].presen;
-						addrengart(idprod,grupo,nombre,precio,i,iva,spesov,ud,presen);
+						addrengart(idprod,grupo,nombre,precio,i,iva,ieps,spesov,ud,presen);
 					}			
 				});
 		}
@@ -527,7 +540,7 @@ function multiplica(){
 					break;
 					case 3:
 						atr="ui-block-d";
-						texto="iva";
+						texto="iva/ieps";
 					break;
 					case 4:
 						atr="ui-block-e";
@@ -734,7 +747,11 @@ function multiplica(){
 				var pus=document.getElementsByClassName("prp");
 				var pres=document.getElementsByClassName("pres");
 				var monts=document.getElementsByClassName("stotoc");
-				var civas=document.getElementsByClassName("ivaoc");
+				//recpge el total de los impuestos
+				var imps= document.getElementsByClassName("ivaoc");
+				//si causa los impuestos
+				var civas= document.getElementsByClassName("ivap");
+				var cieps= document.getElementsByClassName("iepsp");
 				var pesos=document.getElementsByClassName("peso");
 				var spesov=document.getElementsByClassName("spesov");
 				var longi= cants.length;
@@ -744,7 +761,9 @@ function multiplica(){
 					var rengpr=pus[i];
 					var rengpres=pres[i];
 					var rengmon=monts[i];
+					var rengimps=imps[i]
 					var rengiva=civas[i];
+					var rengieps=cieps[i];
 					var rengpes=pesos[i];
 					var rengspesov=spesov[i];
 					var cantprod=rengcant.value;
@@ -752,13 +771,16 @@ function multiplica(){
 					var prprod=rengpr.innerHTML;
 					var presp=rengpres.innerHTML;
 					var montop=rengmon.innerHTML;
-					var ivap=rengiva.innerHTML;
+					var impsc=rengimps.innerHTML;
+					var civap=rengiva.innerHTML;
+					var ciepsp=rengieps.innerHTML;
 					var pesop=rengpes.innerHTML;
 					var spesovp=rengspesov.innerHTML;
 					var checact= checadato(cantprod);
 					if(checact==true){
 					//si hay cantidad, se registra el dato
-						prods.push([idprod,cantprod,prprod,montop,ivap,presp,pesop,spesovp]);
+						prods.push([idprod,cantprod,prprod,montop,impsc,civap,
+							ciepsp,presp,pesop,spesovp]);
 					}
 				}
 				return prods;
@@ -827,7 +849,7 @@ function multiplica(){
 		  					var tventa = $("#tventa :radio:checked").val();
 		  					var totarts =document.getElementById("sumcantp").innerHTML;
 		  					var montot=document.getElementById("sumstotoc").innerHTML;
-		  					var ivat=document.getElementById("sumivaoc").innerHTML;
+		  					var impst=document.getElementById("sumivaoc").innerHTML;
 		  					var total =document.getElementById("sumtotoc").innerHTML;
 					//envio a bd
 							$.post( "php/enviaped.php",
@@ -838,7 +860,7 @@ function multiplica(){
 								tipoventa:tventa,
 								totarts:totarts,
 								montot:montot,
-								totiva:ivat,
+								totimps:impst,
 								total:total								
 							 }, null, "json" )
 	    						.done(function( data) {
@@ -883,7 +905,7 @@ function multiplica(){
 		enctype="application/x-www-form-urlencoded" name="pforma" id="pforma">
 		
 		<div class="cajacent">
-			<label for"fact">Facturar?</label>
+			<label for="fact">Facturar?</label>
 	    	<input type="checkbox" data-role="flipswitch" id="fact" name="fact" checked/>
 		</div>
 			<div>
@@ -903,10 +925,10 @@ function multiplica(){
 		    			<input type="radio" id="rcredcon-a" name="rcredcon" value= "0"/>Mostrador
 		    		</label>
 		    		<label>
-		    			<input type="radio" id="rcredcon-b" name="rcredcon" value= "1" />Contado
+		    			<input type="radio" id="rcredcon-b" name="rcredcon" value= "2" />Contado
 		    		</label>
 		    		<label>
-		    			<input type="radio" id="rcredcon-c" name="rcredcon" value= "2"  checked="checked" />Credito
+		    			<input type="radio" id="rcredcon-c" name="rcredcon" value= "3"  checked="checked" />Credito
 		    		</label>
     			</fieldset>	
 
@@ -914,7 +936,7 @@ function multiplica(){
 				</div>	
 			     	<input data-theme="b" data-icon="check" data-iconshadow="true" value="Enviar" type="button" 
 				    name="penvia"id="penvia">
-				    <div class="ui-input-btn ui-btn ui-btn-b ui-icon-delete ui-btn-icon-left ui-shadow-icon" name="pcancela"id="pcancela">
+				    <div class="ui-input-btn ui-btn ui-btn-b ui-icon-delete ui-btn-icon-left ui-shadow-icon" name="pcancela" id="pcancela">
 				        Cancelar
 				    	<input data-enhanced="true" value="Enhanced" type="button">
 			    	</div>

@@ -18,9 +18,6 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-	  <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame 
-	       Remove this if you use the .htaccess -->
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<title>Recepción OC</title>
 	<meta name="author" content="jmv">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,6 +37,7 @@
 		var remi;
 		var fact;
 		var ivat;
+		var iepst;
 		var mtot;
 			
 		function getpar(name){
@@ -55,7 +53,7 @@
 			$("#aviso").popup("open");
 		}
 		
-		function addreng(nombre,cant,idprod,reng,speso,costo,civa,cud){
+		function addreng(nombre,cant,idprod,reng,speso,costo,civa,cieps,cud){
 			//esta funcion añade un renglon de la tabla de articulos
 			var origen = document.getElementById("tbrecoc");
 			var nombre1 = document.createElement("DIV");
@@ -76,7 +74,7 @@
 				var node;
 				var tipo;
 				
-			for(var z=0;z<11;z++){
+			for(var z=0;z<12;z++){
 				nombre1 = document.createElement("DIV");
 				switch(z){
 					 case 0:
@@ -148,15 +146,24 @@
 			    	clase2 = "";
 			    	texto = civa;
 			        break;
-			        
+
 			        case 9:
+			        elem ="DIV";
+					idt = "cieps" + reng;
+					clase = "ocult";
+					clase2 = "";
+					texto = cieps; 
+					break;   
+
+			        case 10:
 			    	elem ="DIV";
 			    	idt="cud"+reng;
 			    	clase = "ocult";
 			    	clase2 = "";
 			    	texto = cud;
 			        break;
-			        case 10:
+			        
+			        case 11:
 			        elem ="DIV";
 			    	idt="cpeso"+reng;
 			    	clase = "ocult";
@@ -218,6 +225,7 @@
 			var costocalc;
 			var costosum;
 			var civa;
+			var cieps;
 			var ivacalc;
 			//inicializacion de suma costo y suma peso
 			pesosum=0;
@@ -227,6 +235,7 @@
 				pesoact = document.getElementById("peso"+i).value;
 				costoact = document.getElementById("cost"+reng).innerHTML;
 				civa = document.getElementById("civa"+reng).innerHTML;
+				cieps= document.getElementById("civa"+reng).innerHTML;
 				costocalc= ocosto(costoact,pesoact);
 				costosum = costosum+costocalc;
 				pesosum= pesosum+pesoact;
@@ -281,19 +290,30 @@
 			document.getElementById("iva"+reng).innerHTML= ivaact.toFixed(2);
 			return ivaact;	
 		}
+
+		function calcieps(costo,reng){
+			//esta funcion calcula el ieps de un art. y lo registra en HMTL
+			var iepsact= costo *.08;
+			document.getElementById("iva"+reng).innerHTML= iepsact.toFixed(2);
+			return iepsact;	
+		}
 		
 		function calcosto(reng){
-		//esta funcion calcula el costo de un art. y su iva  y los registra en html
+		//esta funcion calcula el costo de un art. y su iva/ieps  y los registra en html
 			var costoact;
 			var cantact;
 			var civa;
+			var cieps;
 			costoact = document.getElementById("cost"+reng).innerHTML;
 			cantact = document.getElementById("cant"+reng).value;
 			civa = document.getElementById("civa"+reng).innerHTML;
+			cieps = document.getElementById("cieps"+reng).innerHTML;
 			var costof= costoact*cantact;
 			if (civa==1){
 				calcivar(costof,reng);
-			}
+			}else if(cieps==1){
+				calcieps(costof,reng);
+				}
 			document.getElementById("costof"+reng).innerHTML= costof.toFixed(2);
 			calctot();
 		}
@@ -400,6 +420,8 @@
 				var costo;
 				var speso;
 				var pesoact;
+				var civaact;
+				var ciepsact;
 				var selec=[];
 				nart = document.getElementById("id"+reng).innerHTML;
 				selec.push(nart)
@@ -410,8 +432,11 @@
 				speso = document.getElementById("speso"+reng).innerHTML;
 				selec.push(speso);
 				pesoact = document.getElementById("cpeso"+reng).innerHTML;
+				civaact = document.getElementById("civa"+reng).innerHTML;
+				ciepsact = document.getElementById("cieps"+reng).innerHTML;
 				selec.push(pesoact);
-				
+				selec.push(civaact);
+				selec.push(ciepsact);			
 				return selec;
 			}
 			
@@ -492,7 +517,6 @@
 							remi:remi,
 							fact:fact,
 							monto:mtot,
-							ivat:ivat,
 							arts:dseleco,
 							fechar:fechar,
 						 }, null, "json" )
@@ -537,8 +561,9 @@
 							var speso= liprodoc[i].speso;
 							var costo = liprodoc[i].costo;
 							var civa = liprodoc[i].civa;
+							var cieps = liprodoc[i].cieps;
 							var cud = liprodoc[i].ud;
-							addreng(nombre,cant,nart,i,speso,costo,civa,cud);
+							addreng(nombre,cant,nart,i,speso,costo,civa,cieps,cud);
 							//adicion de escucha a check
 							var estecheck = document.getElementById("chk"+i)
 							estecheck.addEventListener('change',pesoa,false);
@@ -586,7 +611,7 @@
 				    <div class="ui-block-b"><div class="ui-bar ui-bar-b">Cantidad</div></div>
 				    <div class="ui-block-c"><div class="ui-bar ui-bar-b">OK</div></div>
 				    <div class="ui-block-d"><div class="ui-bar ui-bar-b">Subtotal</div></div>
-				    <div class="ui-block-e"><div class="ui-bar ui-bar-b">IVA</div></div>	    
+				    <div class="ui-block-e"><div class="ui-bar ui-bar-b">IVA/IEPS</div></div>	    
 				</fieldset>
 				<fieldset class="ui-grid-d" id="tbtot">
 					<div class="ui-block-a" id="rtot" name="rtot"><div class="ui-bar-a">TOTALES</div></div>
