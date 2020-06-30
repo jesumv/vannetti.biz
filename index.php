@@ -50,19 +50,19 @@
 
   <div class="dialog-container">
       <div class="dialog">
-      <div class="dialog-title">Proporcione su Datos</div>
-      <div class="dialog-body">
+      	<div class="dialog-title">Proporcione su Datos</div>
+      	<div class="dialog-body">
         <!-- la caja para registro de usuario -->
-        <form id="board_login" name="board_login" method ="post" action="#" onsubmit="return false;">
-        	<div> <label>Usuario  :</label><input type="text" name="username" id="username" /></div>
-           <div><label>Contraseña :</label><input type="password" name="password" id="password"/></div>
-            <div><input type="submit" value=" Enviar "/><br />   </div>      
-      </div>
-      <div class="dialog-buttons">
-      </div>
-      </form>
+        	<form id="board_login" name="board_login" method ="post" action="#" onsubmit="return false;">
+        		<div> <label>Usuario  :</label><input type="text" name="username" id="username" /></div>
+           		<div><label>Contraseña :</label><input type="password" name="password" id="password"/></div>
+            	<div><input type="submit" value=" Enviar "/><br />   </div>      
+      		<div class="dialog-buttons">
+      		</div>
+      		</form>
         <button id="butAddCancel" class="button">Cancelar</button>
-    </div>
+    	</div>
+  	</div>
   </div>
 
   <!-- Insert link to app.js here -->

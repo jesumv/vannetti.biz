@@ -21,6 +21,7 @@ function deleteChild() {
 		for(var i=0;i<prodlong;i++){
 			var presp= 1;
 			var ivap;
+			var iepsp;
 			var cantprod=parseFloat(prods[i].getAttribute("Cantidad"));
 			var idprod=prods[i].getAttribute("NoIdentificacion");
 			var prprod=prods[i].getAttribute("ValorUnitario");
@@ -30,11 +31,9 @@ function deleteChild() {
 				var impuesto= prods[i].children[0].children[0].children[0].getAttribute("Impuesto");
 				if(impuesto==="002"){
 					 ivap = prods[i].children[0].children[0].children[0].getAttribute("Importe");	
-				}else{ivap="0"};
-			}else{ivap="0"}
-
-				arts.push([idprod,cantprod,prprod,montop,ivap,presp]);
-
+				}else if(impuesto==="003"){iepsp= prods[i].children[0].children[0].children[0].getAttribute("Importe");}else{ivap="0";iepsp="0";};
+				arts.push([idprod,cantprod,prprod,montop,ivap,presp,iepsp]);
+			}
 		}
 		return arts;
 	}
@@ -90,11 +89,11 @@ function deleteChild() {
 		reng4.add(option0);
 		var option1 = document.createElement("option");
 		option1.text = "CONTADO";
-		option1.value=1;
+		option1.value=2;
 		reng4.add(option1);
 		var option2 = document.createElement("option");
 		option2.text = "CREDITO";
-		option2.value=2;
+		option2.value=3;
 		reng4.add(option2);
 		divped.appendChild(reng0);
 		divped.appendChild(reng1);
@@ -227,7 +226,7 @@ function deleteChild() {
 				   
 		function piefact(tbl,subtotal,iva,ieps,total){
 				//crea el pie
-				for(var i=0; i<3;i++){
+				for(var i=0; i<4;i++){
 					var cadena= 'reng10'+i;
 						cadena = document.createElement('tr');
 						cadena.setAttribute("id", "re10"+i);
@@ -248,10 +247,13 @@ function deleteChild() {
 				var subtv=document.getElementById('celd1011');
 				subtv.innerHTML=iva;
 				var subt=document.getElementById('celd1020');
-				subt.innerHTML="TOTAL";
+				subt.innerHTML="IEPS";
 				var subtv=document.getElementById('celd1021');
-				subtv.innerHTML=total;
-				
+				subtv.innerHTML=ieps;
+				var subt=document.getElementById('celd1030');
+				subt.innerHTML="TOTAL";
+				var subtv=document.getElementById('celd1031');
+				subtv.innerHTML=total;				
 			}
 		
 		

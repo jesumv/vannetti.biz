@@ -112,6 +112,7 @@
         								datosg.totarts=datosg.prods.length;
         								datosg.montot=contenido.stotal;
         								datosg.totiva=contenido.iva;
+ 										datosg.totieps=contenido.ieps;
         								datosg.total=contenido.total
         								//construir pedido
         								cabezaped(nomcorto,idcte,contenido.seriefolio,nfecha);
