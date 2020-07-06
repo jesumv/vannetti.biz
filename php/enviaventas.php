@@ -104,6 +104,7 @@ if(isset($_POST['dat'])){
         $resulp=datosppago($total,$tventa,$fechaconv);
         $fpago=$resulp['fpago'];
         $tventa= $resulp['tipovta'];
+        $tpago=$resulp['tpago'];
         $status2= $resulp['status'];
         $saldo= $resulp['saldo'];
         $statusp=$status[0];
@@ -114,9 +115,9 @@ if(isset($_POST['dat'])){
         //afectacion a bd
         //alta de pedido
         $sqlCommand= "INSERT INTO pedidos(idclientes,arts,monto,iva,ieps,total,saldo,fecha,
-        tipovta,usu,status,facturar,fechapago,factura,arch)
+        tipovta,usu,status,facturar,fechapago,factura,arch,tpago)
 	    VALUES ($cte,$totarts,$montot,$totiva,$totieps,$total,$saldo,'$fechaconv'
-        ,$tventa,'$usu',$status2,$facturarb,'$fpago','$sefo','$arch')";
+        ,$tventa,'$usu',$status2,$facturarb,'$fpago','$sefo','$arch',$tpago)";
         $query= mysqli_query($mysqli, $sqlCommand)or die("error en alta pedidos:".mysqli_error($mysqli));
         if($query){
             //numero de pedido

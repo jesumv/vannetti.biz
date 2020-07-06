@@ -50,7 +50,7 @@
             //arreglo con datos de producto
             $arts=$_POST['prods'];
             //definicion de variables
-            $rpago= datosppago($total,$tpago,$fechaconv);
+            $rpago= datosppago($total,$tpago,$fechaconv);         
             $fpago=$rpago['fpago'];
             $tventa=$rpago['tipovta'];
             $status=$rpago['status'];

@@ -920,15 +920,15 @@ function multiplica(){
 					 <input type="date" name="fechav" id="fechav">
 				</div>
 				<fieldset id="tventa" name="tventa" data-role="controlgroup" data-type="horizontal">
-		    		<legend>Tipo de Venta</legend>
+		    		<legend>Tipo de Pago</legend>
 		    		<label>
-		    			<input type="radio" id="rcredcon-a" name="rcredcon" value= "0"/>Mostrador
+		    			<input type="radio" id="rcredcon-a" name="rcredcon" value= "0"/>Efectivo
 		    		</label>
 		    		<label>
-		    			<input type="radio" id="rcredcon-b" name="rcredcon" value= "2" />Contado
+		    			<input type="radio" id="rcredcon-b" name="rcredcon" value= "2" />Transferencia
 		    		</label>
 		    		<label>
-		    			<input type="radio" id="rcredcon-c" name="rcredcon" value= "3"  checked="checked" />Credito
+		    			<input type="radio" id="rcredcon-c" name="rcredcon" value= "3"  checked="checked" />CxC
 		    		</label>
     			</fieldset>	
 

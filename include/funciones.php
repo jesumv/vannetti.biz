@@ -17,7 +17,7 @@ function datosppago($total,$tipopago,$fechamov){
         case 2:
             //transferencia
             $resulp['fpago']=$fechamov;;
-            $resulp['tipovta']=1;
+            $resulp['tipovta']=2;
             $resulp['status']=40;
             $resulp['saldo']= 0;
             $resulp['tpago']=1;
@@ -26,7 +26,7 @@ function datosppago($total,$tipopago,$fechamov){
             //x cobrar
             //tipo de pago todavia no conocido
             $resulp['fpago']=null;
-            $resulp['tipovta']=2;
+            $resulp['tipovta']=3;
             $resulp['status']=20;
             $resulp['saldo']=$total;
             $resulp['tpago']=99;
