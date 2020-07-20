@@ -651,7 +651,6 @@ function multiplica(){
 		function tipovta(){
 			//esta funcion revisa que tipo de venta se registrará
 			var radios = document.getElementsByName('recredmos');
-
 				for (var i = 0, length = radios.length; i < length; i++) {
 				    if (radios[i].checked) {
 				        // do whatever you want with the checked radio
@@ -664,13 +663,14 @@ function multiplica(){
 		}
 			
   
-		function evalua(resul,ped){
+		function evalua(resul,ped,tpago){
 			/** se evalua la respuesta del servidor**/
+				let resp;
+				let ttpago;
 			switch (resul){
 				case 1:
-					var resp = "ERROR EN CONEXION A BD";
+					 resp = "ERROR EN CONEXION A BD";
 					break;
-					
 				case 2:
 					resp = "ERROR EN REGISTRO PEDIDO";
 					break;
@@ -681,7 +681,24 @@ function multiplica(){
 				resp = "ERROR EN INSERCIONES A DIARIO";
 				break;
 				default:
-					resp = "VENTA MOSTRADOR <br>Numero: "+ ped + "<br>"+"REGISTRO CORRECTO";
+					switch(tpago){
+					case 0:
+						ttpago="EFECTIVO";
+						break;
+					case 1:
+						ttpago="TDC";
+						break;
+					case 2:
+						ttpago="TRANSFERENCIA";
+						break;
+					case 99:
+						ttpago="CXC";
+						break;
+					default:
+						ttpago="NO IDENTIFICADO";				
+					}
+					resp = "VENTA MOSTRADOR <br>Numero: "+ ped + "<br>"
+					+"PAGO:"+ttpago+"<br>"+"REGISTRO CORRECTO";
 			}
 			return resp;
 		}
@@ -797,7 +814,8 @@ function multiplica(){
 	    							var resul=data.resul;
 	    							if(resul==0){
 	    								var ped= data.ped;
-		    							var cad = evalua(resul,ped);
+	    								var tpago=data.tpago;
+		    							var cad = evalua(resul,ped,tpago);
 										aviso(cad);	
 										$( "#aviso" ).on( "popupafterclose", function( event, ui ) {
 											location.reload();

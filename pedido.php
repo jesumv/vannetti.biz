@@ -697,38 +697,43 @@ function multiplica(){
 			var resul;
 			switch(parseInt(tipoped)){
 				case 0:
-				resul = "MOSTRADOR";
+				resul = "EFECTIVO";
 				break;
 				case 1:
-				resul = "CONTADO";
+					resul = "DEPOSITO";
 				break;
 				case 2:
-				resul = "CREDITO";
+				resul = "CXC";
 				break;
 				default:
-				resul= "NO ESTA BIEN";
+				resul= "INDEFINIDO";
 			}
 			return resul;
 		}   
 		function evalua(resul,ped,tipoped){
 			/** se evalua la respuesta del servidor**/
 			switch (resul){
-				case -99:
+				case 0:
+					var textof = tipopedt(tipoped);
+					resp = "PEDIDO <br>Numero: "+ ped + "<br>"+"FORMA: "+textof+"<br>REGISTRO CORRECTO";
+					break;
+				case 1:
 					var resp = "ERROR EN CONEXION A BD";
+					break;			
+				case 2:
+					resp = "ERROR EN ALTA PEDIDO";
 					break;
-					
-				case -1:
-					resp = "ERROR EN REGISTRO PEDIDO";
+				case 3:
+					resp = "ERROR EN ALTA ARTS";
 					break;
-				case -2:
-					resp = "ERROR EN ALTA ARTS PEDIDO";
+				case 4:
+					resp = "ERROR EN ALTA INVENTARIO";
 					break;
-				case -3:
+				case 5:
 				resp = "ERROR EN INSERCIONES A DIARIO";
 				break;
 				default:
-					var textof = tipopedt(tipoped);
-					resp = "PEDIDO <br>Numero: "+ ped + "<br>"+"FORMA: "+textof+"<br>REGISTRO CORRECTO";
+					resp = "ERROR NO IDENTIFICADO";					
 			}
 			return resp;
 		}
@@ -925,10 +930,13 @@ function multiplica(){
 		    			<input type="radio" id="rcredcon-a" name="rcredcon" value= "0"/>Efectivo
 		    		</label>
 		    		<label>
-		    			<input type="radio" id="rcredcon-b" name="rcredcon" value= "2" />Transferencia
+		    			<input type="radio" id="rcredcon-b" name="rcredcon" value= "1"/>TDC
 		    		</label>
 		    		<label>
-		    			<input type="radio" id="rcredcon-c" name="rcredcon" value= "3"  checked="checked" />CxC
+		    			<input type="radio" id="rcredcon-c" name="rcredcon" value= "2" />Transferencia
+		    		</label>
+		    		<label>
+		    			<input type="radio" id="rcredcon-d" name="rcredcon" value= "3"  checked="checked" />CxC
 		    		</label>
     			</fieldset>	
 

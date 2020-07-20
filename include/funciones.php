@@ -3,6 +3,8 @@
 function datosppago($total,$tipopago,$fechamov){
     //define variables segun tipo de pago.
     $resulp=array();
+        //status arts siempre surtidos
+     $resulp['statusa']=99;
     switch ($tipopago){
         case 0:
             //efectivo
@@ -14,19 +16,26 @@ function datosppago($total,$tipopago,$fechamov){
             break;
         case 1:
             //t credito
-        case 2:
-            //transferencia
             $resulp['fpago']=$fechamov;;
-            $resulp['tipovta']=2;
+            $resulp['tipovta']=1;
             $resulp['status']=40;
             $resulp['saldo']= 0;
             $resulp['tpago']=1;
+            break;
+            
+        case 2:
+            //transferencia
+            $resulp['fpago']=$fechamov;
+            $resulp['tipovta']=1;
+            $resulp['status']=40;
+            $resulp['saldo']= 0;
+            $resulp['tpago']=2;
             break;
         case 3:
             //x cobrar
             //tipo de pago todavia no conocido
             $resulp['fpago']=null;
-            $resulp['tipovta']=3;
+            $resulp['tipovta']=2;
             $resulp['status']=20;
             $resulp['saldo']=$total;
             $resulp['tpago']=99;

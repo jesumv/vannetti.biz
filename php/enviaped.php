@@ -18,63 +18,7 @@
         mysqli_free_result($result);
         return $pedmax;
     }
-    function cstatus($tipoventa,$facturar){
-        //asigna el status del pedido  y articulos de acuerdo al tipo de venta
-        //para el alta del pedido
-        // SI SE VA A FACTURAR
-        if($facturar==1){
-            switch ($tipoventa) {
-                //mostrador
-                case 0:
-                    //X FACTURAR
-                    $pdst= 25;
-                    //surtido
-                    $arst=99;
-                    break;
-                    //contado
-                case 2:
-                    //X FACTURAR
-                    $pdst= 25;
-                    //xsurtir OJO
-                    $arst=99;
-                    break;
-                case 3:
-                    //credito
-                    //X FACTURAR
-                    $pdst= 25;
-                    //xsurtir
-                    $arst=99;
-                    break;
-            }
-        }else{
-            //SI NO SE VA A FACTURAR
-            switch ($tipoventa) {
-                //mostrador
-                case 0:
-                    //PAGADO
-                    $pdst= 40;
-                    //surtido
-                    $arst=99;
-                    break;
-                    //contado
-                case 1:
-                    //AL COBRO S FACT cuando se envia merc al cobro y se espera recibir efec
-                    $pdst= 20;
-                    //xsurtir
-                    $arst=99;
-                    break;
-                case 2:
-                    //credito
-                    //X COBRAR
-                    $pdst= 30;
-                    //xsurtir
-                    $arst=99;
-                    break;
-            }
-            
-        }
-        return array($pdst,$arst);
-    }
+
     $funcbase = new dbutils;
     /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
@@ -107,15 +51,14 @@
             $totimps=$_POST["totimps"];
             $total=$_POST["total"];
             $usu= $_SESSION['usuario'];
-            $status= cstatus($tventa,$facturarb);
             $resulp=datosppago($total,$tventa,$fechaconv);
             $fpago=$resulp['fpago'];
             $tvtam= $resulp['tipovta'];
-            $status2= $resulp['status'];
+            $status= $resulp['status'];
             $saldo= $resulp['saldo'];
             $tpagom= $resulp['tpago'];
-            $statusp=$status[0];
-            $statusa=$status[1];
+            $statusp=$resulp['status'];
+            $statusa=$resulp['statusa'];
             $pedido;
             //arreglo con datos de producto
             $arts=$_POST['prods'];
@@ -126,7 +69,7 @@
             $query=$mysqli->query("INSERT INTO $table (idclientes,arts,monto,iva,total,
             saldo,fecha,fechapago,tipovta,usu,status,facturar,tpago)
             VALUES($cte,$totarts,$montot,$totimps,$total,$saldo,'$fechaconv','$fpago',
-            $tvtam,'$usu',$status2,$facturarb,$tpagom)");           
+            $tvtam,'$usu',$status,$facturarb,$tpagom)");           
             if($query){
                 //numero de pedido
                 $pedido=traepedmax($mysqli);

@@ -120,6 +120,7 @@
                     $most,1);
                 if($resulv==0){
                     $jsondata['ped']=$pedido;
+                    $jsondata['tpago'] = $tpagom;
                     $jsondata['resul'] = $resul;
                     //efectuar la operacion
                     $mysqli->commit();
