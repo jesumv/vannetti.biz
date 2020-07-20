@@ -36,7 +36,7 @@ function datosppago($total,$tipopago,$fechamov){
             //tipo de pago todavia no conocido
             $resulp['fpago']=null;
             $resulp['tipovta']=2;
-            $resulp['status']=20;
+            $resulp['status']=30;
             $resulp['saldo']=$total;
             $resulp['tpago']=99;
     }
