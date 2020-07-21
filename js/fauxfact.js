@@ -84,11 +84,11 @@ function deleteChild() {
 		reng4.setAttribute("id","fpago");
 		newlabel.setAttribute("for","fpago");
 		var option0 = document.createElement("option");
-		option0.text = "MOSTRADOR";
+		option0.text = "EFECTIVO";
 		option0.value=0;
 		reng4.add(option0);
 		var option1 = document.createElement("option");
-		option1.text = "CONTADO";
+		option1.text = "DEPOSITO";
 		option1.value=2;
 		reng4.add(option1);
 		var option2 = document.createElement("option");

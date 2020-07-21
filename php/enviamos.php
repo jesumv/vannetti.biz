@@ -63,8 +63,7 @@
             $query=$mysqli->query("INSERT INTO $table (idclientes,arts,monto,iva,total,
             saldo,fecha,fechapago,tipovta,usu,status,coment,facturar,tpago)
             VALUES(1,$totarts,$montot,$totiva,$total,$saldo,'$fechaconv','$fpago',
-            $tventa,'$usu',$status,'$cte',$most,$tpagom)");
-            
+            $tventa,'$usu',$status,'$cte',$most,$tpagom)");          
             if($query){
                 //numero de pedido
                 $pedido=traepedmax($mysqli); 
@@ -125,6 +124,7 @@
                     //efectuar la operacion
                     $mysqli->commit();
                 }else{
+                    $jsondata['errorsql']= mysqli_error($mysqli);
                     throw new Exception("en movtos diario",5);
                 }
                 
@@ -143,7 +143,7 @@
             //fin de las transacciones//   
         }  	
    }else{
-       $jsondata['errorsql'] =mysqli_connect_error();;
+       $jsondata['errorsql'] =mysqli_connect_error();
        throw new Exception("en conexion bd",1);
 			}
 //salida

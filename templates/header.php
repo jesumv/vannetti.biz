@@ -33,6 +33,7 @@
                 		return tresp;
             		}
         		function regped(){
+            		//registra pedido x vta xml
         			var arche=document.getElementById("archpd").value;
         			if(arche!=""){
             			var fechan=document.getElementById("fechafact");
@@ -56,17 +57,20 @@
  		            		case "-1":
  		            			smensaje= "ERROR EN REGISTRO PEDIDO";
  	 	 		            break;
- 		            		case "-2":
- 		            			smensaje= "ERROR EN REGISTRO ARTICULOS";
+ 		            		case "2":
+ 		            			smensaje= "ERROR EN ARTS PEDIDO";
  	 	 	 		            break;
- 		            		case "-3":
+ 		            		case "3":
  		            			smensaje= "ERROR EN REGISTRO INVENTARIO";
  	 	 	 		            break;
- 		            		case "-99":
+ 		            		case "4":
+ 		            			smensaje= "ERROR EN MOVTOS DIARIO";
+ 	 	 	 		            break;
+ 		            		case "99":
  		            			smensaje= "ERROR EN CONEXION A BD";
  	 	 	 		            break;
- 		            		case "-1000":
- 		            			smensaje= "ERROR EN ENVIO DE DATOS";
+ 		            		case "1000":
+ 		            			smensaje= "ERROR EN ENVIO DATOS";
  	 	 	 		            break;
  	 	 	 		        default:
  	 		            		smensaje="ERROR NO DEFINIDO";
