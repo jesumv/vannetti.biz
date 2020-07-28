@@ -21,11 +21,11 @@
         		function ventatext(vtaint){
                 		var tresp;
                 		switch(vtaint){
-                		case "0":
-                    		tresp="EFECTIVO MOSTRADOR";
+                		case 0:
+                    		tresp="EFECTIVO";
                     	break;
-                		case "1":
-                			tresp="CONTADO BANCOS";
+                		case 1:
+                			tresp="DEPOSITO";
                         break;
                         default:
                         	tresp="CREDITO CXC";
@@ -51,10 +51,9 @@
  		            		switch(resul){
  		            		case 0:
  	 		            		smensaje= "VENTA REGISTRADA OK. PEDIDO: "+pedido
- 	 		            		+" "+tmens;
- 	 	 		            		
+ 	 		            		+" "+tmens; 	 		            		
  	 		            	break;
- 		            		case "-1":
+ 		            		case "1":
  		            			smensaje= "ERROR EN REGISTRO PEDIDO";
  	 	 		            break;
  		            		case "2":
