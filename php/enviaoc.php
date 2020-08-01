@@ -14,7 +14,6 @@
         function cambiaprecios($mysqli,$idprods,$cambios,$preciosc){
             //actualiza los precios de productos con los datos enviados
             $indip=0;
-                    
                 foreach($idprods as $id){
                     if($cambios[$indip]==1){
                         $consul="UPDATE productos set costo = $preciosc[$indip],costov =$preciosc[$indip]
@@ -25,11 +24,12 @@
                             throw new Exception("Error en cambio precios",4);
                         }
                         
-                        $indip ++;     
+                           
                     }
+                    
+                    $indip ++;  
                               
-                }  
-                
+                }                  
                 return 0;
         }
         

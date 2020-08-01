@@ -22,8 +22,8 @@ function cambiaprecios($mysqli,$idprods,$cambios,$preciosc){
                 $jsondata['errorsql']= mysqli_error($mysqli);
                 throw new Exception("Error en cambio precios",4);
             }          
-            $indip ++;
-        }      
+        }
+        $indip ++;
     }    
     return 0;
 }
