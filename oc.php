@@ -513,8 +513,8 @@
      	<p id="menspago2" class = "mens"></p>
      	<label for ="fecha" >Fecha:</label>
 		<input type="date" name="fecha" id="fecha">
-		<label for ="factura" class ="ocultame">Factura:</label>
-		<input type="text" name="factura" id="factura"class ="ocultame">
+		<label for ="factura" >Factura:</label>
+		<input type="text" name="factura" id="factura">
 		<label for ="ctapago" class ="ocultame">Cuenta:</label>
 		<input type="text" name="ctapago" id="ctapago" class ="ocultame">
      		<button id="recibeoc" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b">OK, Procesar</button>
