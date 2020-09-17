@@ -42,7 +42,7 @@ require 'include/funciones.php';
 $table = 'pedidos';
 $table2 = 'clientes';
  $sql= "SELECT t2.razon_social,t1.fecha, t1.idpedidos,t1.factura,t1.monto,t1.iva,t1.total,
-t2.diascred,t1.status,t1.facturar,t1.idclientes,t1.saldo,t1.arch FROM $table AS t1 
+t2.diascred,t1.status,t1.facturar,t1.idclientes,t1.saldo,t1.arch,t1.coment FROM $table AS t1 
 INNER JOIN $table2 AS t2 ON t1.idclientes= t2.idclientes WHERE t1.status >19 AND 
 t1.status <40 AND (t1.tipovta = 2 OR t1.tipovta=1) ORDER BY t1.fecha";
  $result2 = mysqli_query($mysqli,$sql)or die ("ERROR EN CONSULTA DE CUENTAS POR COBRAR.".mysqli_error($mysqli));; 
@@ -473,6 +473,7 @@ t1.status <40 AND (t1.tipovta = 2 OR t1.tipovta=1) ORDER BY t1.fecha";
 	  	 //construir tabla
 	  	 while($row2=mysqli_fetch_row($result2)){
 	  	                $razons= $row2[0];
+	  	                $razonm;
 	  	                $fechamov=date_create($row2[1]);
 			 			$noped=$row2[2];
 			 			$nfact=$row2[3];
@@ -488,9 +489,11 @@ t1.status <40 AND (t1.tipovta = 2 OR t1.tipovta=1) ORDER BY t1.fecha";
 						$facti=sfactura($sfact);
 						$saldo=$row2[11];
 						$arch= $row2[12];
+						$coment= $row2[13];
+						if($idcte<5){$razonm="PUB GEN ".$coment;}else{$razonm=$razons;};
 					 	echo "<tr><td id=idcte".$noped." class='ocult'>$idcte</td>
                         <td id=sfact".$noped." class='ocult'>$sfact</td><td id=arch".$noped." class='ocult'>$arch</td>
-					 	<td id=facti".$noped.">$facti</td><td>$razons</td><td>$fechamod</td><td id=ped".$noped.">$noped</td>
+					 	<td id=facti".$noped.">$facti</td><td>$razonm</td><td>$fechamod</td><td id=ped".$noped.">$noped</td>
                         <td class= 'efact' id=nofact".$noped."><input disabled id=afact".$noped." value='$nfact'></td>
 					 	<td class='subto' id=subt".$noped.">$subt</td><td class='siva' id=iva".$noped.">$iva</td>
                         <td  class='sutot' id=total".$noped.">$total</td><td class='ssaldo' id=saldo".$noped.">$saldo</td>
