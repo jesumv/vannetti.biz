@@ -53,17 +53,22 @@
 			      tabla.classList.remove('tablaocultav');
 			    }
 	};
-	function checaval(valor){
-		//esta funcion checa si el valor introducido es numerico o no esta en blanco
-		if (isNaN(valor)&&valor!=''){
+
+	function inchecaval(valor){
+		//se aisla el chekeo de valores
+		if (isNaN(valor)||valor<0){
 			return false;
-		}else{
-			if(valor <0){
-			return false;	
-			}else{return true;}
+		}else{return true;}		
 		}
-	}
 	
+	function checaval(reng){
+		//esta funcion checa si el valor introducido en inputs es numerico o no esta en blanco
+		let precioa=document.getElementById("chk"+reng).value;
+		let canta=document.getElementById("incostm"+reng).value;
+		let resp1=inchecaval(precioa);
+		let resp2=inchecaval(canta);
+		if(resp1==true && resp2 ==true){return true}else{return false};		
+		}	
 	function validacant(cant){
 	//esta funcion convierte los blancos en 0s para los calculos
 	var cantm;
@@ -120,13 +125,6 @@ function sumatotas(){
 	return grant;
 }
 
-function sacareng(nombre){
-			//esta funcion extrae el renglon de un nombre
-			var longi = nombre.length;
-			var remov = longi-3;
-			var reng = nombre.slice(-remov);
-			return reng;
-		}
 
 function quita(){
 	  		//quitar cajas de peso
@@ -145,8 +143,8 @@ function quita(){
 function ocosto(costo,peso){
 		//esta funcion obtiene el costo de un articulo
 		//en base a su peso, o a la cantidad ordenada, de acuerdo con el tipo
-
-		var costoc= costo*peso;
+		var costom=parseFloat(costo);
+		var costoc= parseFloat(costo)*peso;
 		return costoc;	
 		}
 function getSum(total,num) {
@@ -247,11 +245,10 @@ function quitadatos(rengl,precio){
 	
 }
 
-function calculareng(rengl,tipo){
+function calculareng(rengl){
 	//calcula datos de un renglon luego de modificacion
 		 		//retomar el subtotal, para los calculos
 	var subt= document.getElementById("stmos"+ rengl).innerHTML;
-	//si el pago es con tarjeta, se modifica el precio
 	//si se va a facturar se busca iva por articulo
 	 			//si el articulo causa iva, se agrega a la columna
 	 			var civa2 = document.getElementById("iva"+rengl).innerHTML;
@@ -274,62 +271,88 @@ function calculareng(rengl,tipo){
 	 			document.getElementById("totoc"+rengl).innerHTML= total;			
 }
 
-function multiplica(){
+function evalinp(reng,cant,precioa){
+	let canti= document.getElementById('chk'+reng);
+	let prec = document.getElementById('incostm'+reng);
+	let resul;
+	let modif;
+	let mensajef;
+	//si cant o precio son  negativos, valor en blanco y enfoque a input
+	if(cant < 0 || precioa < 0){
+		mensajef = "debe introducir una cantidad positiva";
+		if (cant < 0){
+			//cantidad negativa
+			modif = document.getElementById('chk'+reng);
+			}else if(precioa < 0) {//precio negativo
+				modif = document.getElementById('incostm'+reng)
+				}else if (precioa==''){
+	//si  precio  en blanco advertencia y enfoque
+			modif = document.getElementById(incostm+reng);
+			mensajef= "debe introducir un precio";					
+				}else if (cant == ''){
+					quitadatos(reng,precioi);  		 		
+					}else{calculatots()};
+	//acciones despues de evaluar	
+	aviso(mensajef);
+	$("#aviso").on( "popupafterclose", function( event, ui ) {
+		modif.value = "";
+		modif.focus();
+		});
+	}
+}
+
+
+function multiplica(reng){
 		//esta funcion obtiene el precio final en base a los datos de cantidad
-		//se valida si la entrada es numerica
-	 	var checa = checaval(this.value);
-	 	var cad = this.name;
-	 	var longi = this.name.length;
-	    var pos = cad.indexOf("k");
-		var rengl = cad.slice(pos+1);
-		var precio = document.getElementById("incostm"+ rengl).value;
-		var precioi= document.getElementById("precio"+ rengl).innerHTML;
-		var valor = document.getElementById("chk"+ rengl).value;
-		var multip;	
-		var subt;
-		var ivacalc;
-		var total;
-		//si la casilla tiene valor, se examina
-	 	if (checa==true && valor!='') {
+		//se valida si la entrada es numerica	 	
+		let cant = document.getElementById("chk"+ reng).value;
+		let precioi= document.getElementById("precio"+ reng).innerHTML;
+		let elprecio= document.getElementById("incostm"+ reng);
+		let precioa = elprecio.value;
+		let checa = checaval(reng);
+		let multip;	
+		let subt = document.getElementById("stmos"+ reng);
+		let ivacalc;
+		let total;
+		//si precio y cant en blanco, Nan o negativo = false
+	 	if (checa==true) {
 	 		//si el articulo se vende por peso, se muestra el combo
-	 		var peso=document.getElementById("peso"+rengl).innerHTML;
+	 		let peso=document.getElementById("peso"+reng).innerHTML;
 	 			if(peso==1){
-	 				multip=pidepeso(valor,rengl);
+	 				multip=pidepeso(precioi,reng);
 	 			}else{
-	 				multip=valor;
+	 				multip=precioi;					
 				//se toma el precio oculto, se multiplica x cantidad y se añade a la tabla
-					var preciot = ocosto(precio,multip);
-					document.getElementById("incostm"+ rengl).value = $.number(preciot,2);
-					document.getElementById("stmos"+ rengl).innerHTML  = preciot;
+					let preciot = ocosto(precioi,cant);
+					elprecio.value = $.number(parseFloat(precioi),2);
+					subt.innerHTML=preciot;
 				//calculo de datos renglon
-	 				calculareng(rengl)
+	 				calculareng(reng)
 	 			// se modifican los totales
 					calculatots();
-	 			}
-
-	 		
+	 			} 		
 	 	}else{
-	 		if(valor!=''){
-	 		//el valor no es admisible
-	 		aviso("debe introducir una cantidad positiva");
-		 			$("#aviso").on( "popupafterclose", function( event, ui ) {
-						var enfoc = document.getElementById(cad);
-						enfoc.value = "";
-						enfoc.focus();
-	 				});
-	 		}
-		 	if(checa==true){
-		 		//si la cantidad está en blanco, se quitan los datos del renglon
-		 		quitadatos(rengl,precioi);
-		 		calculatots();
-		 	}	
-			};
-			
-
+		 	//evalua el contenido. no en blanco y no NaN = true y presenta respuesta
+		 	evalinp(reng,cant,precioa)};
 		}
-		
-		
-		function addrengart(id,categ,nombre,precio,linea,iva,spesov,ud,presen){
+
+function cambiapr(reng,callback){
+	//cambia el precio oculto del articulo si se cambia en el input
+	let eprecioa=document.getElementById("incostm"+reng);
+	let precioa=eprecioa.value;
+	let precioc=document.getElementById("precio"+reng);
+	let stotal = document.getElementById("stmos"+reng);
+	if(precioa!==''){
+		precioc.innerHTML=precioa;	
+		stotal.innerHTML=precioa;
+		callback(reng);
+	}else{
+		eprecioa.value = $.number(precioc.innerHTML,2);
+		}
+	
+}
+			
+function addrengart(id,categ,nombre,precio,linea,iva,spesov,ud,presen){
 			//esta funcion agrega los renglones de articulos para una categoría.
 			var ancla = document.getElementById("cat"+categ);
 		//celdas ocultas
@@ -390,8 +413,6 @@ function multiplica(){
 			var node = document.createTextNode("1");
 			pesor.appendChild(node);
 			ancla.appendChild(pesor);
-			
-			
 		//columna 1
 			var rengpb = document.createElement("DIV");
 			rengpb.className = "ui-block-a"
@@ -458,7 +479,8 @@ function multiplica(){
 			ancla.appendChild(totoc);
 			
 		//agregar funcion de escucha
-			document.getElementById(checkp.id).addEventListener('change', multiplica,false);		
+			document.getElementById(checkp.id).addEventListener('change', function (){multiplica(linea)},false);
+			document.getElementById(incostm.id).addEventListener('change', function(){cambiapr(linea,multiplica)},false);		
 		}
 		
 		function addarts(){
@@ -638,15 +660,6 @@ function multiplica(){
 		}
 		return resul;
 	}
-		function validainput(elem,valor){
-			var resul;
-			//valida si el texto de un imput corresponde al argumento.
-			if(document.getElementById(elem)===null){resul = 0;}else{
-			var texto = document.getElementById(elem).value;
-			if(texto==valor){resul = 0;}else{resul = -1;}
-		}
-		return resul;
-		}
 	
 		function tipovta(){
 			//esta funcion revisa que tipo de venta se registrará
