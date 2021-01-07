@@ -257,7 +257,7 @@ require 'include/funciones.php';
     					    		document.getElementById('folio').focus()
     					        break;
         					    case "28":
-        					    	document.getElementById('cuenta').value="2730";
+        					    	document.getElementById('cuenta').value="8145";
         					    	document.getElementById('folio').focus();
         					        break;
         					    default:
