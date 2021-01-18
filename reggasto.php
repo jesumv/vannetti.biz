@@ -114,20 +114,24 @@ function saldobanco($mysqli){
 			aparece();
 			var metodo = document.getElementById("smpago").focus();
 			}
+		function propina(){
+			aparece();			
+			}
 	function aparece(){                              
 			//elige elementos auxiliares a presentar
 			var concep = document.getElementById("concepg").value;
 			var metodo = document.getElementById("smpago").value;
 			var etiq =document.getElementById("ladic");
 			var propi=document.getElementById("mprop");
-		var etiq2 =document.getElementById("lefec");
-		var efec =document.getElementById("efec");
-		var etiq3 =document.getElementById("liva");
-		var miva= document.getElementById("miva");
-		var estaoc=etiq.classList.contains("ocult");
+    		var etiq2 =document.getElementById("lefec");
+    		var efec =document.getElementById("efec");
+    		var etiq3 =document.getElementById("liva");
+    		var miva= document.getElementById("miva");
+    		var estaoc=etiq.classList.contains("ocult");
+    		var propinasi=document.getElementById("propisi").checked;
 			//si se elige alim  y no es transferencia lleva propina
-		if(concep=="alim viaje" && estaoc==true){
-			etiq.innerHTML="Propina?:";
+		if((concep=="alim viaje"|| propinasi==true) && estaoc==true){
+			etiq.innerHTML="Propina:";
 			etiq.classList.remove("ocult");
 			propi.value="";	
 			propi.classList.toggle("ocult");
@@ -146,7 +150,7 @@ function saldobanco($mysqli){
 					}else{
 
 						}											
-			}else if(metodo!="03" && concep!="alim viaje"){
+			}else if(metodo!="03" && concep!="alim viaje" && propinasi==false ){
 				//sie el metodo de pago es distinto, se ocultan las casillas
 						etiq.classList.add("ocult");
 						propi.value="";					
@@ -817,6 +821,8 @@ function saldobanco($mysqli){
 	 			document.getElementById("smpago").addEventListener('change',modmpago,false)
 	 			//concepto
 					document.getElementById("concepg").addEventListener('change',mconcep,false)
+				//propina?
+					document.getElementById("propisi").addEventListener('click',propina,false)
 				//propina
 				document.getElementById("mprop").addEventListener('change',ivaaux,false)
 	 			//enfoque inicial
@@ -927,6 +933,7 @@ function saldobanco($mysqli){
 			    			</div>
 			    			<div	 class="rengn">
 			    			<label>Concepto Orig: </label><input type="text" name="concepo"  id="concepo" class="cajalfc"/>
+			    			<div  class="rengn"><label>Propina? </label><input type="checkbox" name="propisi"  id="propisi"/></div>
 			    			</div>
 			    			<div class="rengn">
 			    				<label>Categoría: </label>
@@ -941,7 +948,7 @@ function saldobanco($mysqli){
 									<option value="603.81">Admon No Deduc</option>
 									<option value="703">Otros Gastos Deducibles</option>
 		         				</select>
-		         				<label>Concepto: </label><input type="text" name="concepg"  id="concepg" class="cajam" maxlength="20"/>		
+		         				<label>Concepto: </label><input type="text" name="concepg"  id="concepg" class="cajam" maxlength="20"/>			
 			    				<div class="rengn">
     		         				<span id="fded" class= "ocult" >
     		         					<label>%deduc: </label>

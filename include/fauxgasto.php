@@ -41,7 +41,7 @@
 	            //en otro caso, es comision por transpaso = gasto financiero
 	            //si no hay monto de movto, no se registra aux
 	            if(is_numeric($montop)){
-	            if($concep=="alim viaje"){$abono=602.83;}else{$abono=701.10;}
+	                if($concep=="alim viaje"){$abono=602.83;}else if($concepaux=="propina"){$abono=601.83;}else{$abono=701.10;}
 	            $resula=movdiario($mysqli,$abono,$ref,0,$montop,$fecha,$concepaux);
 	            //o traspaso= gastos financieros + iva
 	            if($ivaaux!=0){$resula=movdiario($mysqli,118.01,$ref,0,$ivac,$fecha,$concepaux);}

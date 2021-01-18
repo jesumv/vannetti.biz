@@ -146,7 +146,7 @@ function movtras($mysqli,$origen,$destino,$monto,$fecha,$ref){
 			        $resul2=movdiario($mysqli,$ccargo,"",1,$total,$fecha,$concep,$cuenta,$arch);
 			        $resul=$resul1+$resul2+$resul3;
 			        //anota movimientos auxiliares si los hay
-			        if($metpago=="03" || $concep =="alim viaje"){movaux($mysqli,$metpago,$ccargo,$fact,$concep,
+			        if($metpago=="03" || $mprop!=""){movaux($mysqli,$metpago,$ccargo,$fact,$concep,
 			            $mprop,$efec,$ivaaux,$fecha,$cuenta,$arch);}
 			            mysqli_close($mysqli);
 			    }catch(Exception $e){
