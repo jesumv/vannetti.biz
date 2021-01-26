@@ -256,7 +256,7 @@ require 'include/funciones.php';
     					    		document.getElementById('cuenta').value="8886";
     					    		document.getElementById('folio').focus()
     					        break;
-        					    case "28":
+        					    case"13": case"28":
         					    	document.getElementById('cuenta').value="8145";
         					    	document.getElementById('folio').focus();
         					        break;
@@ -433,6 +433,7 @@ require 'include/funciones.php';
 							<option value="01">Efectivo</option>
 							<option value="02">Cheque</option>
 							<option value="03">Transferencia</option>
+							<option value="13">Cargo a cuenta</option>
 							<option value="04">Tarjetas de Credito</option>
 							<option value="28">Tarjetas de Débito</option>
 							<option value="99">Otros</option>
