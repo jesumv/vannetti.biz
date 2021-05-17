@@ -80,7 +80,7 @@ function movtras($mysqli,$origen,$destino,$monto,$fecha,$ref){
 	            break;
 	            //otros
 	        default:
-	            $abono="101.01";
+	            $abono="205.06";
 	    }
 	    return $abono;
 	    
