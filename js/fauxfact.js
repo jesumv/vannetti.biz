@@ -166,7 +166,7 @@ function deleteChild() {
 			var impuesto= concepto.children[0].children[0].children[0].getAttribute("Impuesto");
 			var importeimp;
 			if(impuesto==="002"){
-				 importeimp = concepto.childNodes[0].childNodes[0].childNodes[0].getAttribute("Importe");	
+				 importeimp = concepto.childNodes[1].childNodes[1].childNodes[1].getAttribute("Importe");	
 			}else{importeimp="0"};
 		}else{importeimp=""}
 
