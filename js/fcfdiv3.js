@@ -121,13 +121,15 @@ function calcimptos(nodoimpuestos){
 
 function leeserief(version,comprob){
 	//lee serie y folio dependiendo de version, si los tiene
-	var serie;
 	var folio32 = comprob.getNamedItem("folio");
 	var serie32= comprob.getNamedItem("serie");
 	var folio33 = comprob.getNamedItem("Folio");
 	var serie33= comprob.getNamedItem("Serie");
 	var resul =[];
 	if (version == "3.3"){
+		if(serie33){resul["serie"] = comprob.getNamedItem("Serie").nodeValue}else{resul["serie"] = ""};
+		if(folio33){resul["folio"] = comprob.getNamedItem("Folio").nodeValue}else{resul["folio"] = ""};
+	}else if(version == "4.0"){
 		if(serie33){resul["serie"] = comprob.getNamedItem("Serie").nodeValue}else{resul["serie"] = ""};
 		if(folio33){resul["folio"] = comprob.getNamedItem("Folio").nodeValue}else{resul["folio"] = ""};
 	}else{
