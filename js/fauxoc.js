@@ -184,7 +184,7 @@ function validacant(cant){
 	//convierte campos vacios en 0 para poder sumar
 	var cantm;
 	if (cant==""){cantm = 0}else{cantm=cant};
-	return Number.parseInt(cantm);
+	return Number.parseFloat(cantm);
 }
 
 function sumaprecio(){
