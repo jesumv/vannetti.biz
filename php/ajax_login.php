@@ -1,10 +1,14 @@
 <?php
-  function __autoload($class){
-      require('../include/' . strtolower($class) . '.class.php');
-    }
-    
+/*** Autoload class files ***/
+function myAutoload($ClassName)
+{
+    require('../include/' . strtolower($ClassName) . '.class.php');
+}
 
-    $funcbase = new dbutils;
+spl_autoload_register('myAutoload');
+
+//directiva a la conexion con base de datos
+$funcbase = new dbutils;
 /*** conexion a bd ***/
     $mysqli = $funcbase->conecta();
     if (is_object($mysqli)) {
