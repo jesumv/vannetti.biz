@@ -1,10 +1,13 @@
 <?php
    /*** Autoload class files ***/ 
-    function __autoload($class){
-      require('../include/' . strtolower($class) . '.class.php');
-    }
-	
-    $funcbase = new dbutils;
+function myAutoload($ClassName)
+{
+    require('include/' . strtolower($ClassName) . '.class.php');
+}
+
+spl_autoload_register('myAutoload');
+
+//directiva a la conexion con base de datos
 /*** conexion a bd ***/
     
     $resul;
