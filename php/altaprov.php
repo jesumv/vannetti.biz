@@ -12,6 +12,7 @@ spl_autoload_register('myAutoload');
     
     $resul;
     $mal=null;
+    $funcbase = new dbutils;
     $mysqli = $funcbase->conecta();
 	
     if (is_object($mysqli)) {
