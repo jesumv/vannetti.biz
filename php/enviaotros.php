@@ -1,8 +1,12 @@
 <?php
  /*** Autoload class files ***/ 
-    function __autoload($class){
-      require('../include/' . strtolower($class) . '.class.php');
-    }
+function myAutoload($ClassName)
+{
+    require('include/' . strtolower($ClassName) . '.class.php');
+}
+
+spl_autoload_register('myAutoload');
+
     //funciones auxiliares
     require_once '../include/fauxgasto.php';
     

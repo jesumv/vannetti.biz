@@ -35,9 +35,13 @@
     /*** Esta rutina obtiene los valores de los indicadores***/
     /*** del proceso contable***/
 	/*** Autoload class files ***/ 
-    function __autoload($class){
-      require('../include/' . strtolower($class) . '.class.php');
-    }
+function myAutoload($ClassName)
+{
+    require('include/' . strtolower($ClassName) . '.class.php');
+}
+
+spl_autoload_register('myAutoload');
+
 	
 	function mesmax($mysqli){
 		/*** obtiene el valor del mes maximo registrado ***/

@@ -1,9 +1,12 @@
 <?php
 //envia numero de factura a bd
-function __autoload($class){
-      require('../include/' . strtolower($class) . '.class.php');
-    }
-	
+function myAutoload($ClassName)
+{
+    require('include/' . strtolower($ClassName) . '.class.php');
+}
+
+spl_autoload_register('myAutoload');
+
     $funcbase = new dbutils;
     
 	function movfact($mysqli,$idpedidos,$nofact){
