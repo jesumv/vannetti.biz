@@ -2,10 +2,12 @@
 	//cachar parametros
 	$oc = $_POST['oc'];
 	//consulta a la base de datos
-	/*** Autoload class files ***/ 
-    function __autoload($class){
-      require('../include/' . strtolower($class) . '.class.php');
-    }
+	function myAutoload($ClassName)
+	{
+	    require('../include/' . strtolower($ClassName) . '.class.php');
+	}
+	
+	spl_autoload_register('myAutoload');
 	
     $funcbase = new dbutils;
 /*** conexion a bd ***/

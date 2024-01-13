@@ -2,7 +2,7 @@
 //envia numero de factura a bd
 function myAutoload($ClassName)
 {
-    require('include/' . strtolower($ClassName) . '.class.php');
+    require('../include/' . strtolower($ClassName) . '.class.php');
 }
 
 spl_autoload_register('myAutoload');

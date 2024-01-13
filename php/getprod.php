@@ -2,7 +2,7 @@
 /*** Esta rutina obtiene datos de productos para mostrar en tablas ***/
 function myAutoload($ClassName)
 {
-    require('include/' . strtolower($ClassName) . '.class.php');
+    require('../include/' . strtolower($ClassName) . '.class.php');
 }
 
 spl_autoload_register('myAutoload');
