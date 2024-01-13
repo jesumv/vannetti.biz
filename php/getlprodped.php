@@ -1,9 +1,13 @@
 <?php
 /*** Esta rutina obtiene los productos de una orden de compra***/
 	/*** Autoload class files ***/ 
-    function __autoload($class){
-      require('../include/' . strtolower($class) . '.class.php');
-    }
+function myAutoload($ClassName)
+{
+    require('include/' . strtolower($ClassName) . '.class.php');
+}
+
+spl_autoload_register('myAutoload');
+
     
     $funcbase = new dbutils;
 /*** conexion a bd ***/

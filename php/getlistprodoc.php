@@ -2,9 +2,13 @@
 /*** Esta rutina obtiene todos los productos para mostrar en autocomplete***/
 /*** y otros datos necesarios de la orden de compra***/
 	/*** Autoload class files ***/ 
-    function __autoload($class){
-      require('../include/' . strtolower($class) . '.class.php');
-    }
+function myAutoload($ClassName)
+{
+    require('include/' . strtolower($ClassName) . '.class.php');
+}
+
+spl_autoload_register('myAutoload');
+
     
     $funcbase = new dbutils;
 /*** conexion a bd ***/
